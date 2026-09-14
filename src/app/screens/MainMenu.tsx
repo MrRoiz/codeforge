@@ -31,7 +31,7 @@ export function MainMenu({
         {status ? <Text color="greenBright">{status}</Text> : null}
       </Box>
       <Box marginTop={1} paddingLeft={2}>
-        <KeyHints hints={[['↑↓', 'navigate'], ['↵', 'select'], ['q', 'quit']]} />
+        <KeyHints hints={[['j/k ↑↓', 'navigate'], ['↵', 'select'], ['q', 'quit']]} />
       </Box>
     </Box>
   );

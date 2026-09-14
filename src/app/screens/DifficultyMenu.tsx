@@ -33,7 +33,7 @@ export function DifficultyMenu({ counts, onSelect, onBack }: Props) {
         />
       </Box>
       <Box marginTop={1}>
-        <KeyHints hints={[['↑↓', 'navigate'], ['↵', 'select'], ['esc', 'back'], ['q', 'quit']]} />
+        <KeyHints hints={[['j/k ↑↓', 'navigate'], ['↵', 'select'], ['esc', 'back'], ['q', 'quit']]} />
       </Box>
     </Box>
   );

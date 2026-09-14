@@ -63,7 +63,7 @@ export function ExerciseList({ exercises, onSelect, onBack }: Props) {
         </Box>
       </Box>
       <Box marginTop={1}>
-        <KeyHints hints={[['↑↓', 'navigate'], ['↵', 'open'], ['esc', 'back'], ['q', 'quit']]} />
+        <KeyHints hints={[['j/k ↑↓', 'navigate'], ['gg/G', 'first/last'], ['↵', 'open'], ['esc', 'back'], ['q', 'quit']]} />
       </Box>
     </Box>
   );

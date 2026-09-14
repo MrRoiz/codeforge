@@ -1,5 +1,5 @@
 import { Box, Text, useInput } from 'ink';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export interface SelectItem<T> {
   label: string;
@@ -29,6 +29,7 @@ export function Select<T>({
   color = 'cyanBright',
 }: SelectProps<T>) {
   const [index, setIndex] = useState(initialIndex);
+  const lastInput = useRef<string | null>(null);
 
   useEffect(() => {
     const item = items[index];
@@ -37,8 +38,11 @@ export function Select<T>({
   }, [index, items]);
 
   useInput(
-    (_input, key) => {
-      if (key.upArrow) {
+    (input, key) => {
+      const prev = lastInput.current;
+      lastInput.current = input;
+
+      if (key.upArrow || input === 'k') {
         setIndex((i) => {
           let next = i;
           for (let step = 0; step < items.length; step++) {
@@ -47,7 +51,7 @@ export function Select<T>({
           }
           return next;
         });
-      } else if (key.downArrow) {
+      } else if (key.downArrow || input === 'j') {
         setIndex((i) => {
           let next = i;
           for (let step = 0; step < items.length; step++) {
@@ -56,6 +60,21 @@ export function Select<T>({
           }
           return next;
         });
+      } else if (input === 'G') {
+        for (let i = items.length - 1; i >= 0; i--) {
+          if (!items[i].disabled) {
+            setIndex(i);
+            break;
+          }
+        }
+      } else if (input === 'g' && prev === 'g') {
+        for (let i = 0; i < items.length; i++) {
+          if (!items[i].disabled) {
+            setIndex(i);
+            break;
+          }
+        }
+        lastInput.current = null;
       } else if (key.return) {
         const item = items[index];
         if (item && !item.disabled) onSelect(item.value);
