@@ -32,5 +32,12 @@ export const wordBreak: Exercise = {
     { input: ['ab', ['a', 'b']], expected: true },
     { input: ['ab', ['a']], expected: false },
     { input: ['cars', ['car', 'ca', 'rs']], expected: true },
+    { input: ['a', ['a', 'b']], expected: true },
+    { input: ['ba', ['a', 'ba']], expected: true },
+    { input: ['bab', ['ba', 'b']], expected: true },
+    { input: ['abcd', ['abc', 'bcd', 'a', 'd']], expected: true },
+    { input: ['aaaaaaa', ['aaaa', 'aaa']], expected: true },
+    { input: ['aaaa', ['aa']], expected: true },
+    { input: ['ccbb', ['bc', 'cb']], expected: false },
   ],
 };
