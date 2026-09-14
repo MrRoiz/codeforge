@@ -50,6 +50,12 @@ contract.
 
 ```bash
 pnpm install
+pnpm dev            # local dev — runs from source, no build step
+```
+
+To build and run the distributable CLI:
+
+```bash
 pnpm build
 node dist/index.js
 # or link it globally:
@@ -258,12 +264,22 @@ claim `verified` without first-hand knowledge.
 
 ### Development
 
+For local development no build is needed — run straight from source:
+
 ```bash
 pnpm install
-pnpm build          # tsup → dist/index.js, dist/lib.js, dist/jestRunner.js
+pnpm dev            # tsx, runs the TUI from src (resolves @ aliases directly)
 pnpm typecheck      # tsc --noEmit
+```
+
+`pnpm dev` also spawns the TypeScript test runner via tsx, so exercising
+solutions works without building.
+
+To produce the distributable CLI:
+
+```bash
+pnpm build          # tsup → dist/index.js, dist/lib.js, dist/jestRunner.js
 node dist/index.js  # run the TUI from the build
-pnpm dev            # tsx, no build step (resolves @ aliases directly)
 ```
 
 `src/lib.ts` is a programmatic API (`exercises`, `ensureGenerated`, `runJest`,
