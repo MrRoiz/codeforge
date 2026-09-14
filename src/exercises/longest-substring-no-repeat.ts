@@ -3,6 +3,7 @@ import type { Exercise } from '@exercises/types';
 export const longestSubstringNoRepeat: Exercise = {
   id: 'longest-substring-no-repeat',
   name: 'Longest Substring Without Repeating Characters',
+  createdAt: '2026-09-14',
   difficulty: 'medium',
   type: 'Sliding Window + Hash Map',
   time: '20-30 min',

@@ -3,6 +3,7 @@ import type { Exercise } from '@exercises/types';
 export const wordBreak: Exercise = {
   id: 'word-break',
   name: 'Word Break',
+  createdAt: '2026-09-14',
   difficulty: 'medium',
   type: 'Dynamic Programming (Strings)',
   time: '25-30 min',

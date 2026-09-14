@@ -3,6 +3,7 @@ import type { Exercise } from '@exercises/types';
 export const dependencyGraphOrdering: Exercise = {
   id: 'dependency-graph-ordering',
   name: 'Dependency Graph Ordering',
+  createdAt: '2026-09-14',
   difficulty: 'medium',
   type: 'Topological Sort',
   time: '25-30 min',

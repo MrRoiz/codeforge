@@ -3,6 +3,7 @@ import type { Exercise } from '@exercises/types';
 export const digitSumWithoutConversion: Exercise = {
   id: 'digit-sum-without-conversion',
   name: 'Digit Sum Without Conversion',
+  createdAt: '2026-09-14',
   difficulty: 'easy',
   type: 'Strings / ASCII',
   time: '10-15 min',

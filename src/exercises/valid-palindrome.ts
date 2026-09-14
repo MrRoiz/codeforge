@@ -3,6 +3,7 @@ import type { Exercise } from '@exercises/types';
 export const validPalindrome: Exercise = {
   id: 'valid-palindrome',
   name: 'Valid Palindrome',
+  createdAt: '2026-09-14',
   difficulty: 'easy',
   type: 'Two Pointers + Strings',
   time: '15-20 min',

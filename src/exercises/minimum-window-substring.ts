@@ -3,6 +3,7 @@ import type { Exercise } from '@exercises/types';
 export const minimumWindowSubstring: Exercise = {
   id: 'minimum-window-substring',
   name: 'Minimum Window Substring',
+  createdAt: '2026-09-14',
   difficulty: 'hard',
   type: 'Sliding Window',
   time: '25-30 min',

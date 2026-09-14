@@ -3,6 +3,7 @@ import type { Exercise } from '@exercises/types';
 export const lruCache: Exercise = {
   id: 'lru-cache',
   name: 'LRU Cache',
+  createdAt: '2026-09-14',
   difficulty: 'medium',
   type: 'Design / Hash Map + Linked List',
   time: '25-30 min',

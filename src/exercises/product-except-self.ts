@@ -3,6 +3,7 @@ import type { Exercise } from '@exercises/types';
 export const productExceptSelf: Exercise = {
   id: 'product-except-self',
   name: 'Product of Array Except Self',
+  createdAt: '2026-09-14',
   difficulty: 'medium',
   type: 'Arrays + Prefix/Suffix Product',
   time: '20-30 min',

@@ -3,6 +3,7 @@ import type { Exercise } from '@exercises/types';
 export const perfectSquares: Exercise = {
   id: 'perfect-squares',
   name: 'Perfect Squares',
+  createdAt: '2026-09-14',
   difficulty: 'medium',
   type: 'Dynamic Programming',
   time: '20-25 min',

@@ -3,6 +3,7 @@ import type { Exercise } from '@exercises/types';
 export const reverseString: Exercise = {
   id: 'reverse-string',
   name: 'Reverse String',
+  createdAt: '2026-09-14',
   difficulty: 'easy',
   type: 'Two Pointers',
   time: '10-15 min',

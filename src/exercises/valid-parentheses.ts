@@ -3,6 +3,7 @@ import type { Exercise } from '@exercises/types';
 export const validParentheses: Exercise = {
   id: 'valid-parentheses',
   name: 'Valid Parentheses',
+  createdAt: '2026-09-14',
   difficulty: 'easy',
   type: 'Stack',
   time: '15-20 min',

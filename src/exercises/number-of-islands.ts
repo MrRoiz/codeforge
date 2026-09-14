@@ -4,6 +4,7 @@ export const numberOfIslands: Exercise = {
   id: 'number-of-islands',
   validation: [{ level: 'reported', source: 'GoDaddy' }],
   name: 'Number of Islands',
+  createdAt: '2026-09-14',
   difficulty: 'medium',
   type: 'DFS/BFS + Grid',
   time: '25-35 min',

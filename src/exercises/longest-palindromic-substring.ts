@@ -3,6 +3,7 @@ import type { Exercise } from '@exercises/types';
 export const longestPalindromicSubstring: Exercise = {
   id: 'longest-palindromic-substring',
   name: 'Longest Palindromic Substring',
+  createdAt: '2026-09-14',
   difficulty: 'medium',
   type: 'Two Pointers / DP',
   time: '20-25 min',

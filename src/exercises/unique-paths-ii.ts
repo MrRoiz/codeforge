@@ -3,6 +3,7 @@ import type { Exercise } from '@exercises/types';
 export const uniquePathsII: Exercise = {
   id: 'unique-paths-ii',
   name: 'Unique Paths II',
+  createdAt: '2026-09-14',
   difficulty: 'medium',
   type: 'Dynamic Programming (Grid)',
   time: '20-25 min',

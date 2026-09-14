@@ -4,6 +4,7 @@ export const twoSum: Exercise = {
   id: 'two-sum',
   validation: [{ level: 'reported', source: 'GoDaddy' }],
   name: 'Two Sum',
+  createdAt: '2026-09-14',
   difficulty: 'easy',
   type: 'Arrays + Hashing',
   time: '15-20 min',

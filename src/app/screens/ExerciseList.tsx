@@ -2,7 +2,7 @@ import { Box, Text, useInput } from 'ink';
 import { useEffect, useState } from 'react';
 import { Select } from '@components/Select';
 import { TextInput } from '@components/TextInput';
-import { DifficultyBadge, KeyHints } from '@components/ui';
+import { DifficultyBadge, formatDate, KeyHints } from '@components/ui';
 import { validationLabel, type Exercise } from '@exercises/types';
 
 interface Props {
@@ -112,6 +112,9 @@ export function ExerciseList({ exercises, onSelect, onBack, onSearchActive }: Pr
               </Box>
               <Box marginTop={1}>
                 <Text dimColor>source: {validationLabel(highlighted)}</Text>
+              </Box>
+              <Box marginTop={1}>
+                <Text dimColor>added: {formatDate(highlighted.createdAt)}</Text>
               </Box>
               <Box marginTop={1}>
                 <Text wrap="wrap" dimColor>

@@ -3,6 +3,7 @@ import type { Exercise } from '@exercises/types';
 export const findPivotIndex: Exercise = {
   id: 'find-pivot-index',
   name: 'Find Pivot Index',
+  createdAt: '2026-09-14',
   difficulty: 'easy',
   type: 'Prefix Sum',
   time: '15-20 min',

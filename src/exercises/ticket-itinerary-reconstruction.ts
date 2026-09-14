@@ -3,6 +3,7 @@ import type { Exercise } from '@exercises/types';
 export const ticketItineraryReconstruction: Exercise = {
   id: 'ticket-itinerary-reconstruction',
   name: 'Ticket Itinerary Reconstruction',
+  createdAt: '2026-09-14',
   difficulty: 'medium',
   type: 'Hash Map + Graph',
   time: '20-25 min',

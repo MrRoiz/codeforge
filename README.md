@@ -210,6 +210,7 @@ library, and it gets better with every real interview problem people add.
    export const myExercise: Exercise = {
      id: 'my-exercise',
      name: 'My Exercise',
+     createdAt: '2026-09-14', // ISO date (YYYY-MM-DD) — shown in the TUI as "added"
      difficulty: 'medium', // 'easy' | 'medium' | 'hard'
      type: 'Arrays + Hashing',
      time: '20-30 min',

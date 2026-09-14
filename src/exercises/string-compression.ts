@@ -4,6 +4,7 @@ export const stringCompression: Exercise = {
   id: 'string-compression',
   validation: [{ level: 'reported', source: 'GoDaddy' }],
   name: 'String Compression',
+  createdAt: '2026-09-14',
   difficulty: 'medium',
   type: 'Two Pointers (in-place)',
   time: '20-25 min',

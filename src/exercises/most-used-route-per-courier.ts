@@ -4,6 +4,7 @@ export const mostUsedRoutePerCourier: Exercise = {
   id: 'most-used-route-per-courier',
   validation: [{ level: 'reported', source: 'EPAM' }],
   name: 'Most Used Route Per Courier',
+  createdAt: '2026-09-14',
   difficulty: 'medium',
   type: 'Hash Map + Counting',
   time: '15-20 min',

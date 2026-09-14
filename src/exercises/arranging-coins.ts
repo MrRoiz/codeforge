@@ -4,6 +4,7 @@ export const arrangingCoins: Exercise = {
   id: 'arranging-coins',
   validation: [{ level: 'reported', source: 'GoDaddy' }],
   name: 'Arranging Coins',
+  createdAt: '2026-09-14',
   difficulty: 'easy',
   type: 'Math + Binary Search',
   time: '15-20 min',

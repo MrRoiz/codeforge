@@ -18,6 +18,8 @@ export interface Validation {
 export interface Exercise {
   id: string;
   name: string;
+  /** ISO date (YYYY-MM-DD) the exercise was added to the app */
+  createdAt: string;
   difficulty: 'easy' | 'medium' | 'hard';
   type: string;
   time: string;

@@ -3,6 +3,7 @@ import type { Exercise } from '@exercises/types';
 export const permutations: Exercise = {
   id: 'permutations',
   name: 'Permutations',
+  createdAt: '2026-09-14',
   difficulty: 'medium',
   type: 'Backtracking',
   time: '20-25 min',

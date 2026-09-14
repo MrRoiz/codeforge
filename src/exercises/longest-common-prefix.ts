@@ -3,6 +3,7 @@ import type { Exercise } from '@exercises/types';
 export const longestCommonPrefix: Exercise = {
   id: 'longest-common-prefix',
   name: 'Longest Common Prefix',
+  createdAt: '2026-09-14',
   difficulty: 'easy',
   type: 'Strings',
   time: '15-20 min',

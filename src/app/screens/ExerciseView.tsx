@@ -1,6 +1,6 @@
 import { Box, Text, useInput } from 'ink';
 import { useState } from 'react';
-import { DifficultyBadge, formatDuration, KeyHints } from '@components/ui';
+import { DifficultyBadge, formatDate, formatDuration, KeyHints } from '@components/ui';
 import { useElapsed } from '@app/useElapsed';
 import { validationLabel, type Exercise } from '@exercises/types';
 
@@ -71,6 +71,7 @@ export function ExerciseView({
           {exercise.type} · {exercise.time}
         </Text>
         <Text dimColor>source: {validationLabel(exercise)}</Text>
+        <Text dimColor>added: {formatDate(exercise.createdAt)}</Text>
       </Box>
 
       <Box marginTop={1} flexDirection="column">

@@ -3,6 +3,7 @@ import type { Exercise } from '@exercises/types';
 export const meetingRoomsII: Exercise = {
   id: 'meeting-rooms-ii',
   name: 'Meeting Rooms II',
+  createdAt: '2026-09-14',
   difficulty: 'medium',
   type: 'Intervals + Heap',
   time: '25-30 min',

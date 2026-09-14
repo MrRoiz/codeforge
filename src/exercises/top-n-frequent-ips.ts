@@ -3,6 +3,7 @@ import type { Exercise } from '@exercises/types';
 export const topNFrequentIps: Exercise = {
   id: 'top-n-frequent-ips',
   name: 'Top N Frequent IPs',
+  createdAt: '2026-09-14',
   difficulty: 'medium',
   type: 'Hash Map + Heap',
   time: '20-25 min',

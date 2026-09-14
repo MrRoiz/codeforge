@@ -4,6 +4,7 @@ export const packageTransportation: Exercise = {
   id: 'package-transportation',
   validation: [{ level: 'reported', source: 'Amazon' }],
   name: 'Package Transportation',
+  createdAt: '2026-09-14',
   difficulty: 'medium',
   type: 'Greedy + Sorting',
   time: '20-25 min',

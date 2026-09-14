@@ -3,6 +3,7 @@ import type { Exercise } from '@exercises/types';
 export const maxConsecutiveOnes: Exercise = {
   id: 'max-consecutive-ones',
   name: 'Max Consecutive Ones',
+  createdAt: '2026-09-14',
   difficulty: 'easy',
   type: 'Arrays',
   time: '15-20 min',

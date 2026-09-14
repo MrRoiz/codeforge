@@ -4,6 +4,7 @@ export const mergeIntervals: Exercise = {
   id: 'merge-intervals',
   validation: [{ level: 'reported', source: 'GoDaddy' }],
   name: 'Merge Intervals',
+  createdAt: '2026-09-14',
   difficulty: 'medium',
   type: 'Arrays + Sorting',
   time: '25-35 min',

@@ -3,6 +3,7 @@ import type { Exercise } from '@exercises/types';
 export const containerWithMostWater: Exercise = {
   id: 'container-with-most-water',
   name: 'Container With Most Water',
+  createdAt: '2026-09-14',
   difficulty: 'medium',
   type: 'Two Pointers',
   time: '20-25 min',
