@@ -163,7 +163,7 @@ export function ExerciseView({
         <KeyHints
           hints={[
             ...(!started ? ([['s', 'start']] as [string, string][]) : []),
-            ['t', started ? 'run tests' : 'start & run tests'],
+            ['t', 'run tests'],
             ...(started ? ([['r', 'restart timer']] as [string, string][]) : []),
             ['c', showTests ? 'hide tests' : 'show tests'],
             ['h', showHints ? 'hide hints' : 'show hints'],

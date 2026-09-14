@@ -73,7 +73,7 @@ export function App() {
     const alreadyStarted = await isStarted(ex, exercisesDir);
     setStarted(alreadyStarted);
     // keep the clock running if we're returning to the same exercise this session
-    setStartedAt((prev) => (exercise?.id === ex.id ? prev : alreadyStarted ? Date.now() : null));
+    setStartedAt((prev) => (exercise?.id === ex.id && prev !== null ? prev : alreadyStarted ? Date.now() : null));
     setScreen('exercise');
   };
 
@@ -97,8 +97,6 @@ export function App() {
 
   const startRun = async (ex: Exercise) => {
     setScreen('running');
-    const startTs = startedAt ?? Date.now();
-    if (startedAt === null) setStartedAt(startTs);
     try {
       await ensureGenerated(ex, exercisesDir); // create on first run, never overwrite
       setStarted(true);
@@ -108,7 +106,8 @@ export function App() {
     }
     const r = await runJest(gymDir(ex.id, exercisesDir));
     setResult(r);
-    setElapsedMs(r.passed ? Date.now() - startTs : null);
+    // running tests never starts or resets the clock; only 's' and 'r' do
+    setElapsedMs(r.passed && startedAt !== null ? Date.now() - startedAt : null);
     setScreen('results');
   };
 
