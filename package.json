@@ -1,6 +1,6 @@
 {
   "name": "@mr_roiz/codeforge",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "TUI tool for practicing live coding interview exercises",
   "main": "dist/index.js",
   "type": "module",

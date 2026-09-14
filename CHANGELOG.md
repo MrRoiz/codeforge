@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/MrRoiz/codeforge/compare/v1.1.0...v1.2.0) (2026-09-14)
+
+
+### Features
+
+* display app version in logo ([016e757](https://github.com/MrRoiz/codeforge/commit/016e7574a93ce313672052c38c28ccddb9ad3ab3))
+
 # [1.1.0](https://github.com/MrRoiz/codeforge/compare/v1.0.0...v1.1.0) (2026-09-14)
 
 
