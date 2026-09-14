@@ -1,5 +1,8 @@
 # ⚒ codeforge
 
+<img width="542" height="125" alt="image" src="https://github.com/user-attachments/assets/f4b83537-d35d-435f-a905-34ad23177475" />
+
+
 > A terminal forge for live-coding interview practice.
 
 In an era where more and more code is written by prompting, a quiet gap is
