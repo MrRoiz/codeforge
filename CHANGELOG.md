@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/MrRoiz/codeforge/compare/v1.0.0...v1.1.0) (2026-09-14)
+
+
+### Features
+
+* **exercises:** add container with most water ([974d6bb](https://github.com/MrRoiz/codeforge/commit/974d6bb0cb0abf4b8e4a5972cb420bf7aaa25f08))
+
 # 1.0.0 (2026-09-14)
 
 
