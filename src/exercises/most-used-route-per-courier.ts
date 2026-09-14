@@ -28,6 +28,7 @@ export const mostUsedRoutePerCourier: Exercise = {
     '0 <= deliveries.length <= 10^5',
     'courier, origin and destination are non-empty strings',
     'origin may equal destination',
+    'routes are directed: (A, B) and (B, A) are different routes',
   ],
   functionSignature:
     'export function mostUsedRoutePerCourier(deliveries: Delivery[]): Record<string, { route: [string, string]; count: number }>',
@@ -92,6 +93,41 @@ export const mostUsedRoutePerCourier: Exercise = {
         A: { route: ['NY', 'LA'], count: 3 },
         B: { route: ['SF', 'NY'], count: 2 },
       },
+    },
+    {
+      // a later route can overtake the first one — proves the counting, not just first-seen
+      input: [
+        [
+          { courier: 'A', origin: 'NY', destination: 'LA' },
+          { courier: 'A', origin: 'SF', destination: 'LA' },
+          { courier: 'A', origin: 'SF', destination: 'LA' },
+        ],
+      ],
+      expected: { A: { route: ['SF', 'LA'], count: 2 } },
+    },
+    {
+      // routes are directed: A->B and B->A are distinct; on a tie the first wins
+      input: [
+        [
+          { courier: 'A', origin: 'NY', destination: 'LA' },
+          { courier: 'A', origin: 'LA', destination: 'NY' },
+        ],
+      ],
+      expected: { A: { route: ['NY', 'LA'], count: 1 } },
+    },
+    {
+      // three routes for one courier; the winner is neither the first nor the last seen
+      input: [
+        [
+          { courier: 'C', origin: 'A', destination: 'B' },
+          { courier: 'C', origin: 'C', destination: 'D' },
+          { courier: 'C', origin: 'A', destination: 'B' },
+          { courier: 'C', origin: 'C', destination: 'D' },
+          { courier: 'C', origin: 'C', destination: 'D' },
+          { courier: 'C', origin: 'B', destination: 'A' },
+        ],
+      ],
+      expected: { C: { route: ['C', 'D'], count: 3 } },
     },
   ],
   stub: `interface Delivery {
