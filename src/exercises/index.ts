@@ -23,6 +23,7 @@ export { perfectSquares } from '@exercises/perfect-squares';
 export { permutations } from '@exercises/permutations';
 export { stringCompression } from '@exercises/string-compression';
 export { topNFrequentIps } from '@exercises/top-n-frequent-ips';
+export { mostUsedRoutePerCourier } from '@exercises/most-used-route-per-courier';
 export { uniquePathsII } from '@exercises/unique-paths-ii';
 export { wordBreak } from '@exercises/word-break';
 export { dependencyGraphOrdering } from '@exercises/dependency-graph-ordering';
@@ -51,6 +52,7 @@ import { perfectSquares } from '@exercises/perfect-squares';
 import { permutations } from '@exercises/permutations';
 import { stringCompression } from '@exercises/string-compression';
 import { topNFrequentIps } from '@exercises/top-n-frequent-ips';
+import { mostUsedRoutePerCourier } from '@exercises/most-used-route-per-courier';
 import { uniquePathsII } from '@exercises/unique-paths-ii';
 import { wordBreak } from '@exercises/word-break';
 import { dependencyGraphOrdering } from '@exercises/dependency-graph-ordering';
@@ -82,6 +84,7 @@ export const exercises: Exercise[] = [
   permutations,
   stringCompression,
   topNFrequentIps,
+  mostUsedRoutePerCourier,
   uniquePathsII,
   wordBreak,
   dependencyGraphOrdering,
