@@ -29,6 +29,7 @@ export { wordBreak } from '@exercises/word-break';
 export { dependencyGraphOrdering } from '@exercises/dependency-graph-ordering';
 export { ticketItineraryReconstruction } from '@exercises/ticket-itinerary-reconstruction';
 export { lruCache } from '@exercises/lru-cache';
+export { packageTransportation } from '@exercises/package-transportation';
 
 import { twoSum } from '@exercises/two-sum';
 import { validParentheses } from '@exercises/valid-parentheses';
@@ -58,6 +59,7 @@ import { wordBreak } from '@exercises/word-break';
 import { dependencyGraphOrdering } from '@exercises/dependency-graph-ordering';
 import { ticketItineraryReconstruction } from '@exercises/ticket-itinerary-reconstruction';
 import { lruCache } from '@exercises/lru-cache';
+import { packageTransportation } from '@exercises/package-transportation';
 import type { Exercise } from '@exercises/types';
 
 export const exercises: Exercise[] = [
@@ -90,6 +92,7 @@ export const exercises: Exercise[] = [
   dependencyGraphOrdering,
   ticketItineraryReconstruction,
   lruCache,
+  packageTransportation,
   // hard
   minimumWindowSubstring,
 ];
