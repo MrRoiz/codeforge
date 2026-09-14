@@ -32,6 +32,8 @@ export function App() {
   const [exercise, setExercise] = useState<Exercise | null>(null);
   const [paths, setPaths] = useState<GeneratedPaths | null>(null);
   const [started, setStarted] = useState(false);
+  const [startedAt, setStartedAt] = useState<number | null>(null);
+  const [elapsedMs, setElapsedMs] = useState<number | null>(null);
   const [result, setResult] = useState<TestRunResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -67,7 +69,11 @@ export function App() {
     setExercise(ex);
     setPaths(exercisePaths(ex, exercisesDir));
     setResult(null);
-    setStarted(await isStarted(ex, exercisesDir));
+    setElapsedMs(null);
+    const alreadyStarted = await isStarted(ex, exercisesDir);
+    setStarted(alreadyStarted);
+    // keep the clock running if we're returning to the same exercise this session
+    setStartedAt((prev) => (exercise?.id === ex.id ? prev : alreadyStarted ? Date.now() : null));
     setScreen('exercise');
   };
 
@@ -77,14 +83,22 @@ export function App() {
       const generated = await ensureGenerated(ex, exercisesDir);
       setPaths(generated);
       setStarted(true);
+      setStartedAt((prev) => prev ?? Date.now());
       setError(null);
     } catch (err) {
       setError(String(err));
     }
   };
 
+  const restartTimer = () => {
+    setStartedAt(Date.now());
+    setElapsedMs(null);
+  };
+
   const startRun = async (ex: Exercise) => {
     setScreen('running');
+    const startTs = startedAt ?? Date.now();
+    if (startedAt === null) setStartedAt(startTs);
     try {
       await ensureGenerated(ex, exercisesDir); // create on first run, never overwrite
       setStarted(true);
@@ -94,6 +108,7 @@ export function App() {
     }
     const r = await runJest(gymDir(ex.id, exercisesDir));
     setResult(r);
+    setElapsedMs(r.passed ? Date.now() - startTs : null);
     setScreen('results');
   };
 
@@ -167,8 +182,10 @@ export function App() {
           exerciseFile={paths.exerciseFile}
           testFile={paths.testFile}
           started={started}
+          startedAt={startedAt}
           onStart={() => void startExercise(exercise)}
           onRun={() => void startRun(exercise)}
+          onRestartTimer={restartTimer}
           onBack={() => setScreen('list')}
         />
       ) : null}
@@ -179,6 +196,7 @@ export function App() {
         <ResultsView
           exercise={exercise}
           result={result}
+          elapsedMs={elapsedMs}
           onRerun={() => void startRun(exercise)}
           onBack={() => setScreen('exercise')}
         />

@@ -1,11 +1,12 @@
 import { Box, Text, useInput } from 'ink';
-import { KeyHints } from '@components/ui';
+import { formatDuration, KeyHints } from '@components/ui';
 import type { TestRunResult } from '@utils/runTests';
 import type { Exercise } from '@exercises/types';
 
 interface Props {
   exercise: Exercise;
   result: TestRunResult;
+  elapsedMs?: number | null;
   onRerun: () => void;
   onBack: () => void;
 }
@@ -28,7 +29,7 @@ function cleanMessage(msg: string): string[] {
   return chosen.slice(0, 4);
 }
 
-export function ResultsView({ exercise, result, onRerun, onBack }: Props) {
+export function ResultsView({ exercise, result, elapsedMs, onRerun, onBack }: Props) {
   useInput((input, key) => {
     if (key.escape) onBack();
     if (input === 'r') onRerun();
@@ -63,6 +64,12 @@ export function ResultsView({ exercise, result, onRerun, onBack }: Props) {
           </Text>
         </Text>
       </Box>
+
+      {ok && elapsedMs != null ? (
+        <Box marginTop={1}>
+          <Text color="cyanBright">⏱  solved in {formatDuration(elapsedMs)}</Text>
+        </Box>
+      ) : null}
 
       <Box marginTop={1} flexDirection="column">
         {result.rawError ? (

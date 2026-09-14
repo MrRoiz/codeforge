@@ -1,6 +1,7 @@
 import { Box, Text, useInput } from 'ink';
 import { useState } from 'react';
-import { DifficultyBadge, KeyHints } from '@components/ui';
+import { DifficultyBadge, formatDuration, KeyHints } from '@components/ui';
+import { useElapsed } from '@app/useElapsed';
 import { validationLabel, type Exercise } from '@exercises/types';
 
 interface Props {
@@ -8,8 +9,10 @@ interface Props {
   exerciseFile: string;
   testFile: string;
   started: boolean;
+  startedAt: number | null;
   onStart: () => void;
   onRun: () => void;
+  onRestartTimer: () => void;
   onBack: () => void;
 }
 
@@ -26,9 +29,20 @@ function MultiLine({ label, value, color }: { label: string; value: string; colo
   );
 }
 
-export function ExerciseView({ exercise, exerciseFile, testFile, started, onStart, onRun, onBack }: Props) {
+export function ExerciseView({
+  exercise,
+  exerciseFile,
+  testFile,
+  started,
+  startedAt,
+  onStart,
+  onRun,
+  onRestartTimer,
+  onBack,
+}: Props) {
   const [showHints, setShowHints] = useState(false);
   const [showTests, setShowTests] = useState(false);
+  const elapsed = useElapsed(startedAt);
 
   useInput((input, key) => {
     if (key.escape) {
@@ -37,6 +51,7 @@ export function ExerciseView({ exercise, exerciseFile, testFile, started, onStar
     }
     if (input === 's') onStart();
     if (input === 't') onRun();
+    if (input === 'r' && started) onRestartTimer();
     if (input === 'h') setShowHints((v) => !v);
     if (input === 'c') setShowTests((v) => !v);
   });
@@ -131,6 +146,7 @@ export function ExerciseView({ exercise, exerciseFile, testFile, started, onStar
       <Box marginTop={1} flexDirection="column" borderStyle="round" borderColor={started ? 'gray' : 'yellowBright'} paddingX={1}>
         {started ? (
           <>
+            {startedAt !== null ? <Text color="cyanBright">⏱  elapsed → {formatDuration(elapsed)}</Text> : null}
             <Text dimColor>Solve it in your editor of choice — codeforge only checks the output.</Text>
             <Text color="cyanBright">solution → {exerciseFile}</Text>
             <Text dimColor>tests    → {testFile} (auto-generated)</Text>
@@ -148,6 +164,7 @@ export function ExerciseView({ exercise, exerciseFile, testFile, started, onStar
           hints={[
             ...(!started ? ([['s', 'start']] as [string, string][]) : []),
             ['t', started ? 'run tests' : 'start & run tests'],
+            ...(started ? ([['r', 'restart timer']] as [string, string][]) : []),
             ['c', showTests ? 'hide tests' : 'show tests'],
             ['h', showHints ? 'hide hints' : 'show hints'],
             ['esc', 'back'],
