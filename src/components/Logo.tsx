@@ -27,7 +27,7 @@ export function Logo() {
   }, []);
 
   return (
-    <Box flexDirection="column" alignItems="center">
+    <Box flexDirection="column" alignItems="center" flexShrink={0}>
       {LOGO_LINES.map((line, i) => (
         <Text key={i} color={i < 2 ? 'cyanBright' : i < 4 ? 'cyan' : 'blueBright'}>
           {line}

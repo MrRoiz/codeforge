@@ -11,7 +11,7 @@ export function Layout({ children }: { children: ReactNode }) {
   return (
     <Box flexDirection="column" width={columns} height={rows} paddingY={1}>
       <Logo />
-      <Box flexDirection="column" flexGrow={1} marginTop={3}>
+      <Box flexDirection="column" flexGrow={1} flexShrink={1} minHeight={0} marginTop={3}>
         {children}
       </Box>
     </Box>

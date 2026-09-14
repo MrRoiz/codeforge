@@ -1,7 +1,9 @@
 import { Box, Text, useInput } from 'ink';
 import { useState } from 'react';
 import { DifficultyBadge, formatDate, formatDuration, KeyHints } from '@components/ui';
+import { ScrollView } from '@components/ScrollView';
 import { useElapsed } from '@app/useElapsed';
+import { formatExample } from '@utils/format';
 import { validationLabel, type Exercise } from '@exercises/types';
 
 interface Props {
@@ -59,8 +61,15 @@ export function ExerciseView({
   const hasCustomTests = Boolean(exercise.testFileBody);
 
   return (
-    <Box flexDirection="column" paddingLeft={2} paddingRight={2}>
-      <Box borderStyle="double" borderColor="cyan" paddingX={1} flexDirection="column">
+    <Box flexDirection="column" flexGrow={1} flexShrink={1} minHeight={0} paddingLeft={2} paddingRight={2}>
+      <Box
+        borderStyle="double"
+        borderColor="cyan"
+        paddingX={1}
+        flexDirection="column"
+        flexShrink={0}
+        marginBottom={1}
+      >
         <Box justifyContent="space-between">
           <Text bold color="whiteBright">
             {exercise.name}
@@ -74,77 +83,105 @@ export function ExerciseView({
         <Text dimColor>added: {formatDate(exercise.createdAt)}</Text>
       </Box>
 
-      <Box marginTop={1} flexDirection="column">
-        <Text wrap="wrap">{exercise.description}</Text>
-      </Box>
-
-      <Box marginTop={1} flexDirection="column">
-        <Text color="yellowBright" bold>
-          EXAMPLES
-        </Text>
-        <Box flexDirection="column" marginLeft={1}>
-          {exercise.examples.map((ex, i) => (
-            <Box key={i} flexDirection="column" marginTop={i === 0 ? 0 : 1}>
-              <MultiLine label="Input:  " value={ex.input} color="greenBright" />
-              <MultiLine label="Output: " value={ex.output} color="greenBright" />
-              {ex.explanation ? <MultiLine label="Note:   " value={ex.explanation} /> : null}
-            </Box>
-          ))}
+      <ScrollView isActive>
+        <Box flexDirection="column">
+          <Text wrap="wrap">{exercise.description}</Text>
         </Box>
-      </Box>
 
-      <Box marginTop={1} flexDirection="column">
-        <Text color="yellowBright" bold>
-          TEST CASES {showTests ? '' : `(${exercise.tests.length}) — press c to reveal`}
-        </Text>
-        {showTests ? (
+        <Box marginTop={1} flexDirection="column">
+          <Text color="yellowBright" bold>
+            EXAMPLES
+          </Text>
           <Box flexDirection="column" marginLeft={1}>
-            {hasCustomTests ? (
-              <Text dimColor>This exercise is graded by a custom validator that accepts any correct answer.</Text>
-            ) : (
-              exercise.tests.map((t, i) => (
-                <Text key={i} wrap="wrap">
-                  <Text dimColor>{`${i + 1}. `}</Text>
-                  <Text color="greenBright">{JSON.stringify(t.input)}</Text>
-                  <Text dimColor> → </Text>
-                  <Text color="cyanBright">{JSON.stringify(t.expected)}</Text>
-                  {t.sorted ? <Text dimColor> (order-insensitive)</Text> : null}
-                </Text>
-              ))
-            )}
+            {exercise.examples.map((ex, i) => (
+              <Box key={i} flexDirection="column">
+                {i > 0 ? (
+                  <Box
+                    borderStyle="single"
+                    borderColor="gray"
+                    borderTop
+                    borderBottom={false}
+                    borderLeft={false}
+                    borderRight={false}
+                    marginTop={1}
+                    marginBottom={1}
+                  />
+                ) : null}
+                <Box flexDirection="row" alignItems="flex-start">
+                  <Box flexDirection="column" flexGrow={1} flexBasis={0} flexShrink={1} marginRight={2}>
+                    <MultiLine label="Input:  " value={formatExample(ex.input)} color="greenBright" />
+                  </Box>
+                  <Box flexDirection="column" flexGrow={1} flexBasis={0} flexShrink={1}>
+                    <MultiLine label="Output: " value={formatExample(ex.output)} color="greenBright" />
+                  </Box>
+                </Box>
+                {ex.explanation ? <MultiLine label="Note:   " value={ex.explanation} /> : null}
+              </Box>
+            ))}
           </Box>
-        ) : null}
-      </Box>
-
-      <Box marginTop={1} flexDirection="column">
-        <Text color="yellowBright" bold>
-          CONSTRAINTS
-        </Text>
-        <Box flexDirection="column" marginLeft={1}>
-          {exercise.constraints.map((c, i) => (
-            <Text key={i} dimColor>
-              • {c}
-            </Text>
-          ))}
         </Box>
-      </Box>
 
-      <Box marginTop={1} flexDirection="column">
-        <Text color="yellowBright" bold>
-          HINTS {showHints ? '' : '(hidden — press h)'}
-        </Text>
-        {showHints ? (
+        <Box marginTop={1} flexDirection="column">
+          <Text color="yellowBright" bold>
+            TEST CASES {showTests ? '' : `(${exercise.tests.length}) — press c to reveal`}
+          </Text>
+          {showTests ? (
+            <Box flexDirection="column" marginLeft={1}>
+              {hasCustomTests ? (
+                <Text dimColor>This exercise is graded by a custom validator that accepts any correct answer.</Text>
+              ) : (
+                exercise.tests.map((t, i) => (
+                  <Text key={i} wrap="wrap">
+                    <Text dimColor>{`${i + 1}. `}</Text>
+                    <Text color="greenBright">{JSON.stringify(t.input)}</Text>
+                    <Text dimColor> → </Text>
+                    <Text color="cyanBright">{JSON.stringify(t.expected)}</Text>
+                    {t.sorted ? <Text dimColor> (order-insensitive)</Text> : null}
+                  </Text>
+                ))
+              )}
+            </Box>
+          ) : null}
+        </Box>
+
+        <Box marginTop={1} flexDirection="column">
+          <Text color="yellowBright" bold>
+            CONSTRAINTS
+          </Text>
           <Box flexDirection="column" marginLeft={1}>
-            {exercise.hints.map((h, i) => (
-              <Text key={i} color="magentaBright">
-                {i + 1}. {h}
+            {exercise.constraints.map((c, i) => (
+              <Text key={i} dimColor>
+                • {c}
               </Text>
             ))}
           </Box>
-        ) : null}
-      </Box>
+        </Box>
 
-      <Box marginTop={1} flexDirection="column" borderStyle="round" borderColor={started ? 'gray' : 'yellowBright'} paddingX={1}>
+        <Box marginTop={1} flexDirection="column">
+          <Text color="yellowBright" bold>
+            HINTS {showHints ? '' : '(hidden — press h)'}
+          </Text>
+          {showHints ? (
+            <Box flexDirection="column" marginLeft={1}>
+              {exercise.hints.map((h, i) => (
+                <Text key={i} color="magentaBright">
+                  {i + 1}. {h}
+                </Text>
+              ))}
+            </Box>
+          ) : null}
+        </Box>
+
+      </ScrollView>
+
+      <Box
+        marginTop={1}
+        flexDirection="column"
+        borderStyle="round"
+        borderColor={started ? 'gray' : 'yellowBright'}
+        paddingX={1}
+        flexShrink={0}
+      >
         {started ? (
           <>
             {startedAt !== null ? <Text color="cyanBright">⏱  elapsed → {formatDuration(elapsed)}</Text> : null}
@@ -160,7 +197,7 @@ export function ExerciseView({
         )}
       </Box>
 
-      <Box marginTop={1}>
+      <Box marginTop={1} flexShrink={0}>
         <KeyHints
           hints={[
             ...(!started ? ([['s', 'start']] as [string, string][]) : []),
@@ -168,6 +205,7 @@ export function ExerciseView({
             ...(started ? ([['r', 'restart timer']] as [string, string][]) : []),
             ['c', showTests ? 'hide tests' : 'show tests'],
             ['h', showHints ? 'hide hints' : 'show hints'],
+            ['j/k', 'scroll'],
             ['esc', 'back'],
             ['q', 'quit'],
           ]}
