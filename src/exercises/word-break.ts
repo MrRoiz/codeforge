@@ -7,7 +7,7 @@ export const wordBreak: Exercise = {
   type: 'Dynamic Programming (Strings)',
   time: '25-30 min',
   description:
-    'Given a string `s` and a dictionary of strings `wordDict`, return true if `s` can be segmented into a space-separated sequence of one or more dictionary words. The same word may be reused.',
+    'Given a string `s` and a dictionary of strings `wordDict`, return true if `s` can be built by concatenating one or more dictionary words back-to-back. In other words, split `s` at any positions so that every resulting piece is in `wordDict`. Words may be reused, and the pieces do not have to align with natural spaces or have any particular length — e.g. "wordbreak" is valid when the dictionary contains "wor" and "dbreak".',
   examples: [
     { input: 's = "leetcode", wordDict = ["leet","code"]', output: 'true' },
     { input: 's = "applepenapple", wordDict = ["apple","pen"]', output: 'true' },
