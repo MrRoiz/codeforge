@@ -1,3 +1,11 @@
+# [1.6.0](https://github.com/MrRoiz/codeforge/compare/v1.5.1...v1.6.0) (2026-09-14)
+
+
+### Features
+
+* add package transportation exercise ([27c3fc7](https://github.com/MrRoiz/codeforge/commit/27c3fc75241e30172ab3b730df90f973867d8372))
+* show when each exercise was added ([ef1b19b](https://github.com/MrRoiz/codeforge/commit/ef1b19bf5f927904e46d30d9aea0c12c3c868552))
+
 ## [1.5.1](https://github.com/MrRoiz/codeforge/compare/v1.5.0...v1.5.1) (2026-09-14)
 
 
