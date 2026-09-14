@@ -1,5 +1,5 @@
 {
-  "name": "codeforge",
+  "name": "@mr_roiz/codeforge",
   "version": "1.0.0",
   "description": "TUI tool for practicing live coding interview exercises",
   "main": "dist/index.js",
@@ -10,6 +10,9 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MrRoiz/codeforge.git"

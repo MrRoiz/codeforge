@@ -328,8 +328,12 @@ npm stage reject <stage-id>     # discard it
 ```
 
 > **Bootstrap:** staged publishing can only target a package that already
-> exists. The very first version (`codeforge@1.0.0`) must be published directly
-> with `npm publish` (2FA) before the automated staging flow can take over.
+> exists. The first version (`@mr_roiz/codeforge@1.0.0`) must be published
+> directly with 2FA before the automated staging flow can take over:
+>
+> ```bash
+> npm publish --access public
+> ```
 
 To preview a release locally (no publish, requires a `GITHUB_TOKEN`):
 
