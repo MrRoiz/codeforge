@@ -7,14 +7,28 @@
   "bin": {
     "codeforge": "./dist/index.js"
   },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MrRoiz/codeforge.git"
+  },
+  "homepage": "https://github.com/MrRoiz/codeforge#readme",
+  "bugs": {
+    "url": "https://github.com/MrRoiz/codeforge/issues"
+  },
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit",
     "dev": "tsx src/index.tsx",
-    "prepare": "tsup"
+    "prepare": "tsup",
+    "release": "semantic-release"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["esbuild"]
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
   },
   "keywords": [
     "tui",
@@ -25,7 +39,7 @@
     "leetcode"
   ],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "packageManager": "pnpm@10.33.4",
   "dependencies": {
     "ink": "^7.0.0",
@@ -34,8 +48,16 @@
     "ts-jest": "^29.4.0"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^7.0.0",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/exec": "^7.1.0",
+    "@semantic-release/git": "^11.0.1",
+    "@semantic-release/github": "^12.0.9",
+    "@semantic-release/npm": "^13.1.5",
+    "@semantic-release/release-notes-generator": "^14.1.1",
     "@types/node": "^24.0.0",
     "@types/react": "^19.0.0",
+    "semantic-release": "^25.0.9",
     "tsup": "^8.5.1",
     "tsx": "^4.20.0",
     "typescript": "^5.9.0"

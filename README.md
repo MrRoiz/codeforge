@@ -296,6 +296,47 @@ solution, and confirm the suite goes green (and red when you break it).
   (e.g. "seen in a senior backend live session") and confirm you verified both
   a passing and a failing run.
 
+### Releases
+
+Releases are automated with [semantic-release](https://semantic-release.gitbook.io)
+on every push to `main`. Commit messages must follow
+[Conventional Commits](https://www.conventionalcommits.org); the next version is
+derived from them:
+
+| Commit                                   | Release |
+| ---------------------------------------- | ------- |
+| `fix: …`, `perf: …`, `refactor: …`, etc. | patch   |
+| `feat: …`                                | minor   |
+| `feat!: …` or a `BREAKING CHANGE:` footer | major   |
+
+semantic-release then bumps `package.json`, updates `CHANGELOG.md`, and creates
+the git tag and GitHub Release. Instead of publishing directly, it **stages** the
+package on npm (`npm stage publish`); a maintainer must approve the staged
+version with 2FA before it becomes public.
+
+The workflow lives in `.github/workflows/release.yml` and uses an `NPM_TOKEN`
+repository secret (a granular access token **without** 2FA bypass — it can
+stage, not publish). It needs npm CLI ≥ 11.15.0, which the workflow installs.
+
+Approve or reject a staged version (2FA required):
+
+```bash
+npm stage list                  # find the stage id
+npm stage view <stage-id>       # inspect
+npm stage approve <stage-id>    # publish it
+npm stage reject <stage-id>     # discard it
+```
+
+> **Bootstrap:** staged publishing can only target a package that already
+> exists. The very first version (`codeforge@1.0.0`) must be published directly
+> with `npm publish` (2FA) before the automated staging flow can take over.
+
+To preview a release locally (no publish, requires a `GITHUB_TOKEN`):
+
+```bash
+pnpm release --dry-run
+```
+
 ---
 
 Built because shipping features and passing interviews are different skills.
