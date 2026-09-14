@@ -1,8 +1,7 @@
 import pkg from '../../package.json' with { type: 'json' };
-import { loadConfig, saveConfig } from '@utils/config';
+import { loadConfig } from '@utils/config';
 
 const REGISTRY_URL = 'https://registry.npmjs.org/@mr_roiz%2Fcodeforge/latest';
-const CHECK_INTERVAL_MS = 1000 * 60 * 60 * 24;
 const TIMEOUT_MS = 3000;
 
 export interface UpdateInfo {
@@ -10,30 +9,26 @@ export interface UpdateInfo {
   latest: string;
 }
 
+/** Compare two semver strings numerically: <0, 0, >0. Handles x.y.z segments. */
+function compareVersions(a: string, b: string): number {
+  const pa = a.split('.').map((n) => Number(n) || 0);
+  const pb = b.split('.').map((n) => Number(n) || 0);
+  const len = Math.max(pa.length, pb.length);
+  for (let i = 0; i < len; i++) {
+    const x = pa[i] ?? 0;
+    const y = pb[i] ?? 0;
+    if (x !== y) return x - y;
+  }
+  return 0;
+}
+
 /**
- * Check the npm registry for a newer release. Silent and never throws — callers
- * fire this without awaiting. The result is cached in the config, so a known
- * update keeps showing on every run between checks. Returns null when opted out,
- * throttled with no cached update, offline, or already on the latest version.
+ * Compare the installed version (package.json) against the latest published on
+ * npm. Silent and never throws — callers fire this without awaiting. Returns
+ * null when opted out, offline, or already on the latest version.
  */
 export async function checkForUpdates(): Promise<UpdateInfo | null> {
-  const config = loadConfig();
-  if (config.updateCheck === false) return null;
-  const now = Date.now();
-
-  // Only skip the network when we already know the latest version; a stale
-  // lastUpdateCheck without a cached result must never hide a real update.
-  const hasCached = config.lastKnownLatest !== undefined;
-  if (
-    hasCached &&
-    config.lastUpdateCheck !== undefined &&
-    now - config.lastUpdateCheck < CHECK_INTERVAL_MS
-  ) {
-    if (config.lastKnownLatest !== pkg.version) {
-      return { current: pkg.version, latest: config.lastKnownLatest! };
-    }
-    return null;
-  }
+  if (loadConfig().updateCheck === false) return null;
 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
@@ -42,8 +37,7 @@ export async function checkForUpdates(): Promise<UpdateInfo | null> {
     if (!res.ok) return null;
     const data = (await res.json()) as { version?: string };
     if (!data.version) return null;
-    saveConfig({ ...config, lastUpdateCheck: now, lastKnownLatest: data.version });
-    if (data.version === pkg.version) return null;
+    if (compareVersions(data.version, pkg.version) <= 0) return null;
     return { current: pkg.version, latest: data.version };
   } catch {
     return null;
