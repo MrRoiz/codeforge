@@ -1,6 +1,6 @@
 # ⚒ codeforge
 
-> A terminal gym for live-coding interview practice.
+> A terminal forge for live-coding interview practice.
 
 In an era where more and more code is written by prompting, a quiet gap is
 growing: the ability to sit in front of a blank function, under a timer, and
@@ -218,7 +218,7 @@ automatically.
 
 - **Real interview relevance over novelty.** Prefer problems actually seen in
   live coding rounds (HackerRank, live sessions) — especially senior backend
-  flavors. This is a gym for interviews, not a puzzle dump.
+  flavors. This is a forge for interviews, not a puzzle dump.
 - **Correct, unambiguous tests.** Every case must have exactly one valid
   answer (or mark `sorted: true` when order doesn't matter). Add edge cases:
   empty input, duplicates, negatives, boundaries.
