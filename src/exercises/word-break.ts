@@ -7,11 +7,12 @@ export const wordBreak: Exercise = {
   type: 'Dynamic Programming (Strings)',
   time: '25-30 min',
   description:
-    'Given a string `s` and a dictionary of strings `wordDict`, return true if `s` can be built by concatenating one or more dictionary words back-to-back. In other words, split `s` at any positions so that every resulting piece is in `wordDict`. Words may be reused, and the pieces do not have to align with natural spaces or have any particular length — e.g. "wordbreak" is valid when the dictionary contains "wor" and "dbreak".',
+    'Given a string `s` and a dictionary of strings `wordDict`, return true if `s` can be segmented into a sequence of one or more dictionary words that together cover the entire string with nothing left over. You may split `s` at any positions; every resulting piece must be a word in `wordDict`. Words may be reused any number of times, and pieces can have any length — they do not need to align with natural spaces. For example, "wordbreak" is valid when the dictionary contains "wor" and "dbreak".',
   examples: [
-    { input: 's = "leetcode", wordDict = ["leet","code"]', output: 'true' },
-    { input: 's = "applepenapple", wordDict = ["apple","pen"]', output: 'true' },
-    { input: 's = "catsandog", wordDict = ["cats","dog","sand","and","cat"]', output: 'false' },
+    { input: 's = "leetcode", wordDict = ["leet","code"]', output: 'true', explanation: '"leet" + "code" covers the whole string' },
+    { input: 's = "applepenapple", wordDict = ["apple","pen"]', output: 'true', explanation: '"apple" + "pen" + "apple" — words may be reused' },
+    { input: 's = "catsandog", wordDict = ["cats","dog","sand","and","cat"]', output: 'false', explanation: 'No split covers the whole string, e.g. "cat" + "sand" + "og" leaves "og", which is not in the dictionary' },
+    { input: 's = "cars", wordDict = ["car","ca","rs"]', output: 'true', explanation: '"car" + "s" fails ("s" is not a word), but "ca" + "rs" covers the whole string — remember to try all splits, not just the first match' },
   ],
   constraints: [
     '1 <= s.length <= 300',

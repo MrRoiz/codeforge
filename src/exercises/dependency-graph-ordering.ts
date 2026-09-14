@@ -7,7 +7,7 @@ export const dependencyGraphOrdering: Exercise = {
   type: 'Topological Sort',
   time: '25-30 min',
   description:
-    'Given a number of tasks and a list of dependencies, return a valid execution order. dependencies[i] = [a, b] means task `a` depends on task `b`, so `b` must run before `a`. If there is a circular dependency, return an empty list. Any valid order is accepted.',
+    'Given a number of tasks and a list of dependencies, return a valid execution order. Tasks are numbered from 0 to tasks - 1. dependencies[i] = [a, b] means task `a` depends on task `b`, so `b` must run before `a`. If there is a circular dependency, return an empty list. Any valid order is accepted.',
   examples: [
     { input: 'tasks = 4, dependencies = [[1,0],[2,1],[3,2]]', output: '[0,1,2,3]' },
     { input: 'tasks = 4, dependencies = [[1,0],[2,1],[0,2]]', output: '[]', explanation: '0 -> 2 -> 1 -> 0 is a cycle' },

@@ -7,11 +7,12 @@ export const lruCache: Exercise = {
   type: 'Design / Hash Map + Linked List',
   time: '25-30 min',
   description:
-    'Design a Least Recently Used (LRU) cache. Implement the class `LRUCache`: the constructor takes a positive capacity; `get(key)` returns the value or -1; `put(key, value)` inserts or updates and evicts the least recently used entry when over capacity. Both operations must run in O(1) average time.',
+    'Design a Least Recently Used (LRU) cache. Implement the class `LRUCache`: the constructor takes a positive capacity; `get(key)` returns the value or -1; `put(key, value)` inserts or updates an entry. Both `get` and `put` mark the accessed key as the most recently used, and a `put` that exceeds capacity evicts the least recently used entry. Both operations must run in O(1) average time.',
   examples: [
     {
-      input: 'capacity = 2; put(1,1); put(2,2); get(1) -> 1; put(3,3); get(2) -> -1',
-      output: 'evicts key 2, then key 1 on the next put',
+      input: 'capacity = 2; put(1,1); put(2,2); get(1) -> 1; put(3,3); get(2)',
+      output: 'get(2) -> -1',
+      explanation: 'put(3,3) fills the cache to capacity and evicts key 2, the least recently used entry.',
     },
   ],
   constraints: [
