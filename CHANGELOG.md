@@ -1,3 +1,11 @@
+# [1.7.0](https://github.com/MrRoiz/codeforge/compare/v1.6.0...v1.7.0) (2026-09-14)
+
+
+### Features
+
+* pretty-print JSON literals in generated exercise headers ([1c5a3ca](https://github.com/MrRoiz/codeforge/commit/1c5a3ca9c7e38088506b8e0ef1d4062942de2aec))
+* scroll overflowing exercise and result views ([007101f](https://github.com/MrRoiz/codeforge/commit/007101fcb83174c09f0d110c1d142657770d0848))
+
 # [1.6.0](https://github.com/MrRoiz/codeforge/compare/v1.5.1...v1.6.0) (2026-09-14)
 
 
