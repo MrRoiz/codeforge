@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import * as path from 'node:path';
 import { validationLabel, type Exercise } from '@exercises/types';
+import { formatExample } from '@utils/format';
 
 export interface GeneratedPaths {
   dir: string;
@@ -82,7 +83,7 @@ function commentBlock(label: string, value: string, pad = ' *   '): string {
 function renderExerciseFile(exercise: Exercise): string {
   const examples = exercise.examples
     .map((e) => {
-      const lines = [commentBlock('Input:  ', e.input), commentBlock('Output: ', e.output)];
+      const lines = [commentBlock('Input:  ', formatExample(e.input)), commentBlock('Output: ', formatExample(e.output))];
       if (e.explanation) lines.push(commentBlock('Note:   ', e.explanation));
       return lines.join('\n');
     })
