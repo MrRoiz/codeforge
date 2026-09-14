@@ -32,7 +32,7 @@ function cleanMessage(msg: string): string[] {
 export function ResultsView({ exercise, result, elapsedMs, onRerun, onBack }: Props) {
   useInput((input, key) => {
     if (key.escape) onBack();
-    if (input === 'r') onRerun();
+    if (input === 't') onRerun();
   });
 
   const ok = result.passed;
@@ -98,7 +98,7 @@ export function ResultsView({ exercise, result, elapsedMs, onRerun, onBack }: Pr
       <Box marginTop={1}>
         <KeyHints
           hints={[
-            ['r', 'run again'],
+            ['t', 'run again'],
             ['esc', 'back'],
             ['q', 'quit'],
           ]}
