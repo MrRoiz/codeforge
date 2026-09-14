@@ -36,13 +36,15 @@ export function App() {
   const [elapsedMs, setElapsedMs] = useState<number | null>(null);
   const [result, setResult] = useState<TestRunResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [searchActive, setSearchActive] = useState(false);
 
-  // global quit — disabled while typing in settings so 'q' is a normal character
+  // global quit — disabled while typing in settings or searching the exercise
+  // list so 'q' is a normal character
   useInput(
     (input) => {
       if (input === 'q') exit();
     },
-    { isActive: screen !== 'settings' },
+    { isActive: screen !== 'settings' && !searchActive },
   );
 
   const exercisesDir = useMemo(() => resolveExercisesDir(config), [config]);
@@ -172,6 +174,7 @@ export function App() {
           exercises={filtered}
           onSelect={(ex) => void openExercise(ex)}
           onBack={() => setScreen('difficulty')}
+          onSearchActive={setSearchActive}
         />
       ) : null}
 

@@ -42,6 +42,8 @@ export function Select<T>({
       const prev = lastInput.current;
       lastInput.current = input;
 
+      if (items.length === 0) return;
+
       if (key.upArrow || input === 'k') {
         setIndex((i) => {
           let next = i;
