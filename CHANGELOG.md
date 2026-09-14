@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/MrRoiz/codeforge/compare/v1.5.0...v1.5.1) (2026-09-14)
+
+
+### Bug Fixes
+
+* compare installed version against published npm version ([22c13c0](https://github.com/MrRoiz/codeforge/commit/22c13c0d9b303e8df8556c90b389a34576974bbe))
+
 # [1.5.0](https://github.com/MrRoiz/codeforge/compare/v1.4.0...v1.5.0) (2026-09-14)
 
 
