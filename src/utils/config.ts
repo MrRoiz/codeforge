@@ -4,6 +4,12 @@ import path from 'node:path';
 
 export interface Config {
   exercisesDir?: string;
+  /** ms timestamp of the last successful update check */
+  lastUpdateCheck?: number;
+  /** latest version seen by the last update check (for cached notifications) */
+  lastKnownLatest?: string;
+  /** set to false to disable the version-update check */
+  updateCheck?: boolean;
 }
 
 // respects XDG on Linux, %APPDATA% on Windows, ~/.config elsewhere

@@ -5,6 +5,7 @@ import { exercises, getRandomExercise } from '@exercises';
 import type { Exercise } from '@exercises/types';
 import { ensureGenerated, exercisePaths, gymDir, isStarted, type GeneratedPaths } from '@utils/generate';
 import { runJest, type TestRunResult } from '@utils/runTests';
+import { openRepo } from '@utils/open';
 import {
   defaultExercisesDir,
   loadConfig,
@@ -38,11 +39,12 @@ export function App() {
   const [error, setError] = useState<string | null>(null);
   const [searchActive, setSearchActive] = useState(false);
 
-  // global quit — disabled while typing in settings or searching the exercise
-  // list so 'q' is a normal character
+  // global keys — disabled while typing in settings or searching the exercise
+  // list so 'q' and 'o' are normal characters
   useInput(
     (input) => {
       if (input === 'q') exit();
+      if (input === 'o') openRepo();
     },
     { isActive: screen !== 'settings' && !searchActive },
   );
