@@ -1,3 +1,11 @@
+# [1.3.0](https://github.com/MrRoiz/codeforge/compare/v1.2.0...v1.3.0) (2026-09-14)
+
+
+### Features
+
+* add most used route per courier exercise ([c8c5635](https://github.com/MrRoiz/codeforge/commit/c8c5635a6607fe32fddf90a3c117e9f2fd4b4751))
+* add vim-style navigation to menus ([5d88718](https://github.com/MrRoiz/codeforge/commit/5d887185b2a0e39ab97d043ed7d4980243fb6ad9))
+
 # [1.2.0](https://github.com/MrRoiz/codeforge/compare/v1.1.0...v1.2.0) (2026-09-14)
 
 
