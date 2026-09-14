@@ -10,6 +10,7 @@ export { longestSubstringNoRepeat } from '@exercises/longest-substring-no-repeat
 export { maxConsecutiveOnes } from '@exercises/max-consecutive-ones';
 export { longestCommonPrefix } from '@exercises/longest-common-prefix';
 export { productExceptSelf } from '@exercises/product-except-self';
+export { containerWithMostWater } from '@exercises/container-with-most-water';
 export { arrangingCoins } from '@exercises/arranging-coins';
 export { mergeIntervals } from '@exercises/merge-intervals';
 export { numberOfIslands } from '@exercises/number-of-islands';
@@ -37,6 +38,7 @@ import { longestSubstringNoRepeat } from '@exercises/longest-substring-no-repeat
 import { maxConsecutiveOnes } from '@exercises/max-consecutive-ones';
 import { longestCommonPrefix } from '@exercises/longest-common-prefix';
 import { productExceptSelf } from '@exercises/product-except-self';
+import { containerWithMostWater } from '@exercises/container-with-most-water';
 import { arrangingCoins } from '@exercises/arranging-coins';
 import { mergeIntervals } from '@exercises/merge-intervals';
 import { numberOfIslands } from '@exercises/number-of-islands';
@@ -71,6 +73,7 @@ export const exercises: Exercise[] = [
   // medium
   longestSubstringNoRepeat,
   productExceptSelf,
+  containerWithMostWater,
   mergeIntervals,
   numberOfIslands,
   longestPalindromicSubstring,
