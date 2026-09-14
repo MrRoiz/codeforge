@@ -1,4 +1,5 @@
 import { Text, Box } from 'ink';
+import pkg from '../../package.json' with { type: 'json' };
 
 export const LOGO_LINES = [
   ' ██████╗ ██████╗ ██████╗ ███████╗███████╗ ██████╗ ██████╗  ██████╗ ███████╗',
@@ -19,6 +20,9 @@ export function Logo() {
       ))}
       <Text color="yellowBright">
         {'⚒  FORGE YOUR SKILLS · ONE EXERCISE AT A TIME  ⚒'}
+      </Text>
+      <Text color="cyan">
+        v{pkg.version}
       </Text>
     </Box>
   );
