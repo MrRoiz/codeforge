@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/MrRoiz/codeforge/compare/v1.7.0...v1.8.0) (2026-09-14)
+
+
+### Features
+
+* open the exercise in your editor with o ([b7e8019](https://github.com/MrRoiz/codeforge/commit/b7e8019e80ccfa826855bc2c71653c3c5044da9b))
+
 # [1.7.0](https://github.com/MrRoiz/codeforge/compare/v1.6.0...v1.7.0) (2026-09-14)
 
 
