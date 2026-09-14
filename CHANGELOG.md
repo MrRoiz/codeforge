@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/MrRoiz/codeforge/compare/v1.8.0...v1.9.0) (2026-09-14)
+
+
+### Features
+
+* celebrate a passing run with a border glow and a quip ([0bcc5b0](https://github.com/MrRoiz/codeforge/commit/0bcc5b0b57468f88a8f922fcf2dc33726e05a6f6))
+
 # [1.8.0](https://github.com/MrRoiz/codeforge/compare/v1.7.0...v1.8.0) (2026-09-14)
 
 
