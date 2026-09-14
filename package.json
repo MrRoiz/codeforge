@@ -1,0 +1,43 @@
+{
+  "name": "codeforge",
+  "version": "1.0.0",
+  "description": "TUI tool for practicing live coding interview exercises",
+  "main": "dist/index.js",
+  "type": "module",
+  "bin": {
+    "codeforge": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "dev": "tsx src/index.tsx",
+    "prepare": "tsup"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild"]
+  },
+  "keywords": [
+    "tui",
+    "coding",
+    "interview",
+    "practice",
+    "exercises",
+    "leetcode"
+  ],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.33.4",
+  "dependencies": {
+    "ink": "^7.0.0",
+    "jest": "^30.0.0",
+    "react": "^19.0.0",
+    "ts-jest": "^29.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.0.0",
+    "tsup": "^8.5.1",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  }
+}
