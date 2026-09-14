@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/MrRoiz/codeforge/compare/v1.4.0...v1.5.0) (2026-09-14)
+
+
+### Features
+
+* add update notification and open repo in browser ([f6ae71a](https://github.com/MrRoiz/codeforge/commit/f6ae71a5998e468526d00f153504b52c14067afb))
+
 # [1.4.0](https://github.com/MrRoiz/codeforge/compare/v1.3.0...v1.4.0) (2026-09-14)
 
 
