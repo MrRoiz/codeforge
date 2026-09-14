@@ -46,11 +46,31 @@ contract.
 - **Honest testing** — the test file is regenerated every run, so you cannot
   "fix" the tests to make yourself pass.
 
-## Install & run
+## Install
+
+Install the CLI globally from npm:
+
+```bash
+npm install -g @mr_roiz/codeforge
+codeforge
+```
+
+Or run it without installing anything:
+
+```bash
+npx @mr_roiz/codeforge
+```
+
+> Requires Node.js 20 or newer. It's an interactive TUI — run it directly in a
+> terminal (not piped).
+
+## Development
+
+For local development no build is needed — run straight from source:
 
 ```bash
 pnpm install
-pnpm dev            # local dev — runs from source, no build step
+pnpm dev            # tsx, runs the TUI from src (resolves @ aliases directly)
 ```
 
 To build and run the distributable CLI:
@@ -62,8 +82,6 @@ node dist/index.js
 pnpm link --global
 codeforge
 ```
-
-> Interactive TUI — run it directly in a terminal (not piped).
 
 ## How to practice
 
