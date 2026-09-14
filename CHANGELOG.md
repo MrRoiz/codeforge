@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/MrRoiz/codeforge/compare/v1.3.0...v1.4.0) (2026-09-14)
+
+
+### Features
+
+* add search to exercise list ([815b117](https://github.com/MrRoiz/codeforge/commit/815b11771fe4fadc7683174a75b651265c2cd71e))
+
 # [1.3.0](https://github.com/MrRoiz/codeforge/compare/v1.2.0...v1.3.0) (2026-09-14)
 
 
