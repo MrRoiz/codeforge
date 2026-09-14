@@ -104,8 +104,9 @@ codeforge
      exercise.test.ts   ← the test suite (auto-generated, don't touch)
    ```
 
-6. Open `exercise.ts` in **your** editor and implement the function. The problem
-   statement, examples, constraints, and hints are all in the file header.
+6. Open `exercise.ts` in **your** editor and implement the function — or just
+   press **`o`** in the TUI to launch it. The problem statement, examples,
+   constraints, and hints are all in the file header.
 7. Back in the TUI, press **`t`** to run the tests. Press **`r`** on the results
    screen to run them again after another edit.
 8. Green bar = you're done. Red bar = read the failing cases and go again.
@@ -129,6 +130,22 @@ Resolution order (highest first):
 
 `~` is expanded, and relative paths are resolved against the current directory.
 
+## Editor
+
+Press **`o`** on an exercise to start working on it in your editor. If the
+exercise hasn't been started yet, codeforge creates the files first (never
+overwriting a solution) and opens `exercise.ts`. It picks an editor like this:
+
+1. `$EDITOR` — may include arguments, e.g. `EDITOR="code --wait"`
+2. `$VISUAL`
+3. the first of `code`, `cursor`, `zed`, `windsurf`, `subl`, `nvim`, `vim`,
+   `nano`, `hx`, `emacs`, `micro` found on your `PATH`
+4. otherwise the OS default handler for the file
+
+Terminal editors (`vim`, `nvim`, `nano`, …) take over the terminal while you
+edit, and codeforge comes back when you quit them. GUI editors open
+independently and leave the TUI running.
+
 ## Keys
 
 | Key        | Action                          |
@@ -137,9 +154,11 @@ Resolution order (highest first):
 | `↵`        | Select / open                   |
 | `s`        | Start exercise (create files)   |
 | `t`        | Run tests (starts it if needed) |
+| `o`        | Start working in your editor    |
 | `c`        | Show/hide the graded test cases |
 | `h`        | Toggle hints                    |
 | `r`        | Re-run tests (on results)       |
+| `p`        | Open the project on GitHub      |
 | `esc`      | Back                            |
 | `q`        | Quit                            |
 

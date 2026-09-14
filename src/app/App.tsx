@@ -5,7 +5,8 @@ import { exercises, getRandomExercise } from '@exercises';
 import type { Exercise } from '@exercises/types';
 import { ensureGenerated, exercisePaths, gymDir, isStarted, type GeneratedPaths } from '@utils/generate';
 import { runJest, type TestRunResult } from '@utils/runTests';
-import { openRepo } from '@utils/open';
+import { isTerminalEditor, launchDetached, launchInForeground, openRepo, resolveEditor } from '@utils/open';
+import { enterFullScreen, exitFullScreen } from '@utils/screen';
 import {
   defaultExercisesDir,
   loadConfig,
@@ -25,7 +26,7 @@ import { Layout } from '@app/Layout';
 type Screen = 'menu' | 'difficulty' | 'list' | 'exercise' | 'running' | 'results' | 'settings';
 
 export function App() {
-  const { exit } = useApp();
+  const { exit, suspendTerminal } = useApp();
   const [screen, setScreen] = useState<Screen>('menu');
   const [config, setConfig] = useState<Config>(() => loadConfig());
   const [status, setStatus] = useState<string | undefined>(undefined);
@@ -40,11 +41,11 @@ export function App() {
   const [searchActive, setSearchActive] = useState(false);
 
   // global keys — disabled while typing in settings or searching the exercise
-  // list so 'q' and 'o' are normal characters
+  // list so 'q' and 'p' are normal characters
   useInput(
     (input) => {
       if (input === 'q') exit();
-      if (input === 'o') openRepo();
+      if (input === 'p') openRepo();
     },
     { isActive: screen !== 'settings' && !searchActive },
   );
@@ -97,6 +98,37 @@ export function App() {
   const restartTimer = () => {
     setStartedAt(Date.now());
     setElapsedMs(null);
+  };
+
+  // Opening in the editor makes sure the files exist (never overwriting a
+  // solution), then launches the exercise file in the user's editor. Terminal
+  // editors take over the TTY while the TUI is suspended; GUI editors detach.
+  const openEditor = async (ex: Exercise) => {
+    try {
+      const generated = await ensureGenerated(ex, exercisesDir);
+      setPaths(generated);
+      setStarted(true);
+      setStartedAt((prev) => prev ?? Date.now());
+      setError(null);
+      const editor = resolveEditor();
+      if (editor && isTerminalEditor(editor.command)) {
+        // Terminal editors need the real TTY. Suspend Ink (pause input/render),
+        // drop out of codeforge's alternate screen, hand the terminal over, then
+        // reclaim both once the editor exits.
+        const suspension = await suspendTerminal();
+        exitFullScreen();
+        try {
+          await launchInForeground(editor, generated.exerciseFile);
+        } finally {
+          enterFullScreen();
+          await suspension.resume();
+        }
+      } else {
+        launchDetached(editor, generated.exerciseFile);
+      }
+    } catch (err) {
+      setError(String(err));
+    }
   };
 
   const startRun = async (ex: Exercise) => {
@@ -189,6 +221,7 @@ export function App() {
           startedAt={startedAt}
           onStart={() => void startExercise(exercise)}
           onRun={() => void startRun(exercise)}
+          onOpenEditor={() => void openEditor(exercise)}
           onRestartTimer={restartTimer}
           onBack={() => setScreen('list')}
         />
@@ -202,6 +235,7 @@ export function App() {
           result={result}
           elapsedMs={elapsedMs}
           onRerun={() => void startRun(exercise)}
+          onOpenEditor={() => void openEditor(exercise)}
           onBack={() => setScreen('exercise')}
         />
       ) : null}

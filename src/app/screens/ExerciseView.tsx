@@ -14,6 +14,7 @@ interface Props {
   startedAt: number | null;
   onStart: () => void;
   onRun: () => void;
+  onOpenEditor: () => void;
   onRestartTimer: () => void;
   onBack: () => void;
 }
@@ -39,6 +40,7 @@ export function ExerciseView({
   startedAt,
   onStart,
   onRun,
+  onOpenEditor,
   onRestartTimer,
   onBack,
 }: Props) {
@@ -53,6 +55,7 @@ export function ExerciseView({
     }
     if (input === 's') onStart();
     if (input === 't') onRun();
+    if (input === 'o') onOpenEditor();
     if (input === 'r' && started) onRestartTimer();
     if (input === 'h') setShowHints((v) => !v);
     if (input === 'c') setShowTests((v) => !v);
@@ -202,6 +205,7 @@ export function ExerciseView({
           hints={[
             ...(!started ? ([['s', 'start']] as [string, string][]) : []),
             ['t', 'run tests'],
+            ['o', 'open in editor'],
             ...(started ? ([['r', 'restart timer']] as [string, string][]) : []),
             ['c', showTests ? 'hide tests' : 'show tests'],
             ['h', showHints ? 'hide hints' : 'show hints'],

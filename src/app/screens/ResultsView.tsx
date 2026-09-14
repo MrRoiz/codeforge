@@ -9,6 +9,7 @@ interface Props {
   result: TestRunResult;
   elapsedMs?: number | null;
   onRerun: () => void;
+  onOpenEditor: () => void;
   onBack: () => void;
 }
 
@@ -30,10 +31,11 @@ function cleanMessage(msg: string): string[] {
   return chosen.slice(0, 4);
 }
 
-export function ResultsView({ exercise, result, elapsedMs, onRerun, onBack }: Props) {
+export function ResultsView({ exercise, result, elapsedMs, onRerun, onOpenEditor, onBack }: Props) {
   useInput((input, key) => {
     if (key.escape) onBack();
     if (input === 't') onRerun();
+    if (input === 'o') onOpenEditor();
   });
 
   const ok = result.passed;
@@ -103,6 +105,7 @@ export function ResultsView({ exercise, result, elapsedMs, onRerun, onBack }: Pr
         <KeyHints
           hints={[
             ['t', 'run again'],
+            ['o', 'open in editor'],
             ['j/k', 'scroll'],
             ['esc', 'back'],
             ['q', 'quit'],
