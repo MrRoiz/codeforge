@@ -1,6 +1,8 @@
 import { Box, Text, useInput } from 'ink';
+import { useEffect, useState } from 'react';
 import { formatDuration, KeyHints } from '@components/ui';
 import { ScrollView } from '@components/ScrollView';
+import { pickQuote } from '@utils/quotes';
 import type { TestRunResult } from '@utils/runTests';
 import type { Exercise } from '@exercises/types';
 
@@ -12,6 +14,11 @@ interface Props {
   onOpenEditor: () => void;
   onBack: () => void;
 }
+
+// border glow on a pass: cycle for a moment, then settle on green
+const GLOW_COLORS = ['greenBright', 'cyanBright', 'whiteBright'];
+const GLOW_FRAMES = 24;
+const GLOW_MS = 140;
 
 function bar(passed: number, total: number, width = 30): string {
   const filled = total === 0 ? 0 : Math.round((passed / total) * width);
@@ -39,22 +46,45 @@ export function ResultsView({ exercise, result, elapsedMs, onRerun, onOpenEditor
   });
 
   const ok = result.passed;
+  const [glowFrame, setGlowFrame] = useState(0);
+  const [quote] = useState(() => (ok ? pickQuote() : ''));
+
+  useEffect(() => {
+    if (!ok) return;
+    const id = setInterval(() => {
+      setGlowFrame((f) => {
+        if (f + 1 >= GLOW_FRAMES) clearInterval(id);
+        return f + 1;
+      });
+    }, GLOW_MS);
+    return () => clearInterval(id);
+  }, [ok]);
+
+  const pulsing = ok && glowFrame < GLOW_FRAMES;
+  const accent = ok ? (pulsing ? GLOW_COLORS[glowFrame % GLOW_COLORS.length] : 'greenBright') : 'redBright';
 
   return (
     <Box flexDirection="column" flexGrow={1} flexShrink={1} minHeight={0} paddingLeft={2} paddingRight={2}>
       <Box
         borderStyle="double"
-        borderColor={ok ? 'greenBright' : 'redBright'}
+        borderColor={accent}
         paddingX={2}
         paddingY={0}
         flexDirection="column"
         alignItems="center"
         flexShrink={0}
       >
-        <Text bold color={ok ? 'greenBright' : 'redBright'}>
+        <Text bold color={accent}>
           {ok ? '✔  ALL TESTS PASSED' : '✘  TESTS FAILED'}
         </Text>
         <Text dimColor>{exercise.name}</Text>
+        {ok && quote ? (
+          <Box marginTop={1}>
+            <Text color="cyanBright" wrap="wrap">
+              {quote}
+            </Text>
+          </Box>
+        ) : null}
       </Box>
 
       <Box marginTop={1} flexShrink={0}>
