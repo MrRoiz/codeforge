@@ -1,3 +1,10 @@
+# [1.12.0](https://github.com/MrRoiz/codeforge/compare/v1.11.0...v1.12.0) (2026-09-15)
+
+
+### Features
+
+* reset an exercise's stats with x ([464efda](https://github.com/MrRoiz/codeforge/commit/464efda12a580d32b204e082cfe83482f42ab3ca))
+
 # [1.11.0](https://github.com/MrRoiz/codeforge/compare/v1.10.0...v1.11.0) (2026-09-15)
 
 
