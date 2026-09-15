@@ -5,7 +5,7 @@ const require = createRequire(import.meta.url);
 
 async function main() {
   const [, , rootDir, outFile] = process.argv;
-  if (!(rootDir && outFile)) {
+  if (!rootDir || !outFile) {
     process.exit(2);
   }
 

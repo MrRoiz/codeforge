@@ -44,8 +44,7 @@
         "noUselessReturn": "error",
         "noUselessTernary": "error",
         "noUselessUndefinedInitialization": "error",
-        "useLiteralKeys": "error",
-        "useSimplifiedLogicExpression": "error"
+        "useLiteralKeys": "error"
       },
       "suspicious": {
         "noArrayIndexKey": "error",

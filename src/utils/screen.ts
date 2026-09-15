@@ -12,7 +12,7 @@ export function enterFullScreen(): void {
 }
 
 export function exitFullScreen(): void {
-  if (!(process.stdout.isTTY && active)) {
+  if (!process.stdout.isTTY || !active) {
     return;
   }
   active = false;
