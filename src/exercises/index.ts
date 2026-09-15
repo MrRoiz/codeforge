@@ -19,6 +19,7 @@ export { perfectSquares } from '@exercises/perfect-squares';
 export { permutations } from '@exercises/permutations';
 export { productExceptSelf } from '@exercises/product-except-self';
 export { reverseString } from '@exercises/reverse-string';
+export { stepsToMakeArrayNonDecreasing } from '@exercises/steps-to-make-array-non-decreasing';
 export { stringCompression } from '@exercises/string-compression';
 export { ticketItineraryReconstruction } from '@exercises/ticket-itinerary-reconstruction';
 export { topNFrequentIps } from '@exercises/top-n-frequent-ips';
@@ -57,6 +58,7 @@ import { perfectSquares } from '@exercises/perfect-squares';
 import { permutations } from '@exercises/permutations';
 import { productExceptSelf } from '@exercises/product-except-self';
 import { reverseString } from '@exercises/reverse-string';
+import { stepsToMakeArrayNonDecreasing } from '@exercises/steps-to-make-array-non-decreasing';
 import { stringCompression } from '@exercises/string-compression';
 import { ticketItineraryReconstruction } from '@exercises/ticket-itinerary-reconstruction';
 import { topNFrequentIps } from '@exercises/top-n-frequent-ips';
@@ -98,6 +100,7 @@ export const exercises: Exercise[] = [
   ticketItineraryReconstruction,
   lruCache,
   packageTransportation,
+  stepsToMakeArrayNonDecreasing,
   // hard
   minimumWindowSubstring,
 ];
