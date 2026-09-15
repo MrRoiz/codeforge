@@ -9,6 +9,7 @@ import { RunningView } from '@app/screens/RunningView';
 import { SettingsView } from '@app/screens/SettingsView';
 import { exercises, getRandomExercise } from '@exercises';
 import type { Exercise } from '@exercises/types';
+import { analyzeSolutionComplexity, type ComplexityResult } from '@utils/complexity';
 import {
   type Config,
   defaultExercisesDir,
@@ -56,6 +57,7 @@ export function App() {
   const [error, setError] = useState<string | null>(null);
   const [searchActive, setSearchActive] = useState(false);
   const [state, setState] = useState<State>(() => loadState());
+  const [complexity, setComplexity] = useState<ComplexityResult | null>(null);
   const [confirm, setConfirm] = useState<null | 'solution' | 'stats'>(null);
   const [hasContent, setHasContent] = useState(false);
 
@@ -98,6 +100,7 @@ export function App() {
     setPaths(exercisePaths(ex, exercisesDir));
     setResult(null);
     setElapsedMs(null);
+    setComplexity(null);
     const alreadyStarted = await isStarted(ex, exercisesDir);
     setStarted(alreadyStarted);
     setHasContent(await isDirty(ex, exercisesDir));
@@ -235,6 +238,8 @@ export function App() {
     // the file has been edited by now — refresh so the "content exists" notice
     // reflects reality
     setHasContent(await isDirty(ex, exercisesDir));
+    const cx = await analyzeSolutionComplexity(ex, exercisesDir);
+    setComplexity(cx);
     // running tests never starts or resets the clock; only 's' and 'r' do.
     // The state is the source of truth: progress is recorded only while the
     // clock is running, and a solve is counted whenever a timed run passes.
@@ -357,6 +362,7 @@ export function App() {
           exercise={exercise}
           result={result}
           elapsedMs={elapsedMs}
+          complexity={complexity}
           onRerun={() => void startRun(exercise)}
           onOpenEditor={() => void openEditor(exercise)}
           onBack={() => setScreen('exercise')}

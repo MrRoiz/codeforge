@@ -1,6 +1,7 @@
 import { ScrollView } from '@components/ScrollView';
 import { formatDuration, KeyHints } from '@components/ui';
 import type { Exercise } from '@exercises/types';
+import type { ComplexityResult } from '@utils/complexity';
 import { pickQuote } from '@utils/quotes';
 import type { TestRunResult } from '@utils/runTests';
 import { Box, Text, useInput } from 'ink';
@@ -10,6 +11,7 @@ interface Props {
   exercise: Exercise;
   result: TestRunResult;
   elapsedMs?: number | null;
+  complexity?: ComplexityResult | null;
   onRerun: () => void;
   onOpenEditor: () => void;
   onBack: () => void;
@@ -53,7 +55,15 @@ function cleanMessage(msg: string): string[] {
   return chosen.slice(0, 4);
 }
 
-export function ResultsView({ exercise, result, elapsedMs, onRerun, onOpenEditor, onBack }: Props) {
+export function ResultsView({
+  exercise,
+  result,
+  elapsedMs,
+  complexity,
+  onRerun,
+  onOpenEditor,
+  onBack,
+}: Props) {
   useInput((input, key) => {
     if (key.escape) {
       onBack();
@@ -134,6 +144,21 @@ export function ResultsView({ exercise, result, elapsedMs, onRerun, onOpenEditor
       {ok && elapsedMs != null ? (
         <Box marginTop={1} flexShrink={0}>
           <Text color="cyanBright">⏱ solved in {formatDuration(elapsedMs)}</Text>
+        </Box>
+      ) : null}
+
+      {complexity ? (
+        <Box marginTop={1} flexShrink={0}>
+          <Text>
+            <Text dimColor>estimated complexity: </Text>
+            <Text bold color="magentaBright">
+              {complexity.label}
+            </Text>
+            <Text dimColor>
+              {'  '}
+              {complexity.confidence} confidence · {complexity.detail}
+            </Text>
+          </Text>
         </Box>
       ) : null}
 
