@@ -12,13 +12,13 @@ export interface GeneratedPaths {
 const TODO_MARKER = '// TODO: forge your solution';
 
 // `exercisesDir` is the folder that holds one subfolder per exercise.
-export function gymDir(exerciseId: string, exercisesDir: string): string {
+export function exerciseDir(exerciseId: string, exercisesDir: string): string {
   return path.resolve(exercisesDir, exerciseId);
 }
 
 /** Compute the file locations without creating anything. */
 export function exercisePaths(exercise: Exercise, exercisesDir: string): GeneratedPaths {
-  const dir = gymDir(exercise.id, exercisesDir);
+  const dir = exerciseDir(exercise.id, exercisesDir);
   return {
     dir,
     exerciseFile: path.join(dir, 'exercise.ts'),
@@ -59,13 +59,13 @@ export async function ensureGenerated(exercise: Exercise, exercisesDir: string):
 }
 
 export async function resetSolution(exercise: Exercise, exercisesDir: string): Promise<void> {
-  const exerciseFile = path.join(gymDir(exercise.id, exercisesDir), 'exercise.ts');
+  const exerciseFile = path.join(exerciseDir(exercise.id, exercisesDir), 'exercise.ts');
   await fs.writeFile(exerciseFile, renderExerciseFile(exercise));
 }
 
 export async function isSolved(exercise: Exercise, exercisesDir: string): Promise<boolean> {
   try {
-    const content = await fs.readFile(path.join(gymDir(exercise.id, exercisesDir), 'exercise.ts'), 'utf-8');
+    const content = await fs.readFile(path.join(exerciseDir(exercise.id, exercisesDir), 'exercise.ts'), 'utf-8');
     return !content.includes(TODO_MARKER);
   } catch {
     return false;

@@ -3,7 +3,7 @@ import fs from 'node:fs/promises';
 import { useMemo, useRef, useState } from 'react';
 import { exercises, getRandomExercise } from '@exercises';
 import type { Exercise } from '@exercises/types';
-import { ensureGenerated, exercisePaths, gymDir, isStarted, type GeneratedPaths } from '@utils/generate';
+import { ensureGenerated, exercisePaths, exerciseDir, isStarted, type GeneratedPaths } from '@utils/generate';
 import { runJest, type TestRunResult } from '@utils/runTests';
 import { drainStdin, isTerminalEditor, launchDetached, launchInForeground, openRepo, resolveEditor } from '@utils/open';
 import { enterFullScreen, exitFullScreen } from '@utils/screen';
@@ -148,7 +148,7 @@ export function App() {
     } catch (err) {
       setError(String(err));
     }
-    const r = await runJest(gymDir(ex.id, exercisesDir));
+    const r = await runJest(exerciseDir(ex.id, exercisesDir));
     setResult(r);
     // running tests never starts or resets the clock; only 's' and 'r' do
     setElapsedMs(r.passed && startedAt !== null ? Date.now() - startedAt : null);
