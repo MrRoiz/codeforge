@@ -1,25 +1,31 @@
 import { Select } from '@components/Select';
 import { TextInput } from '@components/TextInput';
-import { DifficultyBadge, formatDate, KeyHints } from '@components/ui';
+import { DifficultyBadge, formatDate, formatProgress, KeyHints } from '@components/ui';
 import { type Exercise, validationLabel } from '@exercises/types';
+import type { State } from '@utils/state';
 import { Box, Text, useInput } from 'ink';
 import { useEffect, useState } from 'react';
 
 interface Props {
   exercises: Exercise[];
+  state: State;
   onSelect: (exercise: Exercise) => void;
   onBack: () => void;
   onSearchActive?: (active: boolean) => void;
 }
 
-const LABEL_WIDTH = 37;
+const LABEL_WIDTH = 35;
 
 function padLabel(name: string): string {
   const short = name.length > LABEL_WIDTH - 1 ? `${name.slice(0, LABEL_WIDTH - 2)}…` : name;
   return short.padEnd(LABEL_WIDTH);
 }
 
-export function ExerciseList({ exercises, onSelect, onBack, onSearchActive }: Props) {
+function solvedMarker(stat?: State['exercises'][string]): string {
+  return stat?.solves ? '✓ ' : '  ';
+}
+
+export function ExerciseList({ exercises, state, onSelect, onBack, onSearchActive }: Props) {
   const [highlighted, setHighlighted] = useState<Exercise>(exercises[0]);
   const [searching, setSearching] = useState(false);
   const [query, setQuery] = useState('');
@@ -90,6 +96,8 @@ export function ExerciseList({ exercises, onSelect, onBack, onSearchActive }: Pr
                 key: e.id,
                 label: padLabel(e.name),
                 value: e,
+                leading: solvedMarker(state.exercises[e.id]),
+                leadingColor: 'greenBright',
                 hint: `${e.difficulty} · ${e.time}`,
               }))}
               onSelect={onSelect}
@@ -117,6 +125,11 @@ export function ExerciseList({ exercises, onSelect, onBack, onSearchActive }: Pr
               </Box>
               <Box marginTop={1}>
                 <Text dimColor>added: {formatDate(highlighted.createdAt)}</Text>
+              </Box>
+              <Box marginTop={1}>
+                <Text color={state.exercises[highlighted.id]?.solves ? 'greenBright' : 'gray'}>
+                  progress: {formatProgress(state.exercises[highlighted.id])}
+                </Text>
               </Box>
               <Box marginTop={1}>
                 <Text wrap="wrap" dimColor>

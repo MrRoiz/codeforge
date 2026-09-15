@@ -1,18 +1,30 @@
 import { useElapsed } from '@app/useElapsed';
 import { ScrollView } from '@components/ScrollView';
-import { DifficultyBadge, formatDate, formatDuration, KeyHints } from '@components/ui';
+import {
+  DifficultyBadge,
+  formatDate,
+  formatDuration,
+  formatProgress,
+  KeyHints,
+} from '@components/ui';
 import { type Exercise, validationLabel } from '@exercises/types';
 import { formatExample } from '@utils/format';
+import type { ExerciseStat } from '@utils/state';
 import { Box, Text, useInput } from 'ink';
 import { useState } from 'react';
 
 interface Props {
   exercise: Exercise;
+  stat?: ExerciseStat;
   exerciseFile: string;
   testFile: string;
   started: boolean;
   startedAt: number | null;
+  elapsedMs: number | null;
+  hasContent: boolean;
+  confirmingReset: boolean;
   onStart: () => void;
+  onResetDecision: (decision: 'reset' | 'cancel') => void;
   onRun: () => void;
   onOpenEditor: () => void;
   onRestartTimer: () => void;
@@ -31,13 +43,28 @@ function MultiLine({ label, value, color }: { label: string; value: string; colo
   );
 }
 
+function clockStatus(running: boolean, finished: boolean, elapsed: number) {
+  if (running) {
+    return <Text color="cyanBright">⏱ elapsed → {formatDuration(elapsed)}</Text>;
+  }
+  if (finished) {
+    return <Text color="greenBright">✓ solved in {formatDuration(elapsed)}</Text>;
+  }
+  return <Text color="yellowBright">Files ready — the clock is not running.</Text>;
+}
+
 export function ExerciseView({
   exercise,
+  stat,
   exerciseFile,
   testFile,
   started,
   startedAt,
+  elapsedMs,
+  hasContent,
+  confirmingReset,
   onStart,
+  onResetDecision,
   onRun,
   onOpenEditor,
   onRestartTimer,
@@ -45,9 +72,21 @@ export function ExerciseView({
 }: Props) {
   const [showHints, setShowHints] = useState(false);
   const [showTests, setShowTests] = useState(false);
-  const elapsed = useElapsed(startedAt);
+  const liveElapsed = useElapsed(startedAt);
+  const running = startedAt !== null;
+  // a stopped clock with a recorded time means the exercise was just solved
+  const finished = !running && elapsedMs != null;
+  const elapsed = running ? liveElapsed : (elapsedMs ?? 0);
 
   useInput((input, key) => {
+    if (confirmingReset) {
+      if (input === 'y' || input === 'Y') {
+        onResetDecision('reset');
+      } else if (input === 'n' || input === 'N' || key.escape) {
+        onResetDecision('cancel');
+      }
+      return;
+    }
     if (key.escape) {
       onBack();
       return;
@@ -102,6 +141,9 @@ export function ExerciseView({
         </Text>
         <Text dimColor>source: {validationLabel(exercise)}</Text>
         <Text dimColor>added: {formatDate(exercise.createdAt)}</Text>
+        <Text color={stat?.solves ? 'greenBright' : undefined} dimColor={!stat?.solves}>
+          progress: {formatProgress(stat)}
+        </Text>
       </Box>
 
       <ScrollView isActive>
@@ -210,6 +252,33 @@ export function ExerciseView({
         </Box>
       </ScrollView>
 
+      {confirmingReset ? (
+        <Box
+          marginTop={1}
+          flexDirection="column"
+          borderStyle="double"
+          borderColor="yellowBright"
+          paddingX={1}
+          flexShrink={0}
+        >
+          <Text bold color="yellowBright">
+            ⚠ Reset the previous solution?
+          </Text>
+          <Text dimColor>
+            Starting the clock on existing work isn't allowed — exercise.ts will be replaced with
+            the starter stub so you can solve it fresh.
+          </Text>
+          <Box marginTop={1}>
+            <KeyHints
+              hints={[
+                ['y', 'reset & start'],
+                ['n / esc', 'cancel'],
+              ]}
+            />
+          </Box>
+        </Box>
+      ) : null}
+
       <Box
         marginTop={1}
         flexDirection="column"
@@ -220,9 +289,7 @@ export function ExerciseView({
       >
         {started ? (
           <>
-            {startedAt === null ? null : (
-              <Text color="cyanBright">⏱ elapsed → {formatDuration(elapsed)}</Text>
-            )}
+            {clockStatus(running, finished, elapsed)}
             <Text dimColor>
               Solve it in your editor of choice — codeforge only checks the output.
             </Text>
@@ -235,22 +302,41 @@ export function ExerciseView({
             <Text dimColor>will create → {exerciseFile}</Text>
           </>
         )}
+        {!running && hasContent ? (
+          <Box
+            marginTop={1}
+            borderStyle="round"
+            borderColor="magentaBright"
+            paddingX={1}
+            flexDirection="column"
+          >
+            <Text color="magentaBright">
+              ⚠ exercise.ts already has content. Keep working on it with{' '}
+              <Text color="cyanBright">o</Text> — but the clock won't start on its own. Press{' '}
+              <Text color="cyanBright">s</Text> to start it manually; only a timed run counts as a
+              solve.
+            </Text>
+          </Box>
+        ) : null}
       </Box>
 
       <Box marginTop={1} flexShrink={0}>
-        <KeyHints
-          hints={[
-            ...(started ? [] : ([['s', 'start']] as [string, string][])),
-            ['t', 'run tests'],
-            ['o', 'open in editor'],
-            ...(started ? ([['r', 'restart timer']] as [string, string][]) : []),
-            ['c', showTests ? 'hide tests' : 'show tests'],
-            ['h', showHints ? 'hide hints' : 'show hints'],
-            ['j/k', 'scroll'],
-            ['esc', 'back'],
-            ['q', 'quit'],
-          ]}
-        />
+        {confirmingReset ? null : (
+          <KeyHints
+            hints={[
+              ...(running || finished
+                ? ([['r', 'restart timer']] as [string, string][])
+                : ([['s', started ? 'start timer' : 'start']] as [string, string][])),
+              ['t', 'run tests'],
+              ['o', 'open in editor'],
+              ['c', showTests ? 'hide tests' : 'show tests'],
+              ['h', showHints ? 'hide hints' : 'show hints'],
+              ['j/k', 'scroll'],
+              ['esc', 'back'],
+              ['q', 'quit'],
+            ]}
+          />
+        )}
       </Box>
     </Box>
   );

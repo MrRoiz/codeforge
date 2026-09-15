@@ -21,7 +21,9 @@ import {
   exerciseDir,
   exercisePaths,
   type GeneratedPaths,
+  isDirty,
   isStarted,
+  resetSolution,
 } from '@utils/generate';
 import {
   drainStdin,
@@ -33,6 +35,7 @@ import {
 } from '@utils/open';
 import { runJest, type TestRunResult } from '@utils/runTests';
 import { enterFullScreen, exitFullScreen } from '@utils/screen';
+import { loadState, recordAttempt, recordSolve, type State } from '@utils/state';
 import { Box, Text, useApp, useInput } from 'ink';
 import { useMemo, useRef, useState } from 'react';
 
@@ -52,9 +55,12 @@ export function App() {
   const [result, setResult] = useState<TestRunResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [searchActive, setSearchActive] = useState(false);
+  const [state, setState] = useState<State>(() => loadState());
+  const [confirmReset, setConfirmReset] = useState(false);
+  const [hasContent, setHasContent] = useState(false);
 
-  // global keys — disabled while typing in settings or searching the exercise
-  // list so 'q' and 'p' are normal characters
+  // global keys — disabled while typing in settings, searching the exercise
+  // list, or answering the reset prompt so 'q' and 'p' are normal characters
   useInput(
     (input) => {
       if (input === 'q') {
@@ -64,7 +70,7 @@ export function App() {
         openRepo();
       }
     },
-    { isActive: screen !== 'settings' && !searchActive },
+    { isActive: screen !== 'settings' && !searchActive && !confirmReset },
   );
 
   const exercisesDir = useMemo(() => resolveExercisesDir(config), [config]);
@@ -94,27 +100,59 @@ export function App() {
     setElapsedMs(null);
     const alreadyStarted = await isStarted(ex, exercisesDir);
     setStarted(alreadyStarted);
-    // keep the clock running if we're returning to the same exercise this session
-    setStartedAt((prev) => {
-      if (exercise?.id === ex.id && prev !== null) {
-        return prev;
-      }
-      return alreadyStarted ? Date.now() : null;
-    });
+    setHasContent(await isDirty(ex, exercisesDir));
+    // Opening a page never starts the clock — it only resumes the clock when
+    // returning to the same exercise this session. Existing files just mean the
+    // exercise is "started"; the user begins timing with `s`.
+    setStartedAt((prev) => (exercise?.id === ex.id ? prev : null));
     setScreen('exercise');
   };
 
-  // Starting creates the solution + test files (never overwriting a solution).
-  const startExercise = async (ex: Exercise) => {
+  // Starting creates the solution + test files. `reset` wipes a previous
+  // solution back to the stub (only ever after the user confirms).
+  const startExercise = async (ex: Exercise, reset = false) => {
+    setConfirmReset(false);
     try {
       const generated = await ensureGenerated(ex, exercisesDir);
+      if (reset) {
+        await resetSolution(ex, exercisesDir);
+        setStartedAt(Date.now());
+        setElapsedMs(null);
+      } else {
+        setStartedAt((prev) => prev ?? Date.now());
+        setElapsedMs(null);
+      }
+      setHasContent(await isDirty(ex, exercisesDir));
       setPaths(generated);
       setStarted(true);
-      setStartedAt((prev) => prev ?? Date.now());
       setError(null);
     } catch (err) {
       setError(String(err));
     }
+  };
+
+  // `s`: start the exercise. If a previous solution is already on disk, ask
+  // before wiping it. The other entry points (`o`, `t`) never reset.
+  const requestStart = async (ex: Exercise) => {
+    try {
+      if ((await isStarted(ex, exercisesDir)) && (await isDirty(ex, exercisesDir))) {
+        setConfirmReset(true);
+        return;
+      }
+    } catch {
+      // fall through to a plain start
+    }
+    await startExercise(ex, false);
+  };
+
+  // Starting the clock on an existing solution isn't allowed — to time an
+  // exercise you must reset it first, so the only options are reset or cancel.
+  const answerReset = (decision: 'reset' | 'cancel') => {
+    setConfirmReset(false);
+    if (decision === 'cancel' || !exercise) {
+      return;
+    }
+    void startExercise(exercise, true);
   };
 
   const restartTimer = () => {
@@ -135,7 +173,14 @@ export function App() {
       const generated = await ensureGenerated(ex, exercisesDir);
       setPaths(generated);
       setStarted(true);
-      setStartedAt((prev) => prev ?? Date.now());
+      // `o` begins the clock only when the file isn't dirty — a fresh exercise
+      // or an untouched stub. Opening existing work just launches the editor and
+      // leaves the timer alone.
+      const dirty = await isDirty(ex, exercisesDir);
+      setHasContent(dirty);
+      if (!dirty) {
+        setStartedAt((prev) => prev ?? Date.now());
+      }
       setError(null);
       const editor = resolveEditor();
       if (editor && isTerminalEditor(editor.command)) {
@@ -160,6 +205,8 @@ export function App() {
       setError(String(err));
     } finally {
       openingEditor.current = false;
+      // a terminal editor has just written the file — refresh the notice
+      setHasContent(await isDirty(ex, exercisesDir));
     }
   };
 
@@ -174,8 +221,26 @@ export function App() {
     }
     const r = await runJest(exerciseDir(ex.id, exercisesDir));
     setResult(r);
-    // running tests never starts or resets the clock; only 's' and 'r' do
-    setElapsedMs(r.passed && startedAt !== null ? Date.now() - startedAt : null);
+    // the file has been edited by now — refresh so the "content exists" notice
+    // reflects reality
+    setHasContent(await isDirty(ex, exercisesDir));
+    // running tests never starts or resets the clock; only 's' and 'r' do.
+    // The state is the source of truth: progress is recorded only while the
+    // clock is running, and a solve is counted whenever a timed run passes.
+    const timed = startedAt !== null;
+    const ms = r.passed && timed ? Date.now() - startedAt : null;
+    if (timed) {
+      let next = recordAttempt(ex.id);
+      if (r.passed) {
+        next = recordSolve(ex.id, ms);
+      }
+      setState(next);
+    }
+    // solving stops the clock — the final time is frozen in `elapsedMs`
+    if (r.passed) {
+      setStartedAt(null);
+    }
+    setElapsedMs(ms);
     setScreen('results');
   };
 
@@ -244,6 +309,7 @@ export function App() {
       {screen === 'list' ? (
         <ExerciseList
           exercises={filtered}
+          state={state}
           onSelect={(ex) => void openExercise(ex)}
           onBack={() => setScreen('difficulty')}
           onSearchActive={setSearchActive}
@@ -253,11 +319,16 @@ export function App() {
       {screen === 'exercise' && exercise && paths ? (
         <ExerciseView
           exercise={exercise}
+          stat={state.exercises[exercise.id]}
           exerciseFile={paths.exerciseFile}
           testFile={paths.testFile}
           started={started}
           startedAt={startedAt}
-          onStart={() => void startExercise(exercise)}
+          elapsedMs={elapsedMs}
+          hasContent={hasContent}
+          confirmingReset={confirmReset}
+          onStart={() => void requestStart(exercise)}
+          onResetDecision={answerReset}
           onRun={() => void startRun(exercise)}
           onOpenEditor={() => void openEditor(exercise)}
           onRestartTimer={restartTimer}

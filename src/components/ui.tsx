@@ -1,4 +1,5 @@
 import type { Exercise } from '@exercises/types';
+import type { ExerciseStat } from '@utils/state';
 import { Box, Text } from 'ink';
 
 const DIFFICULTY_COLORS: Record<Exercise['difficulty'], string> = {
@@ -48,6 +49,27 @@ export function formatDate(iso: string): string {
     year: 'numeric',
     timeZone: 'UTC',
   });
+}
+
+/** Human-readable progress for one exercise, for the list and detail views. */
+export function formatProgress(stat?: ExerciseStat): string {
+  if (!stat || stat.attempts === 0) {
+    return 'not attempted';
+  }
+  if (stat.solves === 0) {
+    return `${stat.attempts} attempt${stat.attempts === 1 ? '' : 's'} · not solved yet`;
+  }
+  const parts = [`✓ solved ${stat.solves}×`];
+  if (stat.bestMs != null) {
+    parts.push(`best ${formatDuration(stat.bestMs)}`);
+  }
+  if (stat.lastMs != null) {
+    parts.push(`last ${formatDuration(stat.lastMs)}`);
+  }
+  if (stat.attempts > stat.solves) {
+    parts.push(`${stat.attempts} runs`);
+  }
+  return parts.join(' · ');
 }
 
 export function KeyHints({ hints }: { hints: [string, string][] }) {

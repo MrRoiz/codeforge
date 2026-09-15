@@ -100,7 +100,7 @@ codeforge
 
 1. Launch `codeforge`.
 2. (Optional) Open **Settings** to choose where exercises are created. Defaults
-   to `~/codeforge`.
+   to `~/.codeforge/exercises`.
 3. **Train** to browse by difficulty, or **Random Challenge** for a surprise.
 4. Open an exercise to **read it** — nothing is written yet. You can browse the
    statement, examples, constraints, hints (`h`), and the full graded test cases
@@ -108,11 +108,14 @@ codeforge
 
    ![Reading an exercise statement](https://raw.githubusercontent.com/MrRoiz/codeforge/main/docs/screenshot-exercise.png)
 
-5. Press **`s`** to start it (or **`t`** to start and run immediately). codeforge
-   then creates the files under `<settings-dir>/<exercise-id>/`:
+5. Press **`s`** to start it — this creates the files and starts the clock. (Or
+   press **`t`** to run the tests right away; codeforge creates the files first
+   if they don't exist yet.) If a solution from a previous session is already
+   there, `s` asks whether to reset it back to the stub before starting. The
+   files land under `<settings-dir>/<exercise-id>/`:
 
    ```
-   ~/codeforge/two-sum/
+   ~/.codeforge/exercises/two-sum/
      exercise.ts        ← your solution (yours to edit)
      exercise.test.ts   ← the test suite (auto-generated, don't touch)
    ```
@@ -123,6 +126,9 @@ codeforge
 7. Back in the TUI, press **`t`** to run the tests. Press **`r`** on the results
    screen to run them again after another edit.
 8. Green bar = you're done. Red bar = read the failing cases and go again.
+   Passing runs are recorded, marking the exercise solved with its best time.
+   The clock stops on a pass — its final time is frozen on the exercise page,
+   and `r` starts a fresh timed attempt.
 
 | Passing run | Failing run |
 | ----------- | ----------- |
@@ -143,15 +149,35 @@ Resolution order (highest first):
 
 1. `CODEFORGE_DIR` environment variable — handy for scripting/CI
 2. the directory saved in Settings
-3. the default, `~/codeforge`
+3. the default, `~/.codeforge/exercises`
 
 `~` is expanded, and relative paths are resolved against the current directory.
+
+## Progress
+
+codeforge keeps a small record of your practice in
+`~/.codeforge/state.json`, independent of which exercises directory you use. For
+each exercise it tracks the number of attempts, the number of solves, and the
+best and most recent solve times. Solved exercises are marked with a `✓` in the
+exercise list, and the highlighted exercise shows its full stats (both in the
+list's detail panel and on the exercise page).
+
+An *attempt* is a test run made while the clock is running; runs with the clock
+stopped aren't recorded at all. A *solve* is counted whenever a run passes while
+timed. Re-checking an old solution never inflates the count, because opening
+existing work never starts the clock — you'd have to reset it (which starts a
+fresh, countable attempt) first.
+
+The file is written atomically, so an interrupted run can't corrupt it. Delete
+it to reset your progress.
 
 ## Editor
 
 Press **`o`** on an exercise to start working on it in your editor. If the
 exercise hasn't been started yet, codeforge creates the files first (never
-overwriting a solution) and opens `exercise.ts`. It picks an editor like this:
+overwriting a solution), starts the clock, and opens `exercise.ts`. Opening an
+exercise that already has a solution just launches the editor — it never starts
+or resets the timer. It picks an editor like this:
 
 1. `$EDITOR` — may include arguments, e.g. `EDITOR="code --wait"`
 2. `$VISUAL`
@@ -224,8 +250,10 @@ is the clean way to keep `@` aliases extensionless.)
 
 - Tests run through Jest in an isolated child process, so the TUI never gets
   clobbered by test output.
-- Existing solutions are **never overwritten** — codeforge only creates
-  `exercise.ts` if it is missing. Your work is safe.
+- Existing solutions are **never overwritten silently** — codeforge only creates
+  `exercise.ts` if it is missing, and `t`/`o` never touch it. The one exception is
+  `s` on an exercise that already has a solution, which asks first and only wipes
+  it back to the stub if you confirm. Your work is safe.
 - The test suite is always refreshed, so it stays in sync with the exercise
   definition.
 - Generated tests normalize `-0` to `0`, so implementations that produce

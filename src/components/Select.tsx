@@ -7,6 +7,9 @@ export interface SelectItem<T> {
   label: string;
   value: T;
   hint?: string;
+  /** optional fixed-width marker rendered before the label, e.g. a solved tick */
+  leading?: string;
+  leadingColor?: string;
   disabled?: boolean;
 }
 
@@ -100,6 +103,13 @@ export function Select<T>({
           <Box key={item.key}>
             <Text color={active ? color : undefined} dimColor={dim}>
               {active ? `${marker} ` : '  '}
+            </Text>
+            {item.leading ? (
+              <Text color={item.leadingColor} dimColor={dim}>
+                {item.leading}
+              </Text>
+            ) : null}
+            <Text color={active ? color : undefined} dimColor={dim}>
               {item.label}
             </Text>
             {item.hint ? <Text dimColor> {item.hint}</Text> : null}
