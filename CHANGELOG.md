@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/MrRoiz/codeforge/compare/v1.9.3...v1.10.0) (2026-09-15)
+
+
+### Features
+
+* add steps-to-make-array-non-decreasing exercise ([7c9a2f6](https://github.com/MrRoiz/codeforge/commit/7c9a2f6496582704898d1564f4f6eb797def4b7d))
+
 ## [1.9.3](https://github.com/MrRoiz/codeforge/compare/v1.9.2...v1.9.3) (2026-09-15)
 
 
