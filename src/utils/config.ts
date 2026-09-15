@@ -51,9 +51,14 @@ export function expandPath(input: string): string {
   return path.resolve(expanded);
 }
 
+/** codeforge's home folder — holds the exercises dir and the progress state. */
+export function codeforgeHome(): string {
+  return path.join(os.homedir(), '.codeforge');
+}
+
 /** Where exercises are written by default (when nothing is configured). */
 export function defaultExercisesDir(): string {
-  return path.join(os.homedir(), 'codeforge');
+  return path.join(codeforgeHome(), 'exercises');
 }
 
 /**
