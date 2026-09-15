@@ -2,8 +2,15 @@
 
 <img width="542" height="125" alt="image" src="https://github.com/user-attachments/assets/f4b83537-d35d-435f-a905-34ad23177475" />
 
+[![npm version](https://img.shields.io/npm/v/@mr_roiz/codeforge?color=cb3837&label=npm)](https://www.npmjs.com/package/@mr_roiz/codeforge)
+[![npm downloads](https://img.shields.io/npm/dm/@mr_roiz/codeforge?color=blue)](https://www.npmjs.com/package/@mr_roiz/codeforge)
+[![checks](https://github.com/MrRoiz/codeforge/actions/workflows/release.yml/badge.svg)](https://github.com/MrRoiz/codeforge/actions/workflows/release.yml)
+[![license](https://img.shields.io/github/license/MrRoiz/codeforge)](LICENSE)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](README.md#contributing)
 
 > A terminal forge for sharpening your coding skills.
+
+![codeforge main menu](https://raw.githubusercontent.com/MrRoiz/codeforge/main/docs/screenshot-main-menu.png)
 
 In an era where more and more code is written by prompting, a quiet gap is
 growing: the ability to sit in front of a blank function and reason your way to
@@ -32,6 +39,8 @@ solution. You decide your editor, your plugins, your keybindings, your
 workflow — run it in `vim`, `neovim`, `VS Code`, `Cursor`, `Zed`, `Helix`,
 whatever you love. **codeforge only checks the output.** That is the whole
 contract.
+
+![Browsing exercises by difficulty](https://raw.githubusercontent.com/MrRoiz/codeforge/main/docs/screenshot-browse.png)
 
 ## What you get
 
@@ -96,6 +105,9 @@ codeforge
 4. Open an exercise to **read it** — nothing is written yet. You can browse the
    statement, examples, constraints, hints (`h`), and the full graded test cases
    (`c`) to decide whether to attempt it.
+
+   ![Reading an exercise statement](https://raw.githubusercontent.com/MrRoiz/codeforge/main/docs/screenshot-exercise.png)
+
 5. Press **`s`** to start it (or **`t`** to start and run immediately). codeforge
    then creates the files under `<settings-dir>/<exercise-id>/`:
 
@@ -111,6 +123,10 @@ codeforge
 7. Back in the TUI, press **`t`** to run the tests. Press **`r`** on the results
    screen to run them again after another edit.
 8. Green bar = you're done. Red bar = read the failing cases and go again.
+
+| Passing run | Failing run |
+| ----------- | ----------- |
+| ![All tests passing](https://raw.githubusercontent.com/MrRoiz/codeforge/main/docs/screenshot-pass.png) | ![Failing tests](https://raw.githubusercontent.com/MrRoiz/codeforge/main/docs/screenshot-fail.png) |
 
 ## Settings
 
