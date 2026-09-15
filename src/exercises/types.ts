@@ -4,6 +4,16 @@ export interface ExerciseTest {
   sorted?: boolean;
 }
 
+export interface TestConfig {
+  cases: ExerciseTest[];
+  /** solution mutates its first argument in place (and may return nothing) */
+  mutatesInput?: boolean;
+  /** solution mutates its first argument and returns a length; compare the first `result` chars to expected */
+  mutatesInputPrefix?: boolean;
+  /** optional full test file content (overrides generated tests) */
+  fileBody?: string;
+}
+
 //   ai-checked → tests reviewed by AI only (default when omitted)
 //   reported   → seen in public candidate reports / aggregators
 //   verified   → confirmed by a human who saw it in a real interview
@@ -30,15 +40,9 @@ export interface Exercise {
   constraints: string[];
   functionSignature: string;
   hints: string[];
-  /** solution mutates its first argument in place (and may return nothing) */
-  mutatesInput?: boolean;
-  /** solution mutates its first argument and returns a length; compare the first `result` chars to expected */
-  mutatesInputPrefix?: boolean;
   /** optional full body for exercise.ts (overrides the generated function stub) */
   stub?: string;
-  /** optional full test file content (overrides generated tests) */
-  testFileBody?: string;
-  tests: ExerciseTest[];
+  tests: TestConfig;
 }
 
 /**

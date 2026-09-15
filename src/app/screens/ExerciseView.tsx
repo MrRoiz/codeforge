@@ -61,7 +61,7 @@ export function ExerciseView({
     if (input === 'c') setShowTests((v) => !v);
   });
 
-  const hasCustomTests = Boolean(exercise.testFileBody);
+  const hasCustomTests = Boolean(exercise.tests.fileBody);
 
   return (
     <Box flexDirection="column" flexGrow={1} flexShrink={1} minHeight={0} paddingLeft={2} paddingRight={2}>
@@ -126,14 +126,14 @@ export function ExerciseView({
 
         <Box marginTop={1} flexDirection="column">
           <Text color="yellowBright" bold>
-            TEST CASES {showTests ? '' : `(${exercise.tests.length}) — press c to reveal`}
+            TEST CASES {showTests ? '' : `(${exercise.tests.cases.length}) — press c to reveal`}
           </Text>
           {showTests ? (
             <Box flexDirection="column" marginLeft={1}>
               {hasCustomTests ? (
                 <Text dimColor>This exercise is graded by a custom validator that accepts any correct answer.</Text>
               ) : (
-                exercise.tests.map((t, i) => (
+                exercise.tests.cases.map((t, i) => (
                   <Text key={i} wrap="wrap">
                     <Text dimColor>{`${i + 1}. `}</Text>
                     <Text color="greenBright">{JSON.stringify(t.input)}</Text>

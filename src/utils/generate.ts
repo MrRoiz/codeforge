@@ -159,22 +159,24 @@ const sortDeep = (v: any): any => {
 `;
 
 function renderTestFile(exercise: Exercise): string {
-  if (exercise.testFileBody) {
-    return `${TEST_HEADER(exercise.name)}\n${exercise.testFileBody}\n`;
+  const { cases: testCases, mutatesInput, mutatesInputPrefix, fileBody } = exercise.tests;
+
+  if (fileBody) {
+    return `${TEST_HEADER(exercise.name)}\n${fileBody}\n`;
   }
 
   const fn = fnName(exercise);
 
-  const cases = exercise.tests
+  const cases = testCases
     .map((t, i) => {
       const argsLiteral = JSON.stringify(t.input);
       const expectedLiteral = JSON.stringify(t.expected);
       const label = `${fn}(${t.input.map((a) => JSON.stringify(a)).join(', ')})`;
 
       let assertion: string;
-      if (exercise.mutatesInputPrefix) {
+      if (mutatesInputPrefix) {
         assertion = `    expect(norm(args[0].slice(0, result))).toEqual(norm(${expectedLiteral}));`;
-      } else if (exercise.mutatesInput) {
+      } else if (mutatesInput) {
         assertion = `    expect(norm(args[0])).toEqual(norm(${expectedLiteral}));`;
       } else if (t.sorted) {
         assertion = `    expect(sortDeep(result)).toEqual(sortDeep(${expectedLiteral}));`;

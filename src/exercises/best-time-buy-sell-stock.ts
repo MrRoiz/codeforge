@@ -29,12 +29,14 @@ export const bestTimeBuySellStock: Exercise = {
     'At each day, calculate the profit if sold today',
     'Keep the maximum profit seen so far',
   ],
-  tests: [
-    { input: [[7, 1, 5, 3, 6, 4]], expected: 5 },
-    { input: [[7, 6, 4, 3, 1]], expected: 0 },
-    { input: [[1, 2, 3, 4, 5]], expected: 4 },
-    { input: [[5, 4, 3, 2, 1]], expected: 0 },
-    { input: [[2, 1, 2, 1, 0, 1, 2]], expected: 2 },
-    { input: [[1]], expected: 0 },
-  ],
+  tests: {
+    cases: [
+      { input: [[7, 1, 5, 3, 6, 4]], expected: 5 },
+      { input: [[7, 6, 4, 3, 1]], expected: 0 },
+      { input: [[1, 2, 3, 4, 5]], expected: 4 },
+      { input: [[5, 4, 3, 2, 1]], expected: 0 },
+      { input: [[2, 1, 2, 1, 0, 1, 2]], expected: 2 },
+      { input: [[1]], expected: 0 },
+    ],
+  },
 };

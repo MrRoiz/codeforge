@@ -30,7 +30,6 @@ export const lruCache: Exercise = {
     'On get, move the node to the head',
     'On put at capacity, remove the tail node and its map entry before inserting',
   ],
-  tests: [],
   stub: `export class LRUCache {
   constructor(capacity: number) {
     void capacity;
@@ -47,7 +46,8 @@ export const lruCache: Exercise = {
     throw new Error('Not implemented');
   }
 }`,
-  testFileBody: `import { LRUCache } from './exercise.js';
+  tests: {
+    fileBody: `import { LRUCache } from './exercise.js';
 
 describe('LRU Cache', () => {
   it('case 1: evicts the least recently used entry', () => {
@@ -88,4 +88,6 @@ describe('LRU Cache', () => {
     expect(cache.get(99)).toBe(-1);
   });
 });`,
+    cases: [],
+  },
 };

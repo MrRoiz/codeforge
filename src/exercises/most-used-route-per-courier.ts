@@ -38,98 +38,100 @@ export const mostUsedRoutePerCourier: Exercise = {
     'For each courier keep the route with the highest count, replacing only on a strictly greater count so the first-encountered route wins ties',
     'Return an object from courier to { route, count }',
   ],
-  tests: [
-    {
-      input: [
-        [
-          { courier: 'A', origin: 'NY', destination: 'LA' },
-          { courier: 'A', origin: 'NY', destination: 'LA' },
-          { courier: 'A', origin: 'SF', destination: 'LA' },
-          { courier: 'B', origin: 'NY', destination: 'Miami' },
-          { courier: 'B', origin: 'Chicago', destination: 'Miami' },
-          { courier: 'B', origin: 'NY', destination: 'Miami' },
+  tests: {
+    cases: [
+      {
+        input: [
+          [
+            { courier: 'A', origin: 'NY', destination: 'LA' },
+            { courier: 'A', origin: 'NY', destination: 'LA' },
+            { courier: 'A', origin: 'SF', destination: 'LA' },
+            { courier: 'B', origin: 'NY', destination: 'Miami' },
+            { courier: 'B', origin: 'Chicago', destination: 'Miami' },
+            { courier: 'B', origin: 'NY', destination: 'Miami' },
+          ],
         ],
-      ],
-      expected: {
-        A: { route: ['NY', 'LA'], count: 2 },
-        B: { route: ['NY', 'Miami'], count: 2 },
+        expected: {
+          A: { route: ['NY', 'LA'], count: 2 },
+          B: { route: ['NY', 'Miami'], count: 2 },
+        },
       },
-    },
-    { input: [[]], expected: {} },
-    {
-      input: [[{ courier: 'A', origin: 'NY', destination: 'LA' }]],
-      expected: { A: { route: ['NY', 'LA'], count: 1 } },
-    },
-    {
-      input: [
-        [
-          { courier: 'A', origin: 'NY', destination: 'LA' },
-          { courier: 'A', origin: 'SF', destination: 'LA' },
-        ],
-      ],
-      expected: { A: { route: ['NY', 'LA'], count: 1 } },
-    },
-    {
-      input: [
-        [
-          { courier: 'A', origin: 'NY', destination: 'NY' },
-          { courier: 'A', origin: 'NY', destination: 'NY' },
-        ],
-      ],
-      expected: { A: { route: ['NY', 'NY'], count: 2 } },
-    },
-    {
-      input: [
-        [
-          { courier: 'A', origin: 'NY', destination: 'LA' },
-          { courier: 'A', origin: 'NY', destination: 'LA' },
-          { courier: 'A', origin: 'NY', destination: 'LA' },
-          { courier: 'B', origin: 'SF', destination: 'NY' },
-          { courier: 'B', origin: 'SF', destination: 'NY' },
-          { courier: 'B', origin: 'NY', destination: 'LA' },
-        ],
-      ],
-      expected: {
-        A: { route: ['NY', 'LA'], count: 3 },
-        B: { route: ['SF', 'NY'], count: 2 },
+      { input: [[]], expected: {} },
+      {
+        input: [[{ courier: 'A', origin: 'NY', destination: 'LA' }]],
+        expected: { A: { route: ['NY', 'LA'], count: 1 } },
       },
-    },
-    {
-      // a later route can overtake the first one — proves the counting, not just first-seen
-      input: [
-        [
-          { courier: 'A', origin: 'NY', destination: 'LA' },
-          { courier: 'A', origin: 'SF', destination: 'LA' },
-          { courier: 'A', origin: 'SF', destination: 'LA' },
+      {
+        input: [
+          [
+            { courier: 'A', origin: 'NY', destination: 'LA' },
+            { courier: 'A', origin: 'SF', destination: 'LA' },
+          ],
         ],
-      ],
-      expected: { A: { route: ['SF', 'LA'], count: 2 } },
-    },
-    {
-      // routes are directed: A->B and B->A are distinct; on a tie the first wins
-      input: [
-        [
-          { courier: 'A', origin: 'NY', destination: 'LA' },
-          { courier: 'A', origin: 'LA', destination: 'NY' },
+        expected: { A: { route: ['NY', 'LA'], count: 1 } },
+      },
+      {
+        input: [
+          [
+            { courier: 'A', origin: 'NY', destination: 'NY' },
+            { courier: 'A', origin: 'NY', destination: 'NY' },
+          ],
         ],
-      ],
-      expected: { A: { route: ['NY', 'LA'], count: 1 } },
-    },
-    {
-      // three routes for one courier; the winner is neither the first nor the last seen
-      input: [
-        [
-          { courier: 'C', origin: 'A', destination: 'B' },
-          { courier: 'C', origin: 'C', destination: 'D' },
-          { courier: 'C', origin: 'A', destination: 'B' },
-          { courier: 'C', origin: 'C', destination: 'D' },
-          { courier: 'C', origin: 'C', destination: 'D' },
-          { courier: 'C', origin: 'B', destination: 'A' },
+        expected: { A: { route: ['NY', 'NY'], count: 2 } },
+      },
+      {
+        input: [
+          [
+            { courier: 'A', origin: 'NY', destination: 'LA' },
+            { courier: 'A', origin: 'NY', destination: 'LA' },
+            { courier: 'A', origin: 'NY', destination: 'LA' },
+            { courier: 'B', origin: 'SF', destination: 'NY' },
+            { courier: 'B', origin: 'SF', destination: 'NY' },
+            { courier: 'B', origin: 'NY', destination: 'LA' },
+          ],
         ],
-      ],
-      expected: { C: { route: ['C', 'D'], count: 3 } },
-    },
-  ],
+        expected: {
+          A: { route: ['NY', 'LA'], count: 3 },
+          B: { route: ['SF', 'NY'], count: 2 },
+        },
+      },
+      {
+        // a later route can overtake the first one — proves the counting, not just first-seen
+        input: [
+          [
+            { courier: 'A', origin: 'NY', destination: 'LA' },
+            { courier: 'A', origin: 'SF', destination: 'LA' },
+            { courier: 'A', origin: 'SF', destination: 'LA' },
+          ],
+        ],
+        expected: { A: { route: ['SF', 'LA'], count: 2 } },
+      },
+      {
+        // routes are directed: A->B and B->A are distinct; on a tie the first wins
+        input: [
+          [
+            { courier: 'A', origin: 'NY', destination: 'LA' },
+            { courier: 'A', origin: 'LA', destination: 'NY' },
+          ],
+        ],
+        expected: { A: { route: ['NY', 'LA'], count: 1 } },
+      },
+      {
+        // three routes for one courier; the winner is neither the first nor the last seen
+        input: [
+          [
+            { courier: 'C', origin: 'A', destination: 'B' },
+            { courier: 'C', origin: 'C', destination: 'D' },
+            { courier: 'C', origin: 'A', destination: 'B' },
+            { courier: 'C', origin: 'C', destination: 'D' },
+            { courier: 'C', origin: 'C', destination: 'D' },
+            { courier: 'C', origin: 'B', destination: 'A' },
+          ],
+        ],
+        expected: { C: { route: ['C', 'D'], count: 3 } },
+      },
+    ],
+  },
   stub: `interface Delivery {
   courier: string;
   origin: string;

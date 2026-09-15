@@ -21,13 +21,15 @@ export const arrangingCoins: Exercise = {
     'Find the largest k such that k(k+1)/2 <= n',
     'Can be solved with binary search in O(log n), or the quadratic formula in O(1)',
   ],
-  tests: [
-    { input: [5], expected: 2 },
-    { input: [8], expected: 3 },
-    { input: [1], expected: 1 },
-    { input: [3], expected: 2 },
-    { input: [6], expected: 3 },
-    { input: [10], expected: 4 },
-    { input: [1804289383], expected: 60070 },
-  ],
+  tests: {
+    cases: [
+      { input: [5], expected: 2 },
+      { input: [8], expected: 3 },
+      { input: [1], expected: 1 },
+      { input: [3], expected: 2 },
+      { input: [6], expected: 3 },
+      { input: [10], expected: 4 },
+      { input: [1804289383], expected: 60070 },
+    ],
+  },
 };

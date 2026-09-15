@@ -1,4 +1,4 @@
-export type { Exercise, ExerciseTest, Validation, ValidationLevel } from '@exercises/types';
+export type { Exercise, ExerciseTest, TestConfig, Validation, ValidationLevel } from '@exercises/types';
 export { validationLabel } from '@exercises/types';
 
 export { twoSum } from '@exercises/two-sum';

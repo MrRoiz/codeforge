@@ -23,15 +23,17 @@ export const validParentheses: Exercise = {
     'When you see a closing bracket, check if it matches the top of the stack',
     'At the end, the stack should be empty for a valid string',
   ],
-  tests: [
-    { input: ['()'], expected: true },
-    { input: ['()[]{}'], expected: true },
-    { input: ['(]'], expected: false },
-    { input: ['([)]'], expected: false },
-    { input: ['{[]}'], expected: true },
-    { input: ['('], expected: false },
-    { input: [')'], expected: false },
-    { input: ['(('], expected: false },
-    { input: ['())'], expected: false },
-  ],
+  tests: {
+    cases: [
+      { input: ['()'], expected: true },
+      { input: ['()[]{}'], expected: true },
+      { input: ['(]'], expected: false },
+      { input: ['([)]'], expected: false },
+      { input: ['{[]}'], expected: true },
+      { input: ['('], expected: false },
+      { input: [')'], expected: false },
+      { input: ['(('], expected: false },
+      { input: ['())'], expected: false },
+    ],
+  },
 };

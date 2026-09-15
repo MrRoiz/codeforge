@@ -25,13 +25,15 @@ export const minimumWindowSubstring: Exercise = {
     'Shrink the left pointer while it stays valid, recording the smallest window',
     'Track how many required characters are currently satisfied',
   ],
-  tests: [
-    { input: ['ADOBECODEBANC', 'ABC'], expected: 'BANC' },
-    { input: ['a', 'a'], expected: 'a' },
-    { input: ['a', 'aa'], expected: '' },
-    { input: ['aa', 'aa'], expected: 'aa' },
-    { input: ['a', 'b'], expected: '' },
-    { input: ['abc', 'c'], expected: 'c' },
-    { input: ['bdab', 'ab'], expected: 'ab' },
-  ],
+  tests: {
+    cases: [
+      { input: ['ADOBECODEBANC', 'ABC'], expected: 'BANC' },
+      { input: ['a', 'a'], expected: 'a' },
+      { input: ['a', 'aa'], expected: '' },
+      { input: ['aa', 'aa'], expected: 'aa' },
+      { input: ['a', 'b'], expected: '' },
+      { input: ['abc', 'c'], expected: 'c' },
+      { input: ['bdab', 'ab'], expected: 'ab' },
+    ],
+  },
 };

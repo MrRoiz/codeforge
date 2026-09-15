@@ -21,12 +21,14 @@ export const longestPalindromicSubstring: Exercise = {
     'Track the start and length of the best palindrome found',
     'Or use DP: dp[i][j] is true when s[i..j] is a palindrome',
   ],
-  tests: [
-    { input: ['cbbd'], expected: 'bb' },
-    { input: ['racecar'], expected: 'racecar' },
-    { input: ['a'], expected: 'a' },
-    { input: ['abba'], expected: 'abba' },
-    { input: ['abccba'], expected: 'abccba' },
-    { input: ['forgeeksskeegfor'], expected: 'geeksskeeg' },
-  ],
+  tests: {
+    cases: [
+      { input: ['cbbd'], expected: 'bb' },
+      { input: ['racecar'], expected: 'racecar' },
+      { input: ['a'], expected: 'a' },
+      { input: ['abba'], expected: 'abba' },
+      { input: ['abccba'], expected: 'abccba' },
+      { input: ['forgeeksskeegfor'], expected: 'geeksskeeg' },
+    ],
+  },
 };

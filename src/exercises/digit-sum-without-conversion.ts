@@ -21,13 +21,15 @@ export const digitSumWithoutConversion: Exercise = {
     "Subtract the code of '0' to get the digit value: charCodeAt(i) - 48",
     'Accumulate in a single pass — no parseInt, no Number()',
   ],
-  tests: [
-    { input: ['12345'], expected: 15 },
-    { input: ['0'], expected: 0 },
-    { input: ['99999'], expected: 45 },
-    { input: ['1001'], expected: 2 },
-    { input: ['9'], expected: 9 },
-    { input: ['10'], expected: 1 },
-    { input: ['1234567890'], expected: 45 },
-  ],
+  tests: {
+    cases: [
+      { input: ['12345'], expected: 15 },
+      { input: ['0'], expected: 0 },
+      { input: ['99999'], expected: 45 },
+      { input: ['1001'], expected: 2 },
+      { input: ['9'], expected: 9 },
+      { input: ['10'], expected: 1 },
+      { input: ['1234567890'], expected: 45 },
+    ],
+  },
 };

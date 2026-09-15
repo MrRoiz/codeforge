@@ -31,12 +31,14 @@ export const containerWithMostWater: Exercise = {
     'The area is capped by the shorter line, so shrinking the width can only pay off if you replace the shorter line.',
     'Move the pointer at the shorter line inward and track the best area seen.',
   ],
-  tests: [
-    { input: [[1, 8, 6, 2, 5, 4, 8, 3, 7]], expected: 49 },
-    { input: [[1, 1]], expected: 1 },
-    { input: [[4, 3, 2, 1, 4]], expected: 16 },
-    { input: [[1, 2, 1]], expected: 2 },
-    { input: [[1, 2, 4, 3]], expected: 4 },
-    { input: [[2, 3, 4, 5, 18, 17, 6]], expected: 17 },
-  ],
+  tests: {
+    cases: [
+      { input: [[1, 8, 6, 2, 5, 4, 8, 3, 7]], expected: 49 },
+      { input: [[1, 1]], expected: 1 },
+      { input: [[4, 3, 2, 1, 4]], expected: 16 },
+      { input: [[1, 2, 1]], expected: 2 },
+      { input: [[1, 2, 4, 3]], expected: 4 },
+      { input: [[2, 3, 4, 5, 18, 17, 6]], expected: 17 },
+    ],
+  },
 };

@@ -38,16 +38,18 @@ export const stringCompression: Exercise = {
     'Write the character, then write the count digits one at a time (handles multi-digit counts)',
     'Return the write pointer as the new length',
   ],
-  mutatesInputPrefix: true,
-  tests: [
-    { input: [['a', 'a', 'b', 'b', 'c', 'c', 'c']], expected: ['a', '2', 'b', '2', 'c', '3'] },
-    { input: [['a']], expected: ['a'] },
-    {
-      input: [['a', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b']],
-      expected: ['a', 'b', '1', '2'],
-    },
-    { input: [['a', 'a', 'a', 'b', 'b']], expected: ['a', '3', 'b', '2'] },
-    { input: [['a', 'b', 'c']], expected: ['a', 'b', 'c'] },
-    { input: [['a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a']], expected: ['a', '1', '0'] },
-  ],
+  tests: {
+    mutatesInputPrefix: true,
+    cases: [
+      { input: [['a', 'a', 'b', 'b', 'c', 'c', 'c']], expected: ['a', '2', 'b', '2', 'c', '3'] },
+      { input: [['a']], expected: ['a'] },
+      {
+        input: [['a', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b']],
+        expected: ['a', 'b', '1', '2'],
+      },
+      { input: [['a', 'a', 'a', 'b', 'b']], expected: ['a', '3', 'b', '2'] },
+      { input: [['a', 'b', 'c']], expected: ['a', 'b', 'c'] },
+      { input: [['a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a']], expected: ['a', '1', '0'] },
+    ],
+  },
 };

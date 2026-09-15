@@ -21,12 +21,14 @@ export const maxConsecutiveOnes: Exercise = {
     'Reset the current run when a 0 is encountered',
     'First occurrence wins on ties: only replace when strictly greater',
   ],
-  tests: [
-    { input: [[1, 1, 0, 1, 1, 1, 0, 1]], expected: { length: 3, start: 3 } },
-    { input: [[1, 1, 1, 1]], expected: { length: 4, start: 0 } },
-    { input: [[0, 0, 0]], expected: { length: 0, start: -1 } },
-    { input: [[1, 0, 1, 0, 1]], expected: { length: 1, start: 0 } },
-    { input: [[0, 1, 1, 0, 1, 1, 1]], expected: { length: 3, start: 4 } },
-    { input: [[1, 1, 0, 1, 1]], expected: { length: 2, start: 0 } },
-  ],
+  tests: {
+    cases: [
+      { input: [[1, 1, 0, 1, 1, 1, 0, 1]], expected: { length: 3, start: 3 } },
+      { input: [[1, 1, 1, 1]], expected: { length: 4, start: 0 } },
+      { input: [[0, 0, 0]], expected: { length: 0, start: -1 } },
+      { input: [[1, 0, 1, 0, 1]], expected: { length: 1, start: 0 } },
+      { input: [[0, 1, 1, 0, 1, 1, 1]], expected: { length: 3, start: 4 } },
+      { input: [[1, 1, 0, 1, 1]], expected: { length: 2, start: 0 } },
+    ],
+  },
 };

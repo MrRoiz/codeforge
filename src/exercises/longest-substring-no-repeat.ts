@@ -38,14 +38,16 @@ export const longestSubstringNoRepeat: Exercise = {
     'When a duplicate is found inside the window, move start past its previous occurrence',
     'The `lastSeen[ch] >= start` guard is crucial to avoid stale entries (try "abba")',
   ],
-  tests: [
-    { input: ['abcadcbb'], expected: 4 },
-    { input: ['pwwkew'], expected: 3 },
-    { input: ['bbbbb'], expected: 1 },
-    { input: [''], expected: 0 },
-    { input: ['abba'], expected: 2 },
-    { input: ['abcdef'], expected: 6 },
-    { input: ['aab'], expected: 2 },
-    { input: ['dvdf'], expected: 3 },
-  ],
+  tests: {
+    cases: [
+      { input: ['abcadcbb'], expected: 4 },
+      { input: ['pwwkew'], expected: 3 },
+      { input: ['bbbbb'], expected: 1 },
+      { input: [''], expected: 0 },
+      { input: ['abba'], expected: 2 },
+      { input: ['abcdef'], expected: 6 },
+      { input: ['aab'], expected: 2 },
+      { input: ['dvdf'], expected: 3 },
+    ],
+  },
 };

@@ -20,47 +20,49 @@ export const permutations: Exercise = {
     'Swap-based generation: swap the current index with each later index',
     'Base case: when the index reaches the end, record a copy of the array',
   ],
-  tests: [
-    {
-      input: [[1, 2, 3]],
-      expected: [
-        [1, 2, 3],
-        [1, 3, 2],
-        [2, 1, 3],
-        [2, 3, 1],
-        [3, 1, 2],
-        [3, 2, 1],
-      ],
-      sorted: true,
-    },
-    {
-      input: [[0, 1]],
-      expected: [
-        [0, 1],
-        [1, 0],
-      ],
-      sorted: true,
-    },
-    { input: [[1]], expected: [[1]], sorted: true },
-    {
-      input: [[1, 2]],
-      expected: [
-        [1, 2],
-        [2, 1],
-      ],
-      sorted: true,
-    },
-    {
-      input: [[-1, 0, 1]],
-      expected: [
-        [-1, 0, 1],
-        [-1, 1, 0],
-        [0, -1, 1],
-        [0, 1, -1],
-        [1, -1, 0],
-        [1, 0, -1],
-      ],
-      sorted: true,
-    },
-  ],
+  tests: {
+    cases: [
+      {
+        input: [[1, 2, 3]],
+        expected: [
+          [1, 2, 3],
+          [1, 3, 2],
+          [2, 1, 3],
+          [2, 3, 1],
+          [3, 1, 2],
+          [3, 2, 1],
+        ],
+        sorted: true,
+      },
+      {
+        input: [[0, 1]],
+        expected: [
+          [0, 1],
+          [1, 0],
+        ],
+        sorted: true,
+      },
+      { input: [[1]], expected: [[1]], sorted: true },
+      {
+        input: [[1, 2]],
+        expected: [
+          [1, 2],
+          [2, 1],
+        ],
+        sorted: true,
+      },
+      {
+        input: [[-1, 0, 1]],
+        expected: [
+          [-1, 0, 1],
+          [-1, 1, 0],
+          [0, -1, 1],
+          [0, 1, -1],
+          [1, -1, 0],
+          [1, 0, -1],
+        ],
+        sorted: true,
+      },
+    ],
+  },
 };

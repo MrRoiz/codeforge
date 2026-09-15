@@ -21,13 +21,15 @@ export const uniquePathsII: Exercise = {
     'Otherwise dp[i][j] = dp[i-1][j] + dp[i][j-1]',
     'The start cell is 0 paths if it has an obstacle',
   ],
-  tests: [
-    { input: [[[0, 0, 0], [0, 1, 0], [0, 0, 0]]], expected: 2 },
-    { input: [[[0, 1], [0, 0]]], expected: 1 },
-    { input: [[[1]]], expected: 0 },
-    { input: [[[0]]], expected: 1 },
-    { input: [[[0, 0], [0, 0]]], expected: 2 },
-    { input: [[[0, 1], [1, 0]]], expected: 0 },
-    { input: [[[0, 0, 0], [0, 0, 0], [0, 0, 0]]], expected: 6 },
-  ],
+  tests: {
+    cases: [
+      { input: [[[0, 0, 0], [0, 1, 0], [0, 0, 0]]], expected: 2 },
+      { input: [[[0, 1], [0, 0]]], expected: 1 },
+      { input: [[[1]]], expected: 0 },
+      { input: [[[0]]], expected: 1 },
+      { input: [[[0, 0], [0, 0]]], expected: 2 },
+      { input: [[[0, 1], [1, 0]]], expected: 0 },
+      { input: [[[0, 0, 0], [0, 0, 0], [0, 0, 0]]], expected: 6 },
+    ],
+  },
 };

@@ -22,14 +22,16 @@ export const ticketItineraryReconstruction: Exercise = {
     'Build a map from each origin to its destination',
     'Walk the map from the start, collecting cities',
   ],
-  tests: [
-    {
-      input: [[['MUC', 'LHR'], ['JFK', 'MUC'], ['SFO', 'SJC'], ['LHR', 'SFO']]],
-      expected: ['JFK', 'MUC', 'LHR', 'SFO', 'SJC'],
-    },
-    { input: [[['A', 'B']]], expected: ['A', 'B'] },
-    { input: [[['B', 'C'], ['A', 'B']]], expected: ['A', 'B', 'C'] },
-    { input: [[['SFO', 'LAX'], ['LAX', 'JFK'], ['JFK', 'ORD']]], expected: ['SFO', 'LAX', 'JFK', 'ORD'] },
-    { input: [[['X', 'Y'], ['Y', 'Z'], ['Z', 'W']]], expected: ['X', 'Y', 'Z', 'W'] },
-  ],
+  tests: {
+    cases: [
+      {
+        input: [[['MUC', 'LHR'], ['JFK', 'MUC'], ['SFO', 'SJC'], ['LHR', 'SFO']]],
+        expected: ['JFK', 'MUC', 'LHR', 'SFO', 'SJC'],
+      },
+      { input: [[['A', 'B']]], expected: ['A', 'B'] },
+      { input: [[['B', 'C'], ['A', 'B']]], expected: ['A', 'B', 'C'] },
+      { input: [[['SFO', 'LAX'], ['LAX', 'JFK'], ['JFK', 'ORD']]], expected: ['SFO', 'LAX', 'JFK', 'ORD'] },
+      { input: [[['X', 'Y'], ['Y', 'Z'], ['Z', 'W']]], expected: ['X', 'Y', 'Z', 'W'] },
+    ],
+  },
 };

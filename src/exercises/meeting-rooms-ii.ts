@@ -27,12 +27,14 @@ export const meetingRoomsII: Exercise = {
     'If the earliest-ending room is free before the next meeting starts, reuse it',
     'The heap size is the answer',
   ],
-  tests: [
-    { input: [[[0, 30], [5, 10], [15, 20]]], expected: 2 },
-    { input: [[[7, 10], [2, 4]]], expected: 1 },
-    { input: [[[1, 5], [2, 6], [3, 7]]], expected: 3 },
-    { input: [[[1, 2], [3, 4], [5, 6]]], expected: 1 },
-    { input: [[[1, 10], [2, 3], [4, 5]]], expected: 2 },
-    { input: [[[0, 1], [1, 2], [2, 3]]], expected: 1 },
-  ],
+  tests: {
+    cases: [
+      { input: [[[0, 30], [5, 10], [15, 20]]], expected: 2 },
+      { input: [[[7, 10], [2, 4]]], expected: 1 },
+      { input: [[[1, 5], [2, 6], [3, 7]]], expected: 3 },
+      { input: [[[1, 2], [3, 4], [5, 6]]], expected: 1 },
+      { input: [[[1, 10], [2, 3], [4, 5]]], expected: 2 },
+      { input: [[[0, 1], [1, 2], [2, 3]]], expected: 1 },
+    ],
+  },
 };

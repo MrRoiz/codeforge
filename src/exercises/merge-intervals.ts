@@ -25,12 +25,14 @@ export const mergeIntervals: Exercise = {
     'Iterate, extending the last merged interval when they overlap',
     'Two intervals [a,b] and [c,d] overlap if c <= b',
   ],
-  tests: [
-    { input: [[[1, 3], [2, 6], [8, 10], [15, 18]]], expected: [[1, 6], [8, 10], [15, 18]] },
-    { input: [[[1, 4], [4, 5]]], expected: [[1, 5]] },
-    { input: [[[1, 4], [2, 3]]], expected: [[1, 4]] },
-    { input: [[[1, 4], [5, 6]]], expected: [[1, 4], [5, 6]] },
-    { input: [[[1, 4], [0, 4]]], expected: [[0, 4]] },
-    { input: [[[1, 4], [0, 0]]], expected: [[0, 0], [1, 4]] },
-  ],
+  tests: {
+    cases: [
+      { input: [[[1, 3], [2, 6], [8, 10], [15, 18]]], expected: [[1, 6], [8, 10], [15, 18]] },
+      { input: [[[1, 4], [4, 5]]], expected: [[1, 5]] },
+      { input: [[[1, 4], [2, 3]]], expected: [[1, 4]] },
+      { input: [[[1, 4], [5, 6]]], expected: [[1, 4], [5, 6]] },
+      { input: [[[1, 4], [0, 4]]], expected: [[0, 4]] },
+      { input: [[[1, 4], [0, 0]]], expected: [[0, 0], [1, 4]] },
+    ],
+  },
 };

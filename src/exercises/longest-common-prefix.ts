@@ -25,13 +25,15 @@ export const longestCommonPrefix: Exercise = {
     'Horizontal scanning: reduce the prefix iteratively between pairs',
     'Trick: sort the array, then compare only the first and last strings',
   ],
-  tests: [
-    { input: [['flower', 'flow', 'flight']], expected: 'fl' },
-    { input: [['dog', 'racecar', 'car']], expected: '' },
-    { input: [['interspecies', 'interstellar', 'interstate']], expected: 'inters' },
-    { input: [['']], expected: '' },
-    { input: [['a']], expected: 'a' },
-    { input: [['abc', 'abc', 'abc']], expected: 'abc' },
-    { input: [['ab', 'abc', 'abcd']], expected: 'ab' },
-  ],
+  tests: {
+    cases: [
+      { input: [['flower', 'flow', 'flight']], expected: 'fl' },
+      { input: [['dog', 'racecar', 'car']], expected: '' },
+      { input: [['interspecies', 'interstellar', 'interstate']], expected: 'inters' },
+      { input: [['']], expected: '' },
+      { input: [['a']], expected: 'a' },
+      { input: [['abc', 'abc', 'abc']], expected: 'abc' },
+      { input: [['ab', 'abc', 'abcd']], expected: 'ab' },
+    ],
+  },
 };

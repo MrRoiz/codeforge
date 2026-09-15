@@ -24,12 +24,14 @@ export const productExceptSelf: Exercise = {
     'Two passes: left-to-right for prefix products, right-to-left for suffix products',
     'Can be optimized to O(1) extra space (excluding the output array)',
   ],
-  tests: [
-    { input: [[1, 2, 3, 4, 5]], expected: [120, 60, 40, 30, 24] },
-    { input: [[-1, 1, 0, -3, 3]], expected: [0, 0, 9, 0, 0] },
-    { input: [[1, 2]], expected: [2, 1] },
-    { input: [[0, 0]], expected: [0, 0] },
-    { input: [[1, 0]], expected: [0, 1] },
-    { input: [[2, 3, 4]], expected: [12, 8, 6] },
-  ],
+  tests: {
+    cases: [
+      { input: [[1, 2, 3, 4, 5]], expected: [120, 60, 40, 30, 24] },
+      { input: [[-1, 1, 0, -3, 3]], expected: [0, 0, 9, 0, 0] },
+      { input: [[1, 2]], expected: [2, 1] },
+      { input: [[0, 0]], expected: [0, 0] },
+      { input: [[1, 0]], expected: [0, 1] },
+      { input: [[2, 3, 4]], expected: [12, 8, 6] },
+    ],
+  },
 };

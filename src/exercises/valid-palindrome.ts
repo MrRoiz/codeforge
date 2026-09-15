@@ -24,12 +24,14 @@ export const validPalindrome: Exercise = {
     'Skip non-alphanumeric characters from both ends',
     'Compare lowercase characters while moving inward',
   ],
-  tests: [
-    { input: ['A man, a plan, a canal: Panama'], expected: true },
-    { input: ['race a car'], expected: false },
-    { input: [' '], expected: true },
-    { input: ['0P'], expected: false },
-    { input: ['a'], expected: true },
-    { input: ['Was it a car or a cat I saw?'], expected: true },
-  ],
+  tests: {
+    cases: [
+      { input: ['A man, a plan, a canal: Panama'], expected: true },
+      { input: ['race a car'], expected: false },
+      { input: [' '], expected: true },
+      { input: ['0P'], expected: false },
+      { input: ['a'], expected: true },
+      { input: ['Was it a car or a cat I saw?'], expected: true },
+    ],
+  },
 };

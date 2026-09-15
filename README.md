@@ -239,13 +239,15 @@ library, and it gets better with every real interview problem people add.
      // NOTE: include `export` — the generated tests import this function
      functionSignature: 'export function myFn(nums: number[]): number',
      hints: ['...'],
-     // optional: set to true if the solution mutates its input instead of returning (e.g. reverse-string)
-     mutatesInput: false,
-     tests: [
-       { input: [[1, 2, 3]], expected: 6 },
-       // optional: set `sorted: true` when the answer is an array in any order
-       { input: [[3, 1, 2]], expected: [1, 2, 3], sorted: true },
-     ],
+     tests: {
+       // optional: set to true if the solution mutates its input instead of returning (e.g. reverse-string)
+       mutatesInput: false,
+       cases: [
+         { input: [[1, 2, 3]], expected: 6 },
+         // optional: set `sorted: true` when the answer is an array in any order
+         { input: [[3, 1, 2]], expected: [1, 2, 3], sorted: true },
+       ],
+     },
    };
    ```
 

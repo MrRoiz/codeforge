@@ -26,8 +26,8 @@ export const dependencyGraphOrdering: Exercise = {
     'Process a task, then decrement the in-degree of its dependents',
     'If you process fewer than `tasks` nodes, a cycle exists -> return []',
   ],
-  tests: [],
-  testFileBody: `import { findOrder } from './exercise.js';
+  tests: {
+    fileBody: `import { findOrder } from './exercise.js';
 
 // any topological order is accepted — validate instead of comparing exactly
 const isValidOrder = (tasks: number, deps: number[][], order: number[]): boolean => {
@@ -72,4 +72,6 @@ describe('Dependency Graph Ordering', () => {
     expect(isValidOrder(4, deps, findOrder(4, deps))).toBe(true);
   });
 });`,
+    cases: [],
+  },
 };

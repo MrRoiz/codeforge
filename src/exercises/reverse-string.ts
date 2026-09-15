@@ -30,11 +30,13 @@ export const reverseString: Exercise = {
     'Move pointers towards the center',
     'Stop when the pointers meet',
   ],
-  mutatesInput: true,
-  tests: [
-    { input: [['h', 'e', 'l', 'l', 'o']], expected: ['o', 'l', 'l', 'e', 'h'] },
-    { input: [['H', 'a', 'n', 'n', 'a', 'h']], expected: ['h', 'a', 'n', 'n', 'a', 'H'] },
-    { input: [['a']], expected: ['a'] },
-    { input: [['a', 'b']], expected: ['b', 'a'] },
-  ],
+  tests: {
+    mutatesInput: true,
+    cases: [
+      { input: [['h', 'e', 'l', 'l', 'o']], expected: ['o', 'l', 'l', 'e', 'h'] },
+      { input: [['H', 'a', 'n', 'n', 'a', 'h']], expected: ['h', 'a', 'n', 'n', 'a', 'H'] },
+      { input: [['a']], expected: ['a'] },
+      { input: [['a', 'b']], expected: ['b', 'a'] },
+    ],
+  },
 };
