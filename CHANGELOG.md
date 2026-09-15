@@ -1,3 +1,11 @@
+## [1.9.3](https://github.com/MrRoiz/codeforge/compare/v1.9.2...v1.9.3) (2026-09-15)
+
+
+### Bug Fixes
+
+* keep the editor from reopening after it closes ([9b274bc](https://github.com/MrRoiz/codeforge/commit/9b274bcc69acb165886f33738ea5f5afe4e04da3))
+* show the p shortcut for GitHub in the logo ([661ccf6](https://github.com/MrRoiz/codeforge/commit/661ccf63e1b8cb5ca89e5a6b94fda06cefc31af2))
+
 ## [1.9.2](https://github.com/MrRoiz/codeforge/compare/v1.9.1...v1.9.2) (2026-09-15)
 
 
