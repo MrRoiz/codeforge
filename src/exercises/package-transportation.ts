@@ -11,7 +11,7 @@ export const packageTransportation: Exercise = {
   description:
     'A logistics fleet ships packages with n trucks, each with an initial capacity. A truck can carry a package only if the package weight is at most the truck\u2019s current capacity; after a delivery, that truck\u2019s capacity is halved (rounded down) and it may be reused. Given truckCapacities and packageWeights, determine whether every package can be shipped. Return 1 if possible, 0 otherwise.',
   examples: [
-    { input: 'truckCapacities = [3, 5], packageWeights = [3, 2, 1]', output: '1', explanation: 'Ship 3 on truck 3 (becomes 1), ship 2 on truck 5 (becomes 2), ship 1 on truck 2' },
+    { input: 'truckCapacities = [3, 5], packageWeights = [3, 2, 1]', output: '1', explanation: 'Process heaviest-first: 3 on the cap-3 truck (becomes 1); 2 on the cap-5 truck (becomes 2); 1 on the cap-1 truck (becomes 0). Every package ships, so return 1.' },
     { input: 'truckCapacities = [2, 2], packageWeights = [2, 2, 2]', output: '0', explanation: 'After two deliveries both trucks hold capacity 1; the third 2-weight package fits neither' },
     { input: 'truckCapacities = [11], packageWeights = [8, 5]', output: '1', explanation: 'Ship 8 on truck 11 (becomes 5), then ship 5 on the same truck (becomes 2)' },
   ],

@@ -10,9 +10,21 @@ export const longestSubstringNoRepeat: Exercise = {
   description:
     'Given a string `s`, find the length of the longest substring without repeating characters. A substring is contiguous.',
   examples: [
-    { input: 's = "abcadcbb"', output: '4', explanation: 'The answer is "bcad"' },
-    { input: 's = "pwwkew"', output: '3', explanation: 'The answer is "wke"' },
-    { input: 's = "bbbbb"', output: '1', explanation: 'The answer is "b"' },
+    {
+      input: 's = "abcadcbb"',
+      output: '4',
+      explanation: 'The longest substrings without repeats have length 4, e.g. "bcad" or "adcb" — return the length, 4.',
+    },
+    {
+      input: 's = "pwwkew"',
+      output: '3',
+      explanation: 'The longest substrings have length 3, e.g. "wke" or "kew" — return the length, 3.',
+    },
+    {
+      input: 's = "bbbbb"',
+      output: '1',
+      explanation: 'The only non-repeating substring is "b" — return the length, 1.',
+    },
     { input: 's = ""', output: '0' },
   ],
   constraints: [

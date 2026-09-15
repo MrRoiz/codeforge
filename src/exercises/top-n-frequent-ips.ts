@@ -8,12 +8,13 @@ export const topNFrequentIps: Exercise = {
   type: 'Hash Map + Heap',
   time: '20-25 min',
   description:
-    'Given a list of IP addresses from server logs, return the `n` most frequent IP addresses. Tests use distinct top frequencies so the result set is unambiguous.',
+    'Given a list of IP addresses from server logs, return the `n` most frequent IP addresses. Return them in any order — only the set is graded. Tests use distinct top frequencies so the result set is unambiguous.',
   examples: [
     {
       input:
         'ips = ["192.168.1.1","10.0.0.1","192.168.1.1","192.168.1.1","10.0.0.1","172.16.0.1"], n = 2',
       output: '["192.168.1.1","10.0.0.1"]',
+      explanation: 'Order does not matter; this example lists them by descending frequency (3, then 2).',
     },
   ],
   constraints: ['1 <= ips.length <= 10^5', '1 <= n <= number of unique IPs'],

@@ -11,8 +11,16 @@ export const bestTimeBuySellStock: Exercise = {
   description:
     'Given an array `prices` where prices[i] is the price of a stock on day i, choose one day to buy and a different later day to sell to maximize profit. Return the maximum profit; return 0 if no profit is possible.',
   examples: [
-    { input: 'prices = [7, 1, 5, 3, 6, 4]', output: '5', explanation: 'Buy at 1, sell at 6' },
-    { input: 'prices = [7, 6, 4, 3, 1]', output: '0', explanation: 'Prices only fall, no transaction' },
+    {
+      input: 'prices = [7, 1, 5, 3, 6, 4]',
+      output: '5',
+      explanation: 'Buy at price 1 (day 2) and sell at price 6 (day 5) → profit 5.',
+    },
+    {
+      input: 'prices = [7, 6, 4, 3, 1]',
+      output: '0',
+      explanation: 'Prices only fall, so no profitable trade is possible — return 0.',
+    },
   ],
   constraints: ['1 <= prices.length <= 10^5', '0 <= prices[i] <= 10^4'],
   functionSignature: 'export function maxProfit(prices: number[]): number',

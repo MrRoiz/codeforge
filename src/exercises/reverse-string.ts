@@ -10,8 +10,17 @@ export const reverseString: Exercise = {
   description:
     'Write a function that reverses a string. The input string is given as an array of characters `s`. You must do this by modifying the input array in-place with O(1) extra memory. Do not return anything; mutate `s` instead.',
   examples: [
-    { input: 's = ["h","e","l","l","o"]', output: '["o","l","l","e","h"]' },
-    { input: 's = ["H","a","n","n","a","h"]', output: '["h","a","n","n","a","H"]' },
+    {
+      input: 's = ["h","e","l","l","o"]',
+      output: 's becomes ["o","l","l","e","h"] (no return value)',
+      explanation:
+        'In-place: the input array `s` is reversed. The function returns nothing (void); the graded result is the mutated array `s` itself, not a return value.',
+    },
+    {
+      input: 's = ["H","a","n","n","a","h"]',
+      output: 's becomes ["h","a","n","n","a","H"] (no return value)',
+      explanation: 'In-place: `s` is reversed; nothing is returned.',
+    },
   ],
   constraints: ['1 <= s.length <= 10^5', 's[i] is a printable ascii character'],
   functionSignature: 'export function reverseString(s: string[]): void',

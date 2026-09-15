@@ -8,7 +8,7 @@ export const maxConsecutiveOnes: Exercise = {
   type: 'Arrays',
   time: '15-20 min',
   description:
-    'Given an array of 0s and 1s, find the longest run of consecutive 1s: its length and where it starts. If there are no 1s, return length 0 and start -1. On ties, the first occurrence wins.',
+    'Given an array of 0s and 1s, return an object `{ length, start }` describing the longest run of consecutive 1s. If there are no 1s, return `{ length: 0, start: -1 }`. On ties, the first occurrence wins.',
   examples: [
     { input: 'nums = [1, 1, 0, 1, 1, 1, 0, 1]', output: '{ length: 3, start: 3 }' },
     { input: 'nums = [1, 0, 1, 1, 0, 1]', output: '{ length: 2, start: 2 }' },

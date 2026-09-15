@@ -10,7 +10,12 @@ export const meetingRoomsII: Exercise = {
   description:
     'Given an array of meeting time intervals `intervals` where intervals[i] = [start, end], return the minimum number of conference rooms required. A meeting occupies the half-open interval [start, end): it releases the room at `end`, so meetings like [0, 1] and [1, 2] can share a room.',
   examples: [
-    { input: 'intervals = [[0,30],[5,10],[15,20]]', output: '2' },
+    {
+      input: 'intervals = [[0,30],[5,10],[15,20]]',
+      output: '2',
+      explanation:
+        '[0,30] overlaps both [5,10] and [15,20], so 2 rooms are needed; [5,10] and [15,20] do not overlap each other.',
+    },
     { input: 'intervals = [[7,10],[2,4]]', output: '1' },
     { input: 'intervals = [[0,1],[1,2],[2,3]]', output: '1', explanation: 'Back-to-back meetings share one room' },
   ],
