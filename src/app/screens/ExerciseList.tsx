@@ -1,6 +1,6 @@
 import { Select } from '@components/Select';
 import { TextInput } from '@components/TextInput';
-import { DifficultyBadge, formatDate, formatProgress, KeyHints } from '@components/ui';
+import { DifficultyBadge, formatDate, KeyHints, Stats } from '@components/ui';
 import { type Exercise, validationLabel } from '@exercises/types';
 import type { State } from '@utils/state';
 import { Box, Text, useInput } from 'ink';
@@ -127,9 +127,7 @@ export function ExerciseList({ exercises, state, onSelect, onBack, onSearchActiv
                 <Text dimColor>added: {formatDate(highlighted.createdAt)}</Text>
               </Box>
               <Box marginTop={1}>
-                <Text color={state.exercises[highlighted.id]?.solves ? 'greenBright' : 'gray'}>
-                  progress: {formatProgress(state.exercises[highlighted.id])}
-                </Text>
+                <Stats stat={state.exercises[highlighted.id]} />
               </Box>
               <Box marginTop={1}>
                 <Text wrap="wrap" dimColor>

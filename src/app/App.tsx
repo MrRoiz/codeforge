@@ -248,7 +248,10 @@ export function App() {
     if (timed) {
       let next = recordAttempt(ex.id);
       if (r.passed) {
-        next = recordSolve(ex.id, ms);
+        next = recordSolve(ex.id, {
+          elapsedMs: ms,
+          complexity: cx ? { label: cx.label, confidence: cx.confidence } : undefined,
+        });
       }
       setState(next);
     }

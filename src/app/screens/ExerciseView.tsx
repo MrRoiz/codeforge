@@ -1,12 +1,6 @@
 import { useElapsed } from '@app/useElapsed';
 import { ScrollView } from '@components/ScrollView';
-import {
-  DifficultyBadge,
-  formatDate,
-  formatDuration,
-  formatProgress,
-  KeyHints,
-} from '@components/ui';
+import { DifficultyBadge, formatDate, formatDuration, KeyHints, StatColumns } from '@components/ui';
 import { type Exercise, validationLabel } from '@exercises/types';
 import { formatExample } from '@utils/format';
 import type { ExerciseStat } from '@utils/state';
@@ -130,6 +124,23 @@ export function ExerciseView({
 
   const hasCustomTests = Boolean(exercise.tests.fileBody);
 
+  const headerInfo = (
+    <Box flexDirection="column">
+      <Box>
+        <Text bold color="whiteBright">
+          {exercise.name}
+        </Text>
+        <Text> </Text>
+        <DifficultyBadge difficulty={exercise.difficulty} />
+      </Box>
+      <Text dimColor>
+        {exercise.type} · {exercise.time}
+      </Text>
+      <Text dimColor>source: {validationLabel(exercise)}</Text>
+      <Text dimColor>added: {formatDate(exercise.createdAt)}</Text>
+    </Box>
+  );
+
   return (
     <Box
       flexDirection="column"
@@ -147,20 +158,27 @@ export function ExerciseView({
         flexShrink={0}
         marginBottom={1}
       >
-        <Box justifyContent="space-between">
-          <Text bold color="whiteBright">
-            {exercise.name}
-          </Text>
-          <DifficultyBadge difficulty={exercise.difficulty} />
-        </Box>
-        <Text dimColor>
-          {exercise.type} · {exercise.time}
-        </Text>
-        <Text dimColor>source: {validationLabel(exercise)}</Text>
-        <Text dimColor>added: {formatDate(exercise.createdAt)}</Text>
-        <Text color={stat?.solves ? 'greenBright' : undefined} dimColor={!stat?.solves}>
-          progress: {formatProgress(stat)}
-        </Text>
+        {stat?.attempts ? (
+          <Box width="100%" alignItems="center">
+            {headerInfo}
+            <Box flexGrow={1} justifyContent="space-evenly">
+              <StatColumns stat={stat} />
+            </Box>
+          </Box>
+        ) : (
+          <Box
+            position="relative"
+            width="100%"
+            minHeight={4}
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Box position="absolute" left={0} top={0}>
+              {headerInfo}
+            </Box>
+            <Text dimColor>not attempted yet</Text>
+          </Box>
+        )}
       </Box>
 
       <ScrollView isActive>

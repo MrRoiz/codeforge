@@ -24,12 +24,14 @@ watches.
 your working directory — problem statement, examples, constraints, hints, and a
 hidden test suite — then gets out of your way. You solve it in your own editor,
 your own way. When you're ready, codeforge runs the tests and tells you the
-truth: pass or fail, with the exact cases that broke.
+truth: pass or fail, with the exact cases that broke, plus a plain read on how
+your solution scales.
 
 Interviews are one place these skills get measured, but the goal is broader:
 becoming a sharper problem solver every day. The exercises are curated from real
-problems, the tests are unforgiving, and the only thing that counts is the
-output.
+problems, and the tests are unforgiving. But passing is the floor, not the
+ceiling — so codeforge also estimates the complexity you landed on, the way an
+interviewer would ask.
 
 ## Why a TUI
 
@@ -58,6 +60,9 @@ contract.
   random challenge, read the statement, reveal hints, and forge your solution.
 - **Honest testing** — the test file is regenerated every run, so you cannot
   "fix" the tests to make yourself pass.
+- **Big-O feedback** — every run reads your solution and gives a rough
+  complexity estimate (e.g. `O(n)`), with a confidence and a one-line reason, so
+  you can tell a brute force from the real thing.
 
 ## Install
 
@@ -129,6 +134,8 @@ codeforge
    Passing runs are recorded, marking the exercise solved with its best time.
    The clock stops on a pass — its final time is frozen on the exercise page,
    and `r` starts a fresh timed attempt.
+9. Either way, the results screen reads your solution and estimates its
+   complexity — a quick "is this the right shape?" check alongside the tests.
 
 | Passing run | Failing run |
 | ----------- | ----------- |
@@ -157,10 +164,11 @@ Resolution order (highest first):
 
 codeforge keeps a small record of your practice in
 `~/.codeforge/state.json`, independent of which exercises directory you use. For
-each exercise it tracks the number of attempts, the number of solves, and the
-best and most recent solve times. Solved exercises are marked with a `✓` in the
-exercise list, and the highlighted exercise shows its full stats (both in the
-list's detail panel and on the exercise page).
+each exercise it remembers your attempts and solves, the moment of your last
+run, and snapshots of your best solves — the fastest, and the cleanest in
+complexity. Solved exercises are marked with a `✓` in the exercise list, and the
+highlighted exercise lays its stats out as columns, both in the list's detail
+panel and on the exercise page.
 
 An *attempt* is a test run made while the clock is running; runs with the clock
 stopped aren't recorded at all. A *solve* is counted whenever a run passes while
@@ -171,6 +179,27 @@ fresh, countable attempt) first.
 The file is written atomically, so an interrupted run can't corrupt it. Delete
 it to reset your progress, or press `x` on an exercise to clear just that
 exercise's stats.
+
+## Complexity
+
+Read the tests, and you learn whether your solution is *right*. Read the
+complexity, and you learn whether it's *good*. After every run, codeforge walks
+your syntax tree and puts a rough Big-O on the results screen:
+
+```
+estimated complexity: O(n)  high confidence · 1 nesting level
+```
+
+It reasons about the shape of your code — how deeply loops and array methods
+nest, whether you sort, whether a search space halves, whether you recurse — so
+it's comfortable with `O(1)`, `O(log n)`, `O(n)`, `O(n log n)` and `O(n²)`, and
+honest when it can't tell (it says so, and lowers its confidence rather than
+guessing). The estimate travels with your progress, so an exercise's best
+complexity sits next to its best time.
+
+It's a heuristic, not a proof: it can't see through data structures or
+amortization. Treat it as a nudge — a way to catch an accidental brute force
+before it becomes a habit.
 
 ## Editor
 

@@ -1,5 +1,5 @@
 import type { Exercise } from '@exercises/types';
-import type { ExerciseStat } from '@utils/state';
+import type { ExerciseStat, SolveAttempt } from '@utils/state';
 import { Box, Text } from 'ink';
 
 const DIFFICULTY_COLORS: Record<Exercise['difficulty'], string> = {
@@ -51,25 +51,116 @@ export function formatDate(iso: string): string {
   });
 }
 
-/** Human-readable progress for one exercise, for the list and detail views. */
-export function formatProgress(stat?: ExerciseStat): string {
-  if (!stat || stat.attempts === 0) {
-    return 'not attempted';
+/** Renders an ISO timestamp as e.g. 'Sep 14, 23:30'. */
+export function formatDateTime(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) {
+    return iso;
   }
-  if (stat.solves === 0) {
-    return `${stat.attempts} attempt${stat.attempts === 1 ? '' : 's'} · not solved yet`;
+  return d.toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  });
+}
+
+/** One solve snapshot: its time and complexity (whichever are recorded). */
+function describeSolve(attempt: SolveAttempt): string {
+  const parts: string[] = [];
+  if (attempt.timeMs != null) {
+    parts.push(formatDuration(attempt.timeMs));
   }
-  const parts = [`✓ solved ${stat.solves}×`];
-  if (stat.bestMs != null) {
-    parts.push(`best ${formatDuration(stat.bestMs)}`);
+  if (attempt.complexity) {
+    parts.push(attempt.complexity.label);
   }
-  if (stat.lastMs != null) {
-    parts.push(`last ${formatDuration(stat.lastMs)}`);
-  }
-  if (stat.attempts > stat.solves) {
-    parts.push(`${stat.attempts} runs`);
+  if (parts.length === 0) {
+    parts.push('—');
   }
   return parts.join(' · ');
+}
+
+/** Complexity-first view of a solve snapshot, for the "best complexity" column. */
+function describeComplexity(attempt: SolveAttempt): string {
+  const parts: string[] = [];
+  if (attempt.complexity) {
+    parts.push(attempt.complexity.label);
+  }
+  if (attempt.timeMs != null) {
+    parts.push(formatDuration(attempt.timeMs));
+  }
+  if (parts.length === 0) {
+    parts.push('—');
+  }
+  return parts.join(' · ');
+}
+
+interface StatColumn {
+  header: string;
+  value: string;
+}
+
+/** One column per stat we keep for an exercise. */
+function statColumns(stat: ExerciseStat): StatColumn[] {
+  const withDate = (text: string, iso: string) => `${text} · ${formatDateTime(iso)}`;
+  return [
+    { header: 'attempts', value: String(stat.attempts) },
+    { header: 'solves', value: String(stat.solves) },
+    {
+      header: 'last attempt',
+      value: stat.lastAttempt ? formatDateTime(stat.lastAttempt) : '—',
+    },
+    {
+      header: 'last solve',
+      value: stat.lastSolve ? withDate(describeSolve(stat.lastSolve), stat.lastSolve.at) : '—',
+    },
+    {
+      header: 'best time',
+      value: stat.bestTimeAttempt
+        ? withDate(describeSolve(stat.bestTimeAttempt), stat.bestTimeAttempt.at)
+        : '—',
+    },
+    {
+      header: 'best complexity',
+      value: stat.bestComplexityAttempt
+        ? withDate(describeComplexity(stat.bestComplexityAttempt), stat.bestComplexityAttempt.at)
+        : '—',
+    },
+  ];
+}
+
+/** The stat columns as flex children — for a `space-between` row. */
+export function StatColumns({ stat }: { stat?: ExerciseStat }) {
+  if (!stat || stat.attempts === 0) {
+    return null;
+  }
+  return (
+    <>
+      {statColumns(stat).map((c) => (
+        <Box key={c.header} flexDirection="column" alignItems="center">
+          <Text dimColor>{c.header}</Text>
+          <Text>{c.value}</Text>
+        </Box>
+      ))}
+    </>
+  );
+}
+
+/** A standalone stats row spanning the full width. */
+export function Stats({ stat }: { stat?: ExerciseStat }) {
+  if (!stat || stat.attempts === 0) {
+    return (
+      <Box width="100%" justifyContent="center">
+        <Text dimColor>not attempted yet</Text>
+      </Box>
+    );
+  }
+  return (
+    <Box width="100%" justifyContent="space-between">
+      <StatColumns stat={stat} />
+    </Box>
+  );
 }
 
 export function KeyHints({ hints }: { hints: [string, string][] }) {
