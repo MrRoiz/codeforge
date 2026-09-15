@@ -118,3 +118,12 @@ export function recordAttempt(exerciseId: string): State {
 export function recordSolve(exerciseId: string, elapsedMs?: number | null): State {
   return updateState((state) => withStat(state, exerciseId, (stat) => applySolve(stat, elapsedMs)));
 }
+
+/** Remove one exercise's recorded progress (attempts, solves and times). */
+export function resetStat(exerciseId: string): State {
+  return updateState((state) => {
+    const exercises = { ...state.exercises };
+    delete exercises[exerciseId];
+    return { version: STATE_VERSION, exercises };
+  });
+}

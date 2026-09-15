@@ -35,7 +35,7 @@ import {
 } from '@utils/open';
 import { runJest, type TestRunResult } from '@utils/runTests';
 import { enterFullScreen, exitFullScreen } from '@utils/screen';
-import { loadState, recordAttempt, recordSolve, type State } from '@utils/state';
+import { loadState, recordAttempt, recordSolve, resetStat, type State } from '@utils/state';
 import { Box, Text, useApp, useInput } from 'ink';
 import { useMemo, useRef, useState } from 'react';
 
@@ -56,11 +56,11 @@ export function App() {
   const [error, setError] = useState<string | null>(null);
   const [searchActive, setSearchActive] = useState(false);
   const [state, setState] = useState<State>(() => loadState());
-  const [confirmReset, setConfirmReset] = useState(false);
+  const [confirm, setConfirm] = useState<null | 'solution' | 'stats'>(null);
   const [hasContent, setHasContent] = useState(false);
 
   // global keys — disabled while typing in settings, searching the exercise
-  // list, or answering the reset prompt so 'q' and 'p' are normal characters
+  // list, or answering a confirmation prompt so 'q' and 'p' are normal chars
   useInput(
     (input) => {
       if (input === 'q') {
@@ -70,7 +70,7 @@ export function App() {
         openRepo();
       }
     },
-    { isActive: screen !== 'settings' && !searchActive && !confirmReset },
+    { isActive: screen !== 'settings' && !searchActive && !confirm },
   );
 
   const exercisesDir = useMemo(() => resolveExercisesDir(config), [config]);
@@ -111,7 +111,7 @@ export function App() {
   // Starting creates the solution + test files. `reset` wipes a previous
   // solution back to the stub (only ever after the user confirms).
   const startExercise = async (ex: Exercise, reset = false) => {
-    setConfirmReset(false);
+    setConfirm(null);
     try {
       const generated = await ensureGenerated(ex, exercisesDir);
       if (reset) {
@@ -136,7 +136,7 @@ export function App() {
   const requestStart = async (ex: Exercise) => {
     try {
       if ((await isStarted(ex, exercisesDir)) && (await isDirty(ex, exercisesDir))) {
-        setConfirmReset(true);
+        setConfirm('solution');
         return;
       }
     } catch {
@@ -148,11 +148,22 @@ export function App() {
   // Starting the clock on an existing solution isn't allowed — to time an
   // exercise you must reset it first, so the only options are reset or cancel.
   const answerReset = (decision: 'reset' | 'cancel') => {
-    setConfirmReset(false);
+    setConfirm(null);
     if (decision === 'cancel' || !exercise) {
       return;
     }
     void startExercise(exercise, true);
+  };
+
+  // `x`: clear this exercise's recorded stats (kept behind a confirm).
+  const requestResetStats = () => setConfirm('stats');
+
+  const answerResetStats = (decision: 'reset' | 'cancel') => {
+    setConfirm(null);
+    if (decision === 'cancel' || !exercise) {
+      return;
+    }
+    setState(resetStat(exercise.id));
   };
 
   const restartTimer = () => {
@@ -326,9 +337,12 @@ export function App() {
           startedAt={startedAt}
           elapsedMs={elapsedMs}
           hasContent={hasContent}
-          confirmingReset={confirmReset}
+          confirmingReset={confirm === 'solution'}
+          confirmingResetStats={confirm === 'stats'}
           onStart={() => void requestStart(exercise)}
           onResetDecision={answerReset}
+          onResetStats={() => requestResetStats()}
+          onResetStatsDecision={answerResetStats}
           onRun={() => void startRun(exercise)}
           onOpenEditor={() => void openEditor(exercise)}
           onRestartTimer={restartTimer}

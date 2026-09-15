@@ -169,7 +169,8 @@ existing work never starts the clock — you'd have to reset it (which starts a
 fresh, countable attempt) first.
 
 The file is written atomically, so an interrupted run can't corrupt it. Delete
-it to reset your progress.
+it to reset your progress, or press `x` on an exercise to clear just that
+exercise's stats.
 
 ## Editor
 
@@ -195,12 +196,13 @@ independently and leave the TUI running.
 | ---------- | ------------------------------- |
 | `↑` / `↓`  | Navigate                        |
 | `↵`        | Select / open                   |
-| `s`        | Start exercise (create files)   |
-| `t`        | Run tests (starts it if needed) |
-| `o`        | Start working in your editor    |
+| `s`        | Start (or reset & start) the clock |
+| `t`        | Run tests                       |
+| `o`        | Open in your editor             |
+| `r`        | Restart the clock               |
+| `x`        | Reset this exercise's stats     |
 | `c`        | Show/hide the graded test cases |
 | `h`        | Toggle hints                    |
-| `r`        | Re-run tests (on results)       |
 | `p`        | Open the project on GitHub      |
 | `esc`      | Back                            |
 | `q`        | Quit                            |

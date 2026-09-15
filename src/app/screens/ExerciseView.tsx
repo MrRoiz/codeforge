@@ -23,8 +23,11 @@ interface Props {
   elapsedMs: number | null;
   hasContent: boolean;
   confirmingReset: boolean;
+  confirmingResetStats: boolean;
   onStart: () => void;
   onResetDecision: (decision: 'reset' | 'cancel') => void;
+  onResetStats: () => void;
+  onResetStatsDecision: (decision: 'reset' | 'cancel') => void;
   onRun: () => void;
   onOpenEditor: () => void;
   onRestartTimer: () => void;
@@ -63,8 +66,11 @@ export function ExerciseView({
   elapsedMs,
   hasContent,
   confirmingReset,
+  confirmingResetStats,
   onStart,
   onResetDecision,
+  onResetStats,
+  onResetStatsDecision,
   onRun,
   onOpenEditor,
   onRestartTimer,
@@ -87,6 +93,14 @@ export function ExerciseView({
       }
       return;
     }
+    if (confirmingResetStats) {
+      if (input === 'y' || input === 'Y') {
+        onResetStatsDecision('reset');
+      } else if (input === 'n' || input === 'N' || key.escape) {
+        onResetStatsDecision('cancel');
+      }
+      return;
+    }
     if (key.escape) {
       onBack();
       return;
@@ -102,6 +116,9 @@ export function ExerciseView({
     }
     if (input === 'r' && started) {
       onRestartTimer();
+    }
+    if (input === 'x') {
+      onResetStats();
     }
     if (input === 'h') {
       setShowHints((v) => !v);
@@ -279,6 +296,32 @@ export function ExerciseView({
         </Box>
       ) : null}
 
+      {confirmingResetStats ? (
+        <Box
+          marginTop={1}
+          flexDirection="column"
+          borderStyle="double"
+          borderColor="yellowBright"
+          paddingX={1}
+          flexShrink={0}
+        >
+          <Text bold color="yellowBright">
+            ⚠ Reset this exercise's stats?
+          </Text>
+          <Text dimColor>
+            Clears its attempts, solves and best/last times. Your solution file is left untouched.
+          </Text>
+          <Box marginTop={1}>
+            <KeyHints
+              hints={[
+                ['y', 'reset stats'],
+                ['n / esc', 'cancel'],
+              ]}
+            />
+          </Box>
+        </Box>
+      ) : null}
+
       <Box
         marginTop={1}
         flexDirection="column"
@@ -321,7 +364,7 @@ export function ExerciseView({
       </Box>
 
       <Box marginTop={1} flexShrink={0}>
-        {confirmingReset ? null : (
+        {confirmingReset || confirmingResetStats ? null : (
           <KeyHints
             hints={[
               ...(running || finished
@@ -329,6 +372,7 @@ export function ExerciseView({
                 : ([['s', started ? 'start timer' : 'start']] as [string, string][])),
               ['t', 'run tests'],
               ['o', 'open in editor'],
+              ...(stat?.attempts ? ([['x', 'reset stats']] as [string, string][]) : []),
               ['c', showTests ? 'hide tests' : 'show tests'],
               ['h', showHints ? 'hide hints' : 'show hints'],
               ['j/k', 'scroll'],
