@@ -1,11 +1,11 @@
 import { Box, Text, useApp, useInput } from 'ink';
 import fs from 'node:fs/promises';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { exercises, getRandomExercise } from '@exercises';
 import type { Exercise } from '@exercises/types';
 import { ensureGenerated, exercisePaths, gymDir, isStarted, type GeneratedPaths } from '@utils/generate';
 import { runJest, type TestRunResult } from '@utils/runTests';
-import { isTerminalEditor, launchDetached, launchInForeground, openRepo, resolveEditor } from '@utils/open';
+import { drainStdin, isTerminalEditor, launchDetached, launchInForeground, openRepo, resolveEditor } from '@utils/open';
 import { enterFullScreen, exitFullScreen } from '@utils/screen';
 import {
   defaultExercisesDir,
@@ -103,7 +103,10 @@ export function App() {
   // Opening in the editor makes sure the files exist (never overwriting a
   // solution), then launches the exercise file in the user's editor. Terminal
   // editors take over the TTY while the TUI is suspended; GUI editors detach.
+  const openingEditor = useRef(false);
   const openEditor = async (ex: Exercise) => {
+    if (openingEditor.current) return;
+    openingEditor.current = true;
     try {
       const generated = await ensureGenerated(ex, exercisesDir);
       setPaths(generated);
@@ -120,6 +123,9 @@ export function App() {
         try {
           await launchInForeground(editor, generated.exerciseFile);
         } finally {
+          // Keystrokes buffered while the editor had the terminal (e.g. a
+          // repeated `o`) would otherwise be replayed on resume and reopen it.
+          drainStdin();
           enterFullScreen();
           await suspension.resume();
         }
@@ -128,6 +134,8 @@ export function App() {
       }
     } catch (err) {
       setError(String(err));
+    } finally {
+      openingEditor.current = false;
     }
   };
 

@@ -131,3 +131,22 @@ export function launchInForeground(editor: EditorCommand, file: string): Promise
     }
   });
 }
+
+/**
+ * Discard input that was buffered while the editor had the terminal.
+ *
+ * Ink pauses its input reader during `suspendTerminal()`, but Node keeps
+ * reading the shared TTY into stdin's buffer. A keystroke that arrives before
+ * the editor owns the terminal (e.g. a repeated `o`) is then replayed when Ink
+ * resumes, which immediately reopens the editor. Drop the backlog first.
+ */
+export function drainStdin(): void {
+  if (!process.stdin.isTTY) return;
+  try {
+    while (process.stdin.read() !== null) {
+      // discard
+    }
+  } catch {
+    // best effort
+  }
+}
