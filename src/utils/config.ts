@@ -11,12 +11,12 @@ export interface Config {
 // respects XDG on Linux, %APPDATA% on Windows, ~/.config elsewhere
 function configDir(): string {
   const xdg = process.env.XDG_CONFIG_HOME;
-  const base =
-    xdg && xdg.trim()
-      ? xdg
-      : process.platform === 'win32'
-        ? process.env.APPDATA || path.join(os.homedir(), 'AppData', 'Roaming')
-        : path.join(os.homedir(), '.config');
+  let base = path.join(os.homedir(), '.config');
+  if (xdg?.trim()) {
+    base = xdg;
+  } else if (process.platform === 'win32') {
+    base = process.env.APPDATA || path.join(os.homedir(), 'AppData', 'Roaming');
+  }
   return path.join(base, 'codeforge');
 }
 
@@ -41,8 +41,13 @@ export function saveConfig(config: Config): void {
 /** Expand `~` and make the path absolute. */
 export function expandPath(input: string): string {
   const trimmed = input.trim();
-  if (!trimmed) return '';
-  const expanded = trimmed === '~' || trimmed.startsWith('~/') ? path.join(os.homedir(), trimmed.slice(1)) : trimmed;
+  if (!trimmed) {
+    return '';
+  }
+  const expanded =
+    trimmed === '~' || trimmed.startsWith('~/')
+      ? path.join(os.homedir(), trimmed.slice(1))
+      : trimmed;
   return path.resolve(expanded);
 }
 
@@ -57,7 +62,11 @@ export function defaultExercisesDir(): string {
  */
 export function resolveExercisesDir(config: Config): string {
   const fromEnv = process.env.CODEFORGE_DIR ? expandPath(process.env.CODEFORGE_DIR) : '';
-  if (fromEnv) return fromEnv;
-  if (config.exercisesDir) return expandPath(config.exercisesDir);
+  if (fromEnv) {
+    return fromEnv;
+  }
+  if (config.exercisesDir) {
+    return expandPath(config.exercisesDir);
+  }
   return defaultExercisesDir();
 }

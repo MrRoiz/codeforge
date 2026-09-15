@@ -22,7 +22,9 @@ function skipString(input: string, start: number): number {
       i += 2;
       continue;
     }
-    if (ch === quote) return i + 1;
+    if (ch === quote) {
+      return i + 1;
+    }
     i++;
   }
   return i;
@@ -38,12 +40,18 @@ function matchBracket(input: string, start: number): number {
       i = skipString(input, i);
       continue;
     }
-    if (ch === '[') stack.push(']');
-    else if (ch === '{') stack.push('}');
-    else if (ch === ']' || ch === '}') {
-      if (stack[stack.length - 1] !== ch) return -1;
+    if (ch === '[') {
+      stack.push(']');
+    } else if (ch === '{') {
+      stack.push('}');
+    } else if (ch === ']' || ch === '}') {
+      if (stack[stack.length - 1] !== ch) {
+        return -1;
+      }
       stack.pop();
-      if (stack.length === 0) return i;
+      if (stack.length === 0) {
+        return i;
+      }
     }
     i++;
   }
@@ -51,6 +59,10 @@ function matchBracket(input: string, start: number): number {
 }
 
 /** Recursive-descent parser for JSON with optional unquoted keys and single quotes. */
+const WHITESPACE = /\s/;
+const DIGIT = /[0-9]/;
+const IDENTIFIER_CHAR = /[A-Za-z0-9_$]/;
+
 class LooseParser {
   private i = 0;
 
@@ -59,21 +71,33 @@ class LooseParser {
   parse(): unknown {
     const value = this.value();
     this.skipWhitespace();
-    if (this.i !== this.input.length) throw new Error('trailing input');
+    if (this.i !== this.input.length) {
+      throw new Error('trailing input');
+    }
     return value;
   }
 
   private skipWhitespace(): void {
-    while (this.i < this.input.length && /\s/.test(this.input[this.i])) this.i++;
+    while (this.i < this.input.length && WHITESPACE.test(this.input[this.i])) {
+      this.i++;
+    }
   }
 
   private value(): unknown {
     this.skipWhitespace();
     const ch = this.input[this.i];
-    if (ch === '{') return this.object();
-    if (ch === '[') return this.array();
-    if (ch === '"' || ch === "'") return this.string();
-    if (ch === '-' || (ch >= '0' && ch <= '9')) return this.number();
+    if (ch === '{') {
+      return this.object();
+    }
+    if (ch === '[') {
+      return this.array();
+    }
+    if (ch === '"' || ch === "'") {
+      return this.string();
+    }
+    if (ch === '-' || (ch >= '0' && ch <= '9')) {
+      return this.number();
+    }
     return this.identifierValue();
   }
 
@@ -90,7 +114,9 @@ class LooseParser {
       const ch = this.input[this.i];
       const key = ch === '"' || ch === "'" ? this.string() : this.identifierName();
       this.skipWhitespace();
-      if (this.input[this.i] !== ':') throw new Error('expected ":"');
+      if (this.input[this.i] !== ':') {
+        throw new Error('expected ":"');
+      }
       this.i++;
       result[key] = this.value();
       this.skipWhitespace();
@@ -136,54 +162,85 @@ class LooseParser {
     let out = '';
     while (this.i < this.input.length) {
       const ch = this.input[this.i++];
-      if (ch === quote) return out;
+      if (ch === quote) {
+        return out;
+      }
       if (ch !== '\\') {
         out += ch;
         continue;
       }
       const esc = this.input[this.i++];
-      if (esc === 'n') out += '\n';
-      else if (esc === 't') out += '\t';
-      else if (esc === 'r') out += '\r';
-      else if (esc === 'b') out += '\b';
-      else if (esc === 'f') out += '\f';
-      else if (esc === 'u') {
+      if (esc === 'n') {
+        out += '\n';
+      } else if (esc === 't') {
+        out += '\t';
+      } else if (esc === 'r') {
+        out += '\r';
+      } else if (esc === 'b') {
+        out += '\b';
+      } else if (esc === 'f') {
+        out += '\f';
+      } else if (esc === 'u') {
         out += String.fromCharCode(Number.parseInt(this.input.slice(this.i, this.i + 4), 16));
         this.i += 4;
-      } else out += esc;
+      } else {
+        out += esc;
+      }
     }
     throw new Error('unterminated string');
   }
 
   private number(): number {
     const start = this.i;
-    if (this.input[this.i] === '-') this.i++;
-    while (/[0-9]/.test(this.input[this.i] ?? '')) this.i++;
+    if (this.input[this.i] === '-') {
+      this.i++;
+    }
+    while (DIGIT.test(this.input[this.i] ?? '')) {
+      this.i++;
+    }
     if (this.input[this.i] === '.') {
       this.i++;
-      while (/[0-9]/.test(this.input[this.i] ?? '')) this.i++;
+      while (DIGIT.test(this.input[this.i] ?? '')) {
+        this.i++;
+      }
     }
     if (this.input[this.i] === 'e' || this.input[this.i] === 'E') {
       this.i++;
-      if (this.input[this.i] === '+' || this.input[this.i] === '-') this.i++;
-      while (/[0-9]/.test(this.input[this.i] ?? '')) this.i++;
+      if (this.input[this.i] === '+' || this.input[this.i] === '-') {
+        this.i++;
+      }
+      while (DIGIT.test(this.input[this.i] ?? '')) {
+        this.i++;
+      }
     }
-    if (this.i === start) throw new Error('expected number');
+    if (this.i === start) {
+      throw new Error('expected number');
+    }
     return Number(this.input.slice(start, this.i));
   }
 
   private identifierName(): string {
     const start = this.i;
-    while (/[A-Za-z0-9_$]/.test(this.input[this.i] ?? '')) this.i++;
-    if (this.i === start) throw new Error('expected identifier');
+    while (IDENTIFIER_CHAR.test(this.input[this.i] ?? '')) {
+      this.i++;
+    }
+    if (this.i === start) {
+      throw new Error('expected identifier');
+    }
     return this.input.slice(start, this.i);
   }
 
   private identifierValue(): unknown {
     const name = this.identifierName();
-    if (name === 'true') return true;
-    if (name === 'false') return false;
-    if (name === 'null' || name === 'undefined' || name === 'NaN') return null;
+    if (name === 'true') {
+      return true;
+    }
+    if (name === 'false') {
+      return false;
+    }
+    if (name === 'null' || name === 'undefined' || name === 'NaN') {
+      return null;
+    }
     throw new Error(`unexpected identifier "${name}"`);
   }
 }
@@ -206,15 +263,21 @@ function stringifyValue(value: unknown, indent: number): string {
   const childPad = '  '.repeat(indent + 1);
 
   if (Array.isArray(value)) {
-    if (value.length === 0) return '[]';
-    if (value.every(isScalar)) return `[${value.map(scalarLiteral).join(', ')}]`;
+    if (value.length === 0) {
+      return '[]';
+    }
+    if (value.every(isScalar)) {
+      return `[${value.map(scalarLiteral).join(', ')}]`;
+    }
     const items = value.map((item) => `${childPad}${stringifyValue(item, indent + 1)}`);
     return `[\n${items.join(',\n')}\n${pad}]`;
   }
 
   if (value !== null && typeof value === 'object') {
     const entries = Object.entries(value as Record<string, unknown>);
-    if (entries.length === 0) return '{}';
+    if (entries.length === 0) {
+      return '{}';
+    }
     if (entries.every(([, val]) => isScalar(val))) {
       return `{ ${entries.map(([key, val]) => `${JSON.stringify(key)}: ${scalarLiteral(val)}`).join(', ')} }`;
     }

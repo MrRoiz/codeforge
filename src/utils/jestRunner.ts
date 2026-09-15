@@ -1,15 +1,16 @@
-import { createRequire } from 'node:module';
 import fs from 'node:fs/promises';
+import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
 
 async function main() {
   const [, , rootDir, outFile] = process.argv;
-  if (!rootDir || !outFile) {
+  if (!(rootDir && outFile)) {
     process.exit(2);
   }
 
   const tsJestPath = require.resolve('ts-jest');
+  // biome-ignore lint/suspicious/noExplicitAny: jest is loaded dynamically and has no shipped types
   const jestPkg: any = require('jest');
 
   const config = {
@@ -33,10 +34,9 @@ async function main() {
     },
   };
 
-  const { results } = await jestPkg.runCLI(
-    { config: JSON.stringify(config), silent: true },
-    [rootDir],
-  );
+  const { results } = await jestPkg.runCLI({ config: JSON.stringify(config), silent: true }, [
+    rootDir,
+  ]);
 
   const cases: { name: string; passed: boolean; failureMessages: string[] }[] = [];
   for (const suite of results.testResults ?? []) {
@@ -65,7 +65,16 @@ main().catch(async (err) => {
   const outFile = process.argv[4];
   if (outFile) {
     await fs
-      .writeFile(outFile, JSON.stringify({ passed: false, numPassed: 0, numTotal: 0, cases: [], rawError: String(err?.stack ?? err) }))
+      .writeFile(
+        outFile,
+        JSON.stringify({
+          passed: false,
+          numPassed: 0,
+          numTotal: 0,
+          cases: [],
+          rawError: String(err?.stack ?? err),
+        }),
+      )
       .catch(() => {});
   }
   process.exit(1);

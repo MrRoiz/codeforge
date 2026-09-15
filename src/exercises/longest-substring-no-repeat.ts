@@ -13,12 +13,14 @@ export const longestSubstringNoRepeat: Exercise = {
     {
       input: 's = "abcadcbb"',
       output: '4',
-      explanation: 'The longest substrings without repeats have length 4, e.g. "bcad" or "adcb" — return the length, 4.',
+      explanation:
+        'The longest substrings without repeats have length 4, e.g. "bcad" or "adcb" — return the length, 4.',
     },
     {
       input: 's = "pwwkew"',
       output: '3',
-      explanation: 'The longest substrings have length 3, e.g. "wke" or "kew" — return the length, 3.',
+      explanation:
+        'The longest substrings have length 3, e.g. "wke" or "kew" — return the length, 3.',
     },
     {
       input: 's = "bbbbb"',

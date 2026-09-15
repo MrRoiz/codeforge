@@ -37,14 +37,18 @@ const TERMINAL_EDITORS = new Set([
   'emacs',
 ]);
 
+const PATH_SEPARATOR = /[\\/]/;
+const WINDOWS_EXECUTABLE = /\.(exe|cmd|bat)$/i;
+const WHITESPACE_RUN = /\s+/;
+
 export interface EditorCommand {
   command: string;
   args: string[];
 }
 
 function baseName(command: string): string {
-  const base = command.split(/[\\/]/).pop() ?? command;
-  return base.replace(/\.(exe|cmd|bat)$/i, '').toLowerCase();
+  const base = command.split(PATH_SEPARATOR).pop() ?? command;
+  return base.replace(WINDOWS_EXECUTABLE, '').toLowerCase();
 }
 
 /** Whether the editor is a TUI that needs the terminal handed over to it. */
@@ -56,7 +60,12 @@ export function isTerminalEditor(command: string): boolean {
 function openWithSystem(target: string): void {
   try {
     const isWin = process.platform === 'win32';
-    const command = isWin ? 'cmd' : process.platform === 'darwin' ? 'open' : 'xdg-open';
+    let command = 'xdg-open';
+    if (isWin) {
+      command = 'cmd';
+    } else if (process.platform === 'darwin') {
+      command = 'open';
+    }
     const args = isWin ? ['/c', 'start', '', target] : [target];
     const child = spawn(command, args, { detached: true, stdio: 'ignore' });
     child.on('error', () => {});
@@ -89,9 +98,13 @@ function isOnPath(command: string): boolean {
 export function resolveEditor(): EditorCommand | null {
   for (const env of [process.env.EDITOR, process.env.VISUAL]) {
     const raw = env?.trim();
-    if (!raw) continue;
-    const [command, ...args] = raw.split(/\s+/);
-    if (command) return { command, args };
+    if (!raw) {
+      continue;
+    }
+    const [command, ...args] = raw.split(WHITESPACE_RUN);
+    if (command) {
+      return { command, args };
+    }
   }
   const found = EDITOR_CANDIDATES.find(isOnPath);
   return found ? { command: found, args: [] } : null;
@@ -108,7 +121,10 @@ export function launchDetached(editor: EditorCommand | null, file: string): void
     return;
   }
   try {
-    const child = spawn(editor.command, [...editor.args, file], { detached: true, stdio: 'ignore' });
+    const child = spawn(editor.command, [...editor.args, file], {
+      detached: true,
+      stdio: 'ignore',
+    });
     child.on('error', () => {});
     child.unref();
   } catch {
@@ -141,7 +157,9 @@ export function launchInForeground(editor: EditorCommand, file: string): Promise
  * resumes, which immediately reopens the editor. Drop the backlog first.
  */
 export function drainStdin(): void {
-  if (!process.stdin.isTTY) return;
+  if (!process.stdin.isTTY) {
+    return;
+  }
   try {
     while (process.stdin.read() !== null) {
       // discard

@@ -14,13 +14,13 @@ export function useTerminalSize(): TerminalSize {
   });
   const [size, setSize] = useState<TerminalSize>(read);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `read` only depends on `stdout`
   useEffect(() => {
     const onResize = () => setSize(read());
     stdout.on('resize', onResize);
     return () => {
       stdout.off('resize', onResize);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stdout]);
 
   return size;

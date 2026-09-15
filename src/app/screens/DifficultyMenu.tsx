@@ -1,7 +1,7 @@
-import { Box, Text, useInput } from 'ink';
 import { Select } from '@components/Select';
 import { KeyHints } from '@components/ui';
 import type { Exercise } from '@exercises/types';
+import { Box, Text, useInput } from 'ink';
 
 export type DifficultyChoice = Exercise['difficulty'] | 'all';
 
@@ -13,7 +13,9 @@ interface Props {
 
 export function DifficultyMenu({ counts, onSelect, onBack }: Props) {
   useInput((_input, key) => {
-    if (key.escape) onBack();
+    if (key.escape) {
+      onBack();
+    }
   });
 
   return (
@@ -26,14 +28,26 @@ export function DifficultyMenu({ counts, onSelect, onBack }: Props) {
           items={[
             { label: 'All', value: 'all', hint: `(${counts.all})` },
             { label: 'Easy', value: 'easy', hint: `(${counts.easy})`, disabled: counts.easy === 0 },
-            { label: 'Medium', value: 'medium', hint: `(${counts.medium})`, disabled: counts.medium === 0 },
+            {
+              label: 'Medium',
+              value: 'medium',
+              hint: `(${counts.medium})`,
+              disabled: counts.medium === 0,
+            },
             { label: 'Hard', value: 'hard', hint: `(${counts.hard})`, disabled: counts.hard === 0 },
           ]}
           onSelect={onSelect}
         />
       </Box>
       <Box marginTop={1}>
-        <KeyHints hints={[['j/k ↑↓', 'navigate'], ['↵', 'select'], ['esc', 'back'], ['q', 'quit']]} />
+        <KeyHints
+          hints={[
+            ['j/k ↑↓', 'navigate'],
+            ['↵', 'select'],
+            ['esc', 'back'],
+            ['q', 'quit'],
+          ]}
+        />
       </Box>
     </Box>
   );

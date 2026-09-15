@@ -11,7 +11,11 @@ export const longestPalindromicSubstring: Exercise = {
     'Given a string `s`, return the longest palindromic substring in `s`. Tests are chosen so the longest palindromic substring is unique.',
   examples: [
     { input: 's = "cbbd"', output: '"bb"' },
-    { input: 's = "racecar"', output: '"racecar"', explanation: 'The whole string is a palindrome' },
+    {
+      input: 's = "racecar"',
+      output: '"racecar"',
+      explanation: 'The whole string is a palindrome',
+    },
     { input: 's = "forgeeksskeegfor"', output: '"geeksskeeg"' },
   ],
   constraints: ['1 <= s.length <= 1000', 's consists of only digits and English letters'],

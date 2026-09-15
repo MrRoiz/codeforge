@@ -15,7 +15,11 @@ export const ticketItineraryReconstruction: Exercise = {
       output: '["JFK","MUC","LHR","SFO","SJC"]',
     },
   ],
-  constraints: ['1 <= tickets.length <= 10^4', 'Cities are non-empty strings', 'The route is a single valid path'],
+  constraints: [
+    '1 <= tickets.length <= 10^4',
+    'Cities are non-empty strings',
+    'The route is a single valid path',
+  ],
   functionSignature: 'export function reconstructItinerary(tickets: string[][]): string[]',
   hints: [
     'The start city is the one that never appears as a destination',
@@ -25,13 +29,46 @@ export const ticketItineraryReconstruction: Exercise = {
   tests: {
     cases: [
       {
-        input: [[['MUC', 'LHR'], ['JFK', 'MUC'], ['SFO', 'SJC'], ['LHR', 'SFO']]],
+        input: [
+          [
+            ['MUC', 'LHR'],
+            ['JFK', 'MUC'],
+            ['SFO', 'SJC'],
+            ['LHR', 'SFO'],
+          ],
+        ],
         expected: ['JFK', 'MUC', 'LHR', 'SFO', 'SJC'],
       },
       { input: [[['A', 'B']]], expected: ['A', 'B'] },
-      { input: [[['B', 'C'], ['A', 'B']]], expected: ['A', 'B', 'C'] },
-      { input: [[['SFO', 'LAX'], ['LAX', 'JFK'], ['JFK', 'ORD']]], expected: ['SFO', 'LAX', 'JFK', 'ORD'] },
-      { input: [[['X', 'Y'], ['Y', 'Z'], ['Z', 'W']]], expected: ['X', 'Y', 'Z', 'W'] },
+      {
+        input: [
+          [
+            ['B', 'C'],
+            ['A', 'B'],
+          ],
+        ],
+        expected: ['A', 'B', 'C'],
+      },
+      {
+        input: [
+          [
+            ['SFO', 'LAX'],
+            ['LAX', 'JFK'],
+            ['JFK', 'ORD'],
+          ],
+        ],
+        expected: ['SFO', 'LAX', 'JFK', 'ORD'],
+      },
+      {
+        input: [
+          [
+            ['X', 'Y'],
+            ['Y', 'Z'],
+            ['Z', 'W'],
+          ],
+        ],
+        expected: ['X', 'Y', 'Z', 'W'],
+      },
     ],
   },
 };

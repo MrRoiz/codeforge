@@ -52,10 +52,16 @@ export interface Exercise {
 export function validationLabel(exercise: Pick<Exercise, 'validation'>): string {
   const tokens: string[] = [];
   for (const v of exercise.validation ?? []) {
-    if (v.level === 'verified' && v.source) tokens.push(`${v.source} (human-verified)`);
-    else if (v.level === 'reported' && v.source) tokens.push(`${v.source} (reported)`);
-    else if (v.level === 'ai-checked') tokens.push('AI checked');
+    if (v.level === 'verified' && v.source) {
+      tokens.push(`${v.source} (human-verified)`);
+    } else if (v.level === 'reported' && v.source) {
+      tokens.push(`${v.source} (reported)`);
+    } else if (v.level === 'ai-checked') {
+      tokens.push('AI checked');
+    }
   }
-  if (!tokens.includes('AI checked')) tokens.push('AI checked');
+  if (!tokens.includes('AI checked')) {
+    tokens.push('AI checked');
+  }
   return [...new Set(tokens)].join(' · ');
 }

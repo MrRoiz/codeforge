@@ -1,6 +1,6 @@
-import { Box, Text } from 'ink';
 import { Select } from '@components/Select';
 import { KeyHints } from '@components/ui';
+import { Box, Text } from 'ink';
 
 export type MenuAction = 'train' | 'random' | 'settings' | 'quit';
 
@@ -31,7 +31,14 @@ export function MainMenu({
         {status ? <Text color="greenBright">{status}</Text> : null}
       </Box>
       <Box marginTop={1} paddingLeft={2}>
-        <KeyHints hints={[['j/k ↑↓', 'navigate'], ['↵', 'select'], ['p', 'github'], ['q', 'quit']]} />
+        <KeyHints
+          hints={[
+            ['j/k ↑↓', 'navigate'],
+            ['↵', 'select'],
+            ['p', 'github'],
+            ['q', 'quit'],
+          ]}
+        />
       </Box>
     </Box>
   );

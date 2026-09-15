@@ -19,7 +19,8 @@ export const mostUsedRoutePerCourier: Exercise = {
     },
     { input: 'deliveries = []', output: '{}' },
     {
-      input: 'deliveries = [{courier:"A",origin:"NY",destination:"LA"},{courier:"A",origin:"SF",destination:"LA"}]',
+      input:
+        'deliveries = [{courier:"A",origin:"NY",destination:"LA"},{courier:"A",origin:"SF",destination:"LA"}]',
       output: '{ A: { route: ["NY","LA"], count: 1 } }',
       explanation: 'Both routes appear once; the tie goes to the first one encountered.',
     },

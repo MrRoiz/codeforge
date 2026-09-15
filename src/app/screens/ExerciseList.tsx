@@ -1,9 +1,9 @@
-import { Box, Text, useInput } from 'ink';
-import { useEffect, useState } from 'react';
 import { Select } from '@components/Select';
 import { TextInput } from '@components/TextInput';
 import { DifficultyBadge, formatDate, KeyHints } from '@components/ui';
-import { validationLabel, type Exercise } from '@exercises/types';
+import { type Exercise, validationLabel } from '@exercises/types';
+import { Box, Text, useInput } from 'ink';
+import { useEffect, useState } from 'react';
 
 interface Props {
   exercises: Exercise[];
@@ -31,9 +31,7 @@ export function ExerciseList({ exercises, onSelect, onBack, onSearchActive }: Pr
 
   const q = query.trim().toLowerCase();
   const filtered = q
-    ? exercises.filter(
-        (e) => e.name.toLowerCase().includes(q) || e.type.toLowerCase().includes(q),
-      )
+    ? exercises.filter((e) => e.name.toLowerCase().includes(q) || e.type.toLowerCase().includes(q))
     : exercises;
 
   const exitSearch = () => {
@@ -41,16 +39,18 @@ export function ExerciseList({ exercises, onSelect, onBack, onSearchActive }: Pr
     setQuery('');
   };
 
-  useInput(
-    (input, key) => {
-      if (searching) return;
-      if (key.escape) onBack();
-      if (input === '/') {
-        setQuery('');
-        setSearching(true);
-      }
-    },
-  );
+  useInput((input, key) => {
+    if (searching) {
+      return;
+    }
+    if (key.escape) {
+      onBack();
+    }
+    if (input === '/') {
+      setQuery('');
+      setSearching(true);
+    }
+  });
 
   const title = searching
     ? `SELECT EXERCISE (${filtered.length}/${exercises.length})`
@@ -69,7 +69,9 @@ export function ExerciseList({ exercises, onSelect, onBack, onSearchActive }: Pr
             value={query}
             onChange={setQuery}
             onSubmit={() => {
-              if (filtered.length > 0) onSelect(filtered[0]);
+              if (filtered.length > 0) {
+                onSelect(filtered[0]);
+              }
             }}
             onCancel={exitSearch}
             placeholder="filter by name or type"

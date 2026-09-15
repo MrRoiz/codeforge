@@ -8,7 +8,7 @@ export const containerWithMostWater: Exercise = {
   type: 'Two Pointers',
   time: '20-25 min',
   description:
-    'You are given an integer array `height` of length `n`, where `height[i]` is the height of a vertical line drawn at index `i`. Pick two lines that, together with the x-axis, form a container holding the most water. Return the maximum amount of water it can store. The container\'s area is `min(height[left], height[right]) * (right - left)`.',
+    "You are given an integer array `height` of length `n`, where `height[i]` is the height of a vertical line drawn at index `i`. Pick two lines that, together with the x-axis, form a container holding the most water. Return the maximum amount of water it can store. The container's area is `min(height[left], height[right]) * (right - left)`.",
   examples: [
     {
       input: 'height = [1,8,6,2,5,4,8,3,7]',
@@ -21,10 +21,7 @@ export const containerWithMostWater: Exercise = {
       explanation: 'Only one pair: min(1, 1) * 1 = 1.',
     },
   ],
-  constraints: [
-    '2 <= height.length <= 10^5',
-    '0 <= height[i] <= 10^4',
-  ],
+  constraints: ['2 <= height.length <= 10^5', '0 <= height[i] <= 10^4'],
   functionSignature: 'export function maxArea(height: number[]): number',
   hints: [
     'Aim for O(n): start with the widest container (left = 0, right = n - 1).',

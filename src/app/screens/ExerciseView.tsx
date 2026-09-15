@@ -1,10 +1,10 @@
+import { useElapsed } from '@app/useElapsed';
+import { ScrollView } from '@components/ScrollView';
+import { DifficultyBadge, formatDate, formatDuration, KeyHints } from '@components/ui';
+import { type Exercise, validationLabel } from '@exercises/types';
+import { formatExample } from '@utils/format';
 import { Box, Text, useInput } from 'ink';
 import { useState } from 'react';
-import { DifficultyBadge, formatDate, formatDuration, KeyHints } from '@components/ui';
-import { ScrollView } from '@components/ScrollView';
-import { useElapsed } from '@app/useElapsed';
-import { formatExample } from '@utils/format';
-import { validationLabel, type Exercise } from '@exercises/types';
 
 interface Props {
   exercise: Exercise;
@@ -20,14 +20,13 @@ interface Props {
 }
 
 function MultiLine({ label, value, color }: { label: string; value: string; color?: string }) {
-  const lines = value.split('\n');
+  const text = value
+    .split('\n')
+    .map((line, i) => (i === 0 ? `${label}${line}` : `${' '.repeat(label.length)}${line}`))
+    .join('\n');
   return (
     <Box flexDirection="column">
-      {lines.map((line, i) => (
-        <Text key={i} color={color}>
-          {i === 0 ? `${label}${line}` : `${' '.repeat(label.length)}${line}`}
-        </Text>
-      ))}
+      <Text color={color}>{text}</Text>
     </Box>
   );
 }
@@ -53,18 +52,37 @@ export function ExerciseView({
       onBack();
       return;
     }
-    if (input === 's') onStart();
-    if (input === 't') onRun();
-    if (input === 'o') onOpenEditor();
-    if (input === 'r' && started) onRestartTimer();
-    if (input === 'h') setShowHints((v) => !v);
-    if (input === 'c') setShowTests((v) => !v);
+    if (input === 's') {
+      onStart();
+    }
+    if (input === 't') {
+      onRun();
+    }
+    if (input === 'o') {
+      onOpenEditor();
+    }
+    if (input === 'r' && started) {
+      onRestartTimer();
+    }
+    if (input === 'h') {
+      setShowHints((v) => !v);
+    }
+    if (input === 'c') {
+      setShowTests((v) => !v);
+    }
   });
 
   const hasCustomTests = Boolean(exercise.tests.fileBody);
 
   return (
-    <Box flexDirection="column" flexGrow={1} flexShrink={1} minHeight={0} paddingLeft={2} paddingRight={2}>
+    <Box
+      flexDirection="column"
+      flexGrow={1}
+      flexShrink={1}
+      minHeight={0}
+      paddingLeft={2}
+      paddingRight={2}
+    >
       <Box
         borderStyle="double"
         borderColor="cyan"
@@ -97,7 +115,7 @@ export function ExerciseView({
           </Text>
           <Box flexDirection="column" marginLeft={1}>
             {exercise.examples.map((ex, i) => (
-              <Box key={i} flexDirection="column">
+              <Box key={JSON.stringify(ex.input)} flexDirection="column">
                 {i > 0 ? (
                   <Box
                     borderStyle="single"
@@ -111,11 +129,25 @@ export function ExerciseView({
                   />
                 ) : null}
                 <Box flexDirection="row" alignItems="flex-start">
-                  <Box flexDirection="column" flexGrow={1} flexBasis={0} flexShrink={1} marginRight={2}>
-                    <MultiLine label="Input:  " value={formatExample(ex.input)} color="greenBright" />
+                  <Box
+                    flexDirection="column"
+                    flexGrow={1}
+                    flexBasis={0}
+                    flexShrink={1}
+                    marginRight={2}
+                  >
+                    <MultiLine
+                      label="Input:  "
+                      value={formatExample(ex.input)}
+                      color="greenBright"
+                    />
                   </Box>
                   <Box flexDirection="column" flexGrow={1} flexBasis={0} flexShrink={1}>
-                    <MultiLine label="Output: " value={formatExample(ex.output)} color="greenBright" />
+                    <MultiLine
+                      label="Output: "
+                      value={formatExample(ex.output)}
+                      color="greenBright"
+                    />
                   </Box>
                 </Box>
                 {ex.explanation ? <MultiLine label="Note:   " value={ex.explanation} /> : null}
@@ -131,10 +163,12 @@ export function ExerciseView({
           {showTests ? (
             <Box flexDirection="column" marginLeft={1}>
               {hasCustomTests ? (
-                <Text dimColor>This exercise is graded by a custom validator that accepts any correct answer.</Text>
+                <Text dimColor>
+                  This exercise is graded by a custom validator that accepts any correct answer.
+                </Text>
               ) : (
                 exercise.tests.cases.map((t, i) => (
-                  <Text key={i} wrap="wrap">
+                  <Text key={JSON.stringify(t.input)} wrap="wrap">
                     <Text dimColor>{`${i + 1}. `}</Text>
                     <Text color="greenBright">{JSON.stringify(t.input)}</Text>
                     <Text dimColor> → </Text>
@@ -152,8 +186,8 @@ export function ExerciseView({
             CONSTRAINTS
           </Text>
           <Box flexDirection="column" marginLeft={1}>
-            {exercise.constraints.map((c, i) => (
-              <Text key={i} dimColor>
+            {exercise.constraints.map((c) => (
+              <Text key={c} dimColor>
                 • {c}
               </Text>
             ))}
@@ -167,14 +201,13 @@ export function ExerciseView({
           {showHints ? (
             <Box flexDirection="column" marginLeft={1}>
               {exercise.hints.map((h, i) => (
-                <Text key={i} color="magentaBright">
+                <Text key={h} color="magentaBright">
                   {i + 1}. {h}
                 </Text>
               ))}
             </Box>
           ) : null}
         </Box>
-
       </ScrollView>
 
       <Box
@@ -187,10 +220,14 @@ export function ExerciseView({
       >
         {started ? (
           <>
-            {startedAt !== null ? <Text color="cyanBright">⏱  elapsed → {formatDuration(elapsed)}</Text> : null}
-            <Text dimColor>Solve it in your editor of choice — codeforge only checks the output.</Text>
+            {startedAt === null ? null : (
+              <Text color="cyanBright">⏱ elapsed → {formatDuration(elapsed)}</Text>
+            )}
+            <Text dimColor>
+              Solve it in your editor of choice — codeforge only checks the output.
+            </Text>
             <Text color="cyanBright">solution → {exerciseFile}</Text>
-            <Text dimColor>tests    → {testFile} (auto-generated)</Text>
+            <Text dimColor>tests → {testFile} (auto-generated)</Text>
           </>
         ) : (
           <>
@@ -203,7 +240,7 @@ export function ExerciseView({
       <Box marginTop={1} flexShrink={0}>
         <KeyHints
           hints={[
-            ...(!started ? ([['s', 'start']] as [string, string][]) : []),
+            ...(started ? [] : ([['s', 'start']] as [string, string][])),
             ['t', 'run tests'],
             ['o', 'open in editor'],
             ...(started ? ([['r', 'restart timer']] as [string, string][]) : []),

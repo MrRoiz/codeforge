@@ -1,27 +1,40 @@
-import { Box, Text, useApp, useInput } from 'ink';
 import fs from 'node:fs/promises';
-import { useMemo, useRef, useState } from 'react';
+import { Layout } from '@app/Layout';
+import { type DifficultyChoice, DifficultyMenu } from '@app/screens/DifficultyMenu';
+import { ExerciseList } from '@app/screens/ExerciseList';
+import { ExerciseView } from '@app/screens/ExerciseView';
+import { MainMenu, type MenuAction } from '@app/screens/MainMenu';
+import { ResultsView } from '@app/screens/ResultsView';
+import { RunningView } from '@app/screens/RunningView';
+import { SettingsView } from '@app/screens/SettingsView';
 import { exercises, getRandomExercise } from '@exercises';
 import type { Exercise } from '@exercises/types';
-import { ensureGenerated, exercisePaths, exerciseDir, isStarted, type GeneratedPaths } from '@utils/generate';
-import { runJest, type TestRunResult } from '@utils/runTests';
-import { drainStdin, isTerminalEditor, launchDetached, launchInForeground, openRepo, resolveEditor } from '@utils/open';
-import { enterFullScreen, exitFullScreen } from '@utils/screen';
 import {
+  type Config,
   defaultExercisesDir,
   loadConfig,
   resolveExercisesDir,
   saveConfig,
-  type Config,
 } from '@utils/config';
-import { MainMenu, type MenuAction } from '@app/screens/MainMenu';
-import { DifficultyMenu, type DifficultyChoice } from '@app/screens/DifficultyMenu';
-import { ExerciseList } from '@app/screens/ExerciseList';
-import { ExerciseView } from '@app/screens/ExerciseView';
-import { RunningView } from '@app/screens/RunningView';
-import { ResultsView } from '@app/screens/ResultsView';
-import { SettingsView } from '@app/screens/SettingsView';
-import { Layout } from '@app/Layout';
+import {
+  ensureGenerated,
+  exerciseDir,
+  exercisePaths,
+  type GeneratedPaths,
+  isStarted,
+} from '@utils/generate';
+import {
+  drainStdin,
+  isTerminalEditor,
+  launchDetached,
+  launchInForeground,
+  openRepo,
+  resolveEditor,
+} from '@utils/open';
+import { runJest, type TestRunResult } from '@utils/runTests';
+import { enterFullScreen, exitFullScreen } from '@utils/screen';
+import { Box, Text, useApp, useInput } from 'ink';
+import { useMemo, useRef, useState } from 'react';
 
 type Screen = 'menu' | 'difficulty' | 'list' | 'exercise' | 'running' | 'results' | 'settings';
 
@@ -44,8 +57,12 @@ export function App() {
   // list so 'q' and 'p' are normal characters
   useInput(
     (input) => {
-      if (input === 'q') exit();
-      if (input === 'p') openRepo();
+      if (input === 'q') {
+        exit();
+      }
+      if (input === 'p') {
+        openRepo();
+      }
     },
     { isActive: screen !== 'settings' && !searchActive },
   );
@@ -78,7 +95,12 @@ export function App() {
     const alreadyStarted = await isStarted(ex, exercisesDir);
     setStarted(alreadyStarted);
     // keep the clock running if we're returning to the same exercise this session
-    setStartedAt((prev) => (exercise?.id === ex.id && prev !== null ? prev : alreadyStarted ? Date.now() : null));
+    setStartedAt((prev) => {
+      if (exercise?.id === ex.id && prev !== null) {
+        return prev;
+      }
+      return alreadyStarted ? Date.now() : null;
+    });
     setScreen('exercise');
   };
 
@@ -105,7 +127,9 @@ export function App() {
   // editors take over the TTY while the TUI is suspended; GUI editors detach.
   const openingEditor = useRef(false);
   const openEditor = async (ex: Exercise) => {
-    if (openingEditor.current) return;
+    if (openingEditor.current) {
+      return;
+    }
     openingEditor.current = true;
     try {
       const generated = await ensureGenerated(ex, exercisesDir);
@@ -156,13 +180,19 @@ export function App() {
   };
 
   const onMenu = (action: MenuAction) => {
-    if (action === 'quit') exit();
-    if (action === 'train') setScreen('difficulty');
+    if (action === 'quit') {
+      exit();
+    }
+    if (action === 'train') {
+      setScreen('difficulty');
+    }
     if (action === 'settings') {
       setStatus(undefined);
       setScreen('settings');
     }
-    if (action === 'random') void openExercise(getRandomExercise());
+    if (action === 'random') {
+      void openExercise(getRandomExercise());
+    }
   };
 
   const saveDir = async (dir: string) => {

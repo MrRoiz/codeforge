@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-import React from 'react';
-import { render } from 'ink';
 import { App } from '@app/App';
 import { enterFullScreen, exitFullScreen } from '@utils/screen';
+import { render } from 'ink';
+import React from 'react';
 
 if (!process.stdin.isTTY) {
   console.error('codeforge is an interactive TUI — run it directly in a terminal.');

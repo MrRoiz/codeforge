@@ -10,7 +10,14 @@ interface Props {
   placeholder?: string;
 }
 
-export function TextInput({ value, onChange, onSubmit, onCancel, isActive = true, placeholder }: Props) {
+export function TextInput({
+  value,
+  onChange,
+  onSubmit,
+  onCancel,
+  isActive = true,
+  placeholder,
+}: Props) {
   const [cursor, setCursor] = useState(value.length);
 
   useEffect(() => {
@@ -36,7 +43,9 @@ export function TextInput({ value, onChange, onSubmit, onCancel, isActive = true
         return;
       }
       if (key.backspace || key.delete) {
-        if (cursor === 0) return;
+        if (cursor === 0) {
+          return;
+        }
         onChange(value.slice(0, cursor - 1) + value.slice(cursor));
         setCursor((c) => Math.max(0, c - 1));
         return;

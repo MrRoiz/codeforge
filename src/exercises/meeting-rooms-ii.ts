@@ -17,7 +17,11 @@ export const meetingRoomsII: Exercise = {
         '[0,30] overlaps both [5,10] and [15,20], so 2 rooms are needed; [5,10] and [15,20] do not overlap each other.',
     },
     { input: 'intervals = [[7,10],[2,4]]', output: '1' },
-    { input: 'intervals = [[0,1],[1,2],[2,3]]', output: '1', explanation: 'Back-to-back meetings share one room' },
+    {
+      input: 'intervals = [[0,1],[1,2],[2,3]]',
+      output: '1',
+      explanation: 'Back-to-back meetings share one room',
+    },
   ],
   constraints: ['1 <= intervals.length <= 10^4', '0 <= start < end <= 10^6'],
   functionSignature: 'export function minMeetingRooms(intervals: number[][]): number',
@@ -29,12 +33,65 @@ export const meetingRoomsII: Exercise = {
   ],
   tests: {
     cases: [
-      { input: [[[0, 30], [5, 10], [15, 20]]], expected: 2 },
-      { input: [[[7, 10], [2, 4]]], expected: 1 },
-      { input: [[[1, 5], [2, 6], [3, 7]]], expected: 3 },
-      { input: [[[1, 2], [3, 4], [5, 6]]], expected: 1 },
-      { input: [[[1, 10], [2, 3], [4, 5]]], expected: 2 },
-      { input: [[[0, 1], [1, 2], [2, 3]]], expected: 1 },
+      {
+        input: [
+          [
+            [0, 30],
+            [5, 10],
+            [15, 20],
+          ],
+        ],
+        expected: 2,
+      },
+      {
+        input: [
+          [
+            [7, 10],
+            [2, 4],
+          ],
+        ],
+        expected: 1,
+      },
+      {
+        input: [
+          [
+            [1, 5],
+            [2, 6],
+            [3, 7],
+          ],
+        ],
+        expected: 3,
+      },
+      {
+        input: [
+          [
+            [1, 2],
+            [3, 4],
+            [5, 6],
+          ],
+        ],
+        expected: 1,
+      },
+      {
+        input: [
+          [
+            [1, 10],
+            [2, 3],
+            [4, 5],
+          ],
+        ],
+        expected: 2,
+      },
+      {
+        input: [
+          [
+            [0, 1],
+            [1, 2],
+            [2, 3],
+          ],
+        ],
+        expected: 1,
+      },
     ],
   },
 };

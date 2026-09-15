@@ -11,7 +11,11 @@ export const longestCommonPrefix: Exercise = {
     'Find the longest common prefix string among an array of strings. If there is no common prefix, return an empty string.',
   examples: [
     { input: 'strs = ["flower", "flow", "flight"]', output: '"fl"' },
-    { input: 'strs = ["dog", "racecar", "car"]', output: '""', explanation: 'There is no common prefix' },
+    {
+      input: 'strs = ["dog", "racecar", "car"]',
+      output: '""',
+      explanation: 'There is no common prefix',
+    },
     { input: 'strs = ["interspecies", "interstellar", "interstate"]', output: '"inters"' },
   ],
   constraints: [

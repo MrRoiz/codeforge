@@ -14,7 +14,8 @@ export const maxConsecutiveOnes: Exercise = {
     { input: 'nums = [1, 0, 1, 1, 0, 1]', output: '{ length: 2, start: 2 }' },
   ],
   constraints: ['1 <= nums.length <= 10^5', 'nums[i] is 0 or 1'],
-  functionSignature: 'export function maxConsecutiveOnes(nums: number[]): { length: number; start: number }',
+  functionSignature:
+    'export function maxConsecutiveOnes(nums: number[]): { length: number; start: number }',
   hints: [
     'Track the current run length and its start index',
     'Track the best run seen so far',

@@ -9,6 +9,19 @@ export interface SelectItem<T> {
   disabled?: boolean;
 }
 
+function findEnabledIndex<T>(items: SelectItem<T>[], from: number, delta: number): number {
+  let index = from;
+  let remaining = items.length;
+  while (remaining > 0) {
+    index = (index + delta + items.length) % items.length;
+    if (!items[index].disabled) {
+      break;
+    }
+    remaining--;
+  }
+  return index;
+}
+
 interface SelectProps<T> {
   items: SelectItem<T>[];
   onSelect: (value: T) => void;
@@ -31,10 +44,12 @@ export function Select<T>({
   const [index, setIndex] = useState(initialIndex);
   const lastInput = useRef<string | null>(null);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: only re-notify when the selection moves
   useEffect(() => {
     const item = items[index];
-    if (item && onHighlight) onHighlight(item.value, index);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (item && onHighlight) {
+      onHighlight(item.value, index);
+    }
   }, [index, items]);
 
   useInput(
@@ -42,26 +57,14 @@ export function Select<T>({
       const prev = lastInput.current;
       lastInput.current = input;
 
-      if (items.length === 0) return;
+      if (items.length === 0) {
+        return;
+      }
 
       if (key.upArrow || input === 'k') {
-        setIndex((i) => {
-          let next = i;
-          for (let step = 0; step < items.length; step++) {
-            next = (next - 1 + items.length) % items.length;
-            if (!items[next].disabled) break;
-          }
-          return next;
-        });
+        setIndex((i) => findEnabledIndex(items, i, -1));
       } else if (key.downArrow || input === 'j') {
-        setIndex((i) => {
-          let next = i;
-          for (let step = 0; step < items.length; step++) {
-            next = (next + 1) % items.length;
-            if (!items[next].disabled) break;
-          }
-          return next;
-        });
+        setIndex((i) => findEnabledIndex(items, i, 1));
       } else if (input === 'G') {
         for (let i = items.length - 1; i >= 0; i--) {
           if (!items[i].disabled) {
@@ -79,7 +82,9 @@ export function Select<T>({
         lastInput.current = null;
       } else if (key.return) {
         const item = items[index];
-        if (item && !item.disabled) onSelect(item.value);
+        if (item && !item.disabled) {
+          onSelect(item.value);
+        }
       }
     },
     { isActive },
@@ -91,7 +96,7 @@ export function Select<T>({
         const active = i === index;
         const dim = item.disabled;
         return (
-          <Box key={item.key ?? `${i}:${item.label}`}>
+          <Box key={item.key ?? item.label}>
             <Text color={active ? color : undefined} dimColor={dim}>
               {active ? `${marker} ` : '  '}
               {item.label}

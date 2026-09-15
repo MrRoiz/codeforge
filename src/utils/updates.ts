@@ -1,5 +1,5 @@
-import pkg from '../../package.json' with { type: 'json' };
 import { loadConfig } from '@utils/config';
+import pkg from '../../package.json' with { type: 'json' };
 
 const REGISTRY_URL = 'https://registry.npmjs.org/@mr_roiz%2Fcodeforge/latest';
 const TIMEOUT_MS = 3000;
@@ -17,7 +17,9 @@ function compareVersions(a: string, b: string): number {
   for (let i = 0; i < len; i++) {
     const x = pa[i] ?? 0;
     const y = pb[i] ?? 0;
-    if (x !== y) return x - y;
+    if (x !== y) {
+      return x - y;
+    }
   }
   return 0;
 }
@@ -28,16 +30,24 @@ function compareVersions(a: string, b: string): number {
  * null when opted out, offline, or already on the latest version.
  */
 export async function checkForUpdates(): Promise<UpdateInfo | null> {
-  if (loadConfig().updateCheck === false) return null;
+  if (loadConfig().updateCheck === false) {
+    return null;
+  }
 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
   try {
     const res = await fetch(REGISTRY_URL, { signal: controller.signal });
-    if (!res.ok) return null;
+    if (!res.ok) {
+      return null;
+    }
     const data = (await res.json()) as { version?: string };
-    if (!data.version) return null;
-    if (compareVersions(data.version, pkg.version) <= 0) return null;
+    if (!data.version) {
+      return null;
+    }
+    if (compareVersions(data.version, pkg.version) <= 0) {
+      return null;
+    }
     return { current: pkg.version, latest: data.version };
   } catch {
     return null;

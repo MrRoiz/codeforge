@@ -12,7 +12,11 @@ export const minimumWindowSubstring: Exercise = {
   examples: [
     { input: 's = "ADOBECODEBANC", t = "ABC"', output: '"BANC"' },
     { input: 's = "a", t = "a"', output: '"a"' },
-    { input: 's = "a", t = "aa"', output: '""', explanation: 's does not contain two a characters' },
+    {
+      input: 's = "a", t = "aa"',
+      output: '""',
+      explanation: 's does not contain two a characters',
+    },
   ],
   constraints: [
     '1 <= s.length, t.length <= 10^5',

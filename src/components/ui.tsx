@@ -1,12 +1,24 @@
-import { Box, Text } from 'ink';
 import type { Exercise } from '@exercises/types';
+import { Box, Text } from 'ink';
+
+const DIFFICULTY_COLORS: Record<Exercise['difficulty'], string> = {
+  easy: 'greenBright',
+  medium: 'yellowBright',
+  hard: 'redBright',
+};
+
+const DIFFICULTY_LABELS: Record<Exercise['difficulty'], string> = {
+  easy: 'EASY',
+  medium: 'MED',
+  hard: 'HARD',
+};
 
 export function difficultyColor(d: Exercise['difficulty']): string {
-  return d === 'easy' ? 'greenBright' : d === 'medium' ? 'yellowBright' : 'redBright';
+  return DIFFICULTY_COLORS[d];
 }
 
 export function DifficultyBadge({ difficulty }: { difficulty: Exercise['difficulty'] }) {
-  const label = difficulty === 'easy' ? 'EASY' : difficulty === 'medium' ? 'MED' : 'HARD';
+  const label = DIFFICULTY_LABELS[difficulty];
   return (
     <Text backgroundColor={difficultyColor(difficulty)} color="black">
       {` ${label} `}
@@ -27,7 +39,9 @@ export function formatDuration(ms: number): string {
 /** Renders an ISO 'YYYY-MM-DD' date as e.g. 'Sep 14, 2026'. */
 export function formatDate(iso: string): string {
   const d = new Date(`${iso}T00:00:00Z`);
-  if (Number.isNaN(d.getTime())) return iso;
+  if (Number.isNaN(d.getTime())) {
+    return iso;
+  }
   return d.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',

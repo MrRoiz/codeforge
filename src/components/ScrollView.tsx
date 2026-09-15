@@ -1,5 +1,5 @@
-import { Box, Text, useInput, measureElement, type DOMElement } from 'ink';
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { Box, type DOMElement, measureElement, Text, useInput } from 'ink';
+import { type ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 interface Props {
   children: ReactNode;
@@ -38,20 +38,31 @@ export function ScrollView({ children, isActive = true }: Props) {
 
   // keep the stored offset in range after the content shrinks or the terminal grows
   useEffect(() => {
-    if (offset > maxOffset) setOffset(maxOffset);
+    if (offset > maxOffset) {
+      setOffset(maxOffset);
+    }
   }, [offset, maxOffset]);
 
   const scrollTo = (next: number) => setOffset(Math.max(0, Math.min(maxOffset, next)));
 
   useInput(
     (input, key) => {
-      if (maxOffset === 0) return;
-      if (key.upArrow || input === 'k') scrollTo(clamped - 1);
-      else if (key.downArrow || input === 'j') scrollTo(clamped + 1);
-      else if (key.pageUp || input === 'b') scrollTo(clamped - viewportHeight);
-      else if (key.pageDown || input === ' ') scrollTo(clamped + viewportHeight);
-      else if (key.home || input === 'g') scrollTo(0);
-      else if (key.end || input === 'G') scrollTo(maxOffset);
+      if (maxOffset === 0) {
+        return;
+      }
+      if (key.upArrow || input === 'k') {
+        scrollTo(clamped - 1);
+      } else if (key.downArrow || input === 'j') {
+        scrollTo(clamped + 1);
+      } else if (key.pageUp || input === 'b') {
+        scrollTo(clamped - viewportHeight);
+      } else if (key.pageDown || input === ' ') {
+        scrollTo(clamped + viewportHeight);
+      } else if (key.home || input === 'g') {
+        scrollTo(0);
+      } else if (key.end || input === 'G') {
+        scrollTo(maxOffset);
+      }
     },
     { isActive },
   );
@@ -63,6 +74,9 @@ export function ScrollView({ children, isActive = true }: Props) {
   const thumbStart = scrollable
     ? Math.round(((viewportHeight - thumbSize) * clamped) / maxOffset)
     : 0;
+
+  const rows = (count: number, glyph: string) =>
+    Array.from({ length: count }, () => glyph).join('\n');
 
   return (
     <Box flexDirection="row" flexGrow={1} flexShrink={1} minHeight={0} overflowX="hidden">
@@ -79,16 +93,13 @@ export function ScrollView({ children, isActive = true }: Props) {
         </Box>
       </Box>
       <Box flexDirection="column" flexShrink={0} marginLeft={1} width={1} height={viewportHeight}>
-        {scrollable
-          ? Array.from({ length: viewportHeight }, (_, i) => {
-              const thumb = i >= thumbStart && i < thumbStart + thumbSize;
-              return (
-                <Text key={i} color={thumb ? 'cyanBright' : undefined} dimColor={!thumb}>
-                  {thumb ? '█' : '│'}
-                </Text>
-              );
-            })
-          : null}
+        {scrollable ? (
+          <>
+            <Text dimColor>{rows(thumbStart, '│')}</Text>
+            <Text color="cyanBright">{rows(thumbSize, '█')}</Text>
+            <Text dimColor>{rows(Math.max(0, viewportHeight - thumbStart - thumbSize), '│')}</Text>
+          </>
+        ) : null}
       </Box>
     </Box>
   );

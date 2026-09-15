@@ -11,7 +11,11 @@ export const arrangingCoins: Exercise = {
   description:
     'You have n coins and want to build a staircase where the ith row has exactly i coins. The last row may be incomplete. Given n, return the number of complete rows.',
   examples: [
-    { input: 'n = 5', output: '2', explanation: 'Rows: 1 + 2 coins, 2 left over (row 3 incomplete)' },
+    {
+      input: 'n = 5',
+      output: '2',
+      explanation: 'Rows: 1 + 2 coins, 2 left over (row 3 incomplete)',
+    },
     { input: 'n = 8', output: '3', explanation: 'Rows: 1 + 2 + 3 coins, 2 left over' },
   ],
   constraints: ['1 <= n <= 2^31 - 1'],

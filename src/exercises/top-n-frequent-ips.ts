@@ -14,7 +14,8 @@ export const topNFrequentIps: Exercise = {
       input:
         'ips = ["192.168.1.1","10.0.0.1","192.168.1.1","192.168.1.1","10.0.0.1","172.16.0.1"], n = 2',
       output: '["192.168.1.1","10.0.0.1"]',
-      explanation: 'Order does not matter; this example lists them by descending frequency (3, then 2).',
+      explanation:
+        'Order does not matter; this example lists them by descending frequency (3, then 2).',
     },
   ],
   constraints: ['1 <= ips.length <= 10^5', '1 <= n <= number of unique IPs'],
@@ -28,22 +29,30 @@ export const topNFrequentIps: Exercise = {
     cases: [
       {
         input: [
-          [
-            '192.168.1.1',
-            '10.0.0.1',
-            '192.168.1.1',
-            '192.168.1.1',
-            '10.0.0.1',
-            '172.16.0.1',
-          ],
+          ['192.168.1.1', '10.0.0.1', '192.168.1.1', '192.168.1.1', '10.0.0.1', '172.16.0.1'],
           2,
         ],
         expected: ['192.168.1.1', '10.0.0.1'],
         sorted: true,
       },
-      { input: [['1.1.1.1', '1.1.1.1', '1.1.1.1', '2.2.2.2', '2.2.2.2', '3.3.3.3'], 1], expected: ['1.1.1.1'], sorted: true },
-      { input: [['1.1.1.1', '1.1.1.1', '1.1.1.1', '2.2.2.2', '2.2.2.2', '3.3.3.3'], 3], expected: ['1.1.1.1', '2.2.2.2', '3.3.3.3'], sorted: true },
-      { input: [['10.0.0.1', '10.0.0.1', '192.168.1.1', '192.168.1.1', '192.168.1.1', '172.16.0.1'], 1], expected: ['192.168.1.1'], sorted: true },
+      {
+        input: [['1.1.1.1', '1.1.1.1', '1.1.1.1', '2.2.2.2', '2.2.2.2', '3.3.3.3'], 1],
+        expected: ['1.1.1.1'],
+        sorted: true,
+      },
+      {
+        input: [['1.1.1.1', '1.1.1.1', '1.1.1.1', '2.2.2.2', '2.2.2.2', '3.3.3.3'], 3],
+        expected: ['1.1.1.1', '2.2.2.2', '3.3.3.3'],
+        sorted: true,
+      },
+      {
+        input: [
+          ['10.0.0.1', '10.0.0.1', '192.168.1.1', '192.168.1.1', '192.168.1.1', '172.16.0.1'],
+          1,
+        ],
+        expected: ['192.168.1.1'],
+        sorted: true,
+      },
       { input: [['1.1.1.1'], 1], expected: ['1.1.1.1'], sorted: true },
     ],
   },

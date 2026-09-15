@@ -10,14 +10,19 @@ export const validPalindrome: Exercise = {
   description:
     'A phrase is a palindrome if, after converting all uppercase letters to lowercase and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers. Return true if it is a palindrome, false otherwise.',
   examples: [
-    { input: 's = "A man, a plan, a canal: Panama"', output: 'true', explanation: '"amanaplanacanalpanama" is a palindrome' },
+    {
+      input: 's = "A man, a plan, a canal: Panama"',
+      output: 'true',
+      explanation: '"amanaplanacanalpanama" is a palindrome',
+    },
     { input: 's = "race a car"', output: 'false', explanation: '"raceacar" is not a palindrome' },
-    { input: 's = " "', output: 'true', explanation: 'After removing non-alphanumerics, s is an empty string, which is a palindrome' },
+    {
+      input: 's = " "',
+      output: 'true',
+      explanation: 'After removing non-alphanumerics, s is an empty string, which is a palindrome',
+    },
   ],
-  constraints: [
-    '1 <= s.length <= 2 * 10^5',
-    's consists only of printable ASCII characters',
-  ],
+  constraints: ['1 <= s.length <= 2 * 10^5', 's consists only of printable ASCII characters'],
   functionSignature: 'export function isPalindrome(s: string): boolean',
   hints: [
     'Use two pointers: left at start, right at end',

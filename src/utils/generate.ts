@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 import * as path from 'node:path';
-import { validationLabel, type Exercise } from '@exercises/types';
+import { type Exercise, validationLabel } from '@exercises/types';
 import { formatExample } from '@utils/format';
 
 export interface GeneratedPaths {
@@ -10,6 +10,7 @@ export interface GeneratedPaths {
 }
 
 const TODO_MARKER = '// TODO: forge your solution';
+const FUNCTION_DECLARATION = /function\s+(\w+)/;
 
 // `exercisesDir` is the folder that holds one subfolder per exercise.
 export function exerciseDir(exerciseId: string, exercisesDir: string): string {
@@ -36,7 +37,10 @@ export async function isStarted(exercise: Exercise, exercisesDir: string): Promi
   }
 }
 
-export async function ensureGenerated(exercise: Exercise, exercisesDir: string): Promise<GeneratedPaths> {
+export async function ensureGenerated(
+  exercise: Exercise,
+  exercisesDir: string,
+): Promise<GeneratedPaths> {
   const { dir, exerciseFile, testFile } = exercisePaths(exercise, exercisesDir);
 
   await fs.mkdir(dir, { recursive: true });
@@ -65,7 +69,10 @@ export async function resetSolution(exercise: Exercise, exercisesDir: string): P
 
 export async function isSolved(exercise: Exercise, exercisesDir: string): Promise<boolean> {
   try {
-    const content = await fs.readFile(path.join(exerciseDir(exercise.id, exercisesDir), 'exercise.ts'), 'utf-8');
+    const content = await fs.readFile(
+      path.join(exerciseDir(exercise.id, exercisesDir), 'exercise.ts'),
+      'utf-8',
+    );
     return !content.includes(TODO_MARKER);
   } catch {
     return false;
@@ -75,16 +82,19 @@ export async function isSolved(exercise: Exercise, exercisesDir: string): Promis
 function commentBlock(label: string, value: string, pad = ' *   '): string {
   const continuation = ' '.repeat(label.length);
   const lines = value.split('\n');
-  return lines
-    .map((line, i) => `${pad}${i === 0 ? label : continuation}${line}`)
-    .join('\n');
+  return lines.map((line, i) => `${pad}${i === 0 ? label : continuation}${line}`).join('\n');
 }
 
 function renderExerciseFile(exercise: Exercise): string {
   const examples = exercise.examples
     .map((e) => {
-      const lines = [commentBlock('Input:  ', formatExample(e.input)), commentBlock('Output: ', formatExample(e.output))];
-      if (e.explanation) lines.push(commentBlock('Note:   ', e.explanation));
+      const lines = [
+        commentBlock('Input:  ', formatExample(e.input)),
+        commentBlock('Output: ', formatExample(e.output)),
+      ];
+      if (e.explanation) {
+        lines.push(commentBlock('Note:   ', e.explanation));
+      }
       return lines.join('\n');
     })
     .join('\n *\n');
@@ -108,8 +118,8 @@ ${constraints}
  */
 
 ${
-    exercise.stub ??
-    `${exercise.functionSignature} {
+  exercise.stub ??
+  `${exercise.functionSignature} {
   ${TODO_MARKER}
   throw new Error('Not implemented');
 }`
@@ -118,8 +128,10 @@ ${
 }
 
 function fnName(exercise: Exercise): string {
-  const match = exercise.functionSignature.match(/function\s+(\w+)/);
-  if (!match) throw new Error(`Bad function signature for ${exercise.id}`);
+  const match = exercise.functionSignature.match(FUNCTION_DECLARATION);
+  if (!match) {
+    throw new Error(`Bad function signature for ${exercise.id}`);
+  }
   return match[1];
 }
 
