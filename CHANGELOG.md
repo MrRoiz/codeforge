@@ -1,3 +1,10 @@
+## [1.9.2](https://github.com/MrRoiz/codeforge/compare/v1.9.1...v1.9.2) (2026-09-15)
+
+
+### Bug Fixes
+
+* group exercise test config under tests for readability ([627d70f](https://github.com/MrRoiz/codeforge/commit/627d70fd80c8fb2e48df407f352a1976a38d3fdd))
+
 ## [1.9.1](https://github.com/MrRoiz/codeforge/compare/v1.9.0...v1.9.1) (2026-09-15)
 
 
