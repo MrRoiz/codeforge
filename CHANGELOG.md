@@ -1,3 +1,12 @@
+# [1.11.0](https://github.com/MrRoiz/codeforge/compare/v1.10.0...v1.11.0) (2026-09-15)
+
+
+### Features
+
+* **config:** store exercises under ~/.codeforge/exercises ([386c998](https://github.com/MrRoiz/codeforge/commit/386c998033633f21fc5c93c6bc8087705aa2f66a))
+* **state:** add progress state store ([d1b5885](https://github.com/MrRoiz/codeforge/commit/d1b588547f7966f23f2e2f89e9c4323234770db4))
+* timed practice tracking with progress display and reset prompt ([e860e04](https://github.com/MrRoiz/codeforge/commit/e860e0433f74dd412dc5f6e4b80cd8b6ee9744f3))
+
 # [1.10.0](https://github.com/MrRoiz/codeforge/compare/v1.9.3...v1.10.0) (2026-09-15)
 
 
