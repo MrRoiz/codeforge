@@ -1,15 +1,15 @@
-name: Lint
+name: Checks
 
+# Runs on pull requests only. Pushes to main are checked by the release
+# workflow's `checks` job, so lint/typecheck never run twice for one commit.
 on:
-  push:
-    branches: [main]
   pull_request:
 
 permissions:
   contents: read
 
 jobs:
-  biome:
+  checks:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -27,5 +27,8 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
-      - name: Biome check
+      - name: Lint
         run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
