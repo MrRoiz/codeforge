@@ -26,15 +26,28 @@ export function DifficultyMenu({ counts, onSelect, onBack }: Props) {
       <Box marginTop={1} flexDirection="column">
         <Select<DifficultyChoice>
           items={[
-            { label: 'All', value: 'all', hint: `(${counts.all})` },
-            { label: 'Easy', value: 'easy', hint: `(${counts.easy})`, disabled: counts.easy === 0 },
+            { key: 'all', label: 'All', value: 'all', hint: `(${counts.all})` },
             {
+              key: 'easy',
+              label: 'Easy',
+              value: 'easy',
+              hint: `(${counts.easy})`,
+              disabled: counts.easy === 0,
+            },
+            {
+              key: 'medium',
               label: 'Medium',
               value: 'medium',
               hint: `(${counts.medium})`,
               disabled: counts.medium === 0,
             },
-            { label: 'Hard', value: 'hard', hint: `(${counts.hard})`, disabled: counts.hard === 0 },
+            {
+              key: 'hard',
+              label: 'Hard',
+              value: 'hard',
+              hint: `(${counts.hard})`,
+              disabled: counts.hard === 0,
+            },
           ]}
           onSelect={onSelect}
         />

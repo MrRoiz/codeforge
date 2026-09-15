@@ -18,10 +18,20 @@ export function MainMenu({
       <Box flexDirection="column" paddingLeft={2}>
         <Select<MenuAction>
           items={[
-            { label: '⚔  Train', value: 'train', hint: 'choose difficulty & exercise' },
-            { label: '🎲 Random Challenge', value: 'random', hint: 'surprise me' },
-            { label: '⚙  Settings', value: 'settings', hint: 'where exercises are created' },
-            { label: '🚪 Quit', value: 'quit' },
+            {
+              key: 'train',
+              label: '⚔  Train',
+              value: 'train',
+              hint: 'choose difficulty & exercise',
+            },
+            { key: 'random', label: '🎲 Random Challenge', value: 'random', hint: 'surprise me' },
+            {
+              key: 'settings',
+              label: '⚙  Settings',
+              value: 'settings',
+              hint: 'where exercises are created',
+            },
+            { key: 'quit', label: '🚪 Quit', value: 'quit' },
           ]}
           onSelect={onSelect}
         />

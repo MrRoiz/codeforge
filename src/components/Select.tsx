@@ -2,9 +2,10 @@ import { Box, Text, useInput } from 'ink';
 import { useEffect, useRef, useState } from 'react';
 
 export interface SelectItem<T> {
+  /** stable identity for React list keys */
+  key: string;
   label: string;
   value: T;
-  key?: string;
   hint?: string;
   disabled?: boolean;
 }
@@ -96,7 +97,7 @@ export function Select<T>({
         const active = i === index;
         const dim = item.disabled;
         return (
-          <Box key={item.key ?? item.label}>
+          <Box key={item.key}>
             <Text color={active ? color : undefined} dimColor={dim}>
               {active ? `${marker} ` : '  '}
               {item.label}
