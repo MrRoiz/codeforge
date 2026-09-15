@@ -40,7 +40,7 @@ export function Logo() {
         v{pkg.version}
         {updateInfo ? <Text color="greenBright">  → v{updateInfo.latest} available</Text> : null}
       </Text>
-      <Text dimColor>o: Open in Github</Text>
+      <Text dimColor>p: Open in GitHub</Text>
     </Box>
   );
 }
