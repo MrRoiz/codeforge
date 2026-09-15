@@ -3,24 +3,26 @@
 <img width="542" height="125" alt="image" src="https://github.com/user-attachments/assets/f4b83537-d35d-435f-a905-34ad23177475" />
 
 
-> A terminal forge for live-coding interview practice.
+> A terminal forge for sharpening your coding skills.
 
 In an era where more and more code is written by prompting, a quiet gap is
-growing: the ability to sit in front of a blank function, under a timer, and
-reason your way to a working solution — out loud, from scratch. AI coding
-is great at shipping features. It does not train the muscles an interview
-actually measures: problem decomposition, data-structure fluency, edge-case
-instinct, and the confidence to write code while someone watches.
+growing: the ability to sit in front of a blank function and reason your way to
+a working solution from scratch. AI coding is great at shipping features. It
+does not train the fundamentals that keep you effective when there's no
+auto-complete to lean on: problem decomposition, data-structure fluency,
+edge-case instinct, and the confidence to write correct code while someone
+watches.
 
-**codeforge** exists to close that gap. It drops a real interview-style exercise
-into your working directory — problem statement, examples, constraints, hints,
-and a hidden test suite — then gets out of your way. You solve it in your own
-editor, your own way. When you're ready, codeforge runs the tests and tells you
-the truth: pass or fail, with the exact cases that broke.
+**codeforge** exists to close that gap. It drops a self-contained exercise into
+your working directory — problem statement, examples, constraints, hints, and a
+hidden test suite — then gets out of your way. You solve it in your own editor,
+your own way. When you're ready, codeforge runs the tests and tells you the
+truth: pass or fail, with the exact cases that broke.
 
-The gap it closes and the value it brings
-are real. The exercises are curated from real interview reports, the tests are
-unforgiving, and the only thing that counts is the output.
+Interviews are one place these skills get measured, but the goal is broader:
+becoming a sharper problem solver every day. The exercises are curated from real
+problems, the tests are unforgiving, and the only thing that counts is the
+output.
 
 ## Why a TUI
 
@@ -34,15 +36,14 @@ contract.
 ## What you get
 
 - **A growing library of curated algorithmic exercises** across Easy, Medium,
-  and Hard, chosen for relevance to senior backend interviews — the kind GoDaddy
-  and similar companies run in HackerRank / live sessions. Highlights: Two Sum,
-  Valid Parentheses, Two Pointers & Sliding Window (Longest Substring, Minimum
-  Window Substring), Prefix/Suffix & Intervals (Product Except Self, Merge
-  Intervals, Meeting Rooms II), Graph/Grid (Number of Islands, Dependency Graph
-  Ordering), DP (Word Break, Unique Paths II, Perfect Squares, Longest
-  Palindromic Substring), design (LRU Cache), plus practical-logic tasks
-  (Weighted Voting, Top-N Frequent IPs, Ticket Itinerary, Most-Used Route Per
-  Courier).
+  and Hard, chosen to train the patterns that keep showing up in real code and
+  coding rounds. Highlights: Two Sum, Valid Parentheses, Two Pointers & Sliding
+  Window (Longest Substring, Minimum Window Substring), Prefix/Suffix & Intervals
+  (Product Except Self, Merge Intervals, Meeting Rooms II), Graph/Grid (Number of
+  Islands, Dependency Graph Ordering), DP (Word Break, Unique Paths II, Perfect
+  Squares, Longest Palindromic Substring), design (LRU Cache), plus
+  practical-logic tasks (Weighted Voting, Top-N Frequent IPs, Ticket Itinerary,
+  Most-Used Route Per Courier).
 - **TypeScript-first** exercise templates and **Jest** test suites.
 - **Keyboard-driven TUI** with a game-flavored feel: browse by difficulty, get a
   random challenge, read the statement, reveal hints, and forge your solution.
@@ -217,7 +218,7 @@ is the clean way to keep `@` aliases extensionless.)
 ## Contributing
 
 Contributions are very welcome — the best part of this project is the exercise
-library, and it gets better with every real interview problem people add.
+library, and it gets better with every real problem people add.
 
 ### Add an exercise
 
@@ -259,9 +260,10 @@ automatically.
 
 ### Guidelines
 
-- **Real interview relevance over novelty.** Prefer problems actually seen in
-  live coding rounds (HackerRank, live sessions) — especially senior backend
-  flavors. This is a forge for interviews, not a puzzle dump.
+- **Skill relevance over novelty.** Prefer problems that train a transferable
+  pattern (arrays, two pointers, intervals, graphs, DP, design) over one-off
+  puzzles. Problems that show up in real coding rounds are especially welcome —
+  this is a forge for skills, not a puzzle dump.
 - **Correct, unambiguous tests.** Every case must have exactly one valid
   answer (or mark `sorted: true` when order doesn't matter). Add edge cases:
   empty input, duplicates, negatives, boundaries.
@@ -386,5 +388,5 @@ pnpm release --dry-run
 
 ---
 
-Built because shipping features and passing interviews are different skills.
-Practice the one you're about to be measured on.
+Built because shipping features and solving problems from scratch are different
+skills. Practice the one you want to keep sharp.
