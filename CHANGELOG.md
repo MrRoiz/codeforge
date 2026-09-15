@@ -1,3 +1,10 @@
+## [1.9.1](https://github.com/MrRoiz/codeforge/compare/v1.9.0...v1.9.1) (2026-09-15)
+
+
+### Bug Fixes
+
+* clarify misleading exercise examples ([66935e9](https://github.com/MrRoiz/codeforge/commit/66935e9d3e2d8da15902fca22be4d0f3b509b080))
+
 # [1.9.0](https://github.com/MrRoiz/codeforge/compare/v1.8.0...v1.9.0) (2026-09-14)
 
 
