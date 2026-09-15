@@ -51,7 +51,8 @@
     "ink": "^7.0.0",
     "jest": "^30.0.0",
     "react": "^19.0.0",
-    "ts-jest": "^29.4.0"
+    "ts-jest": "^29.4.0",
+    "typescript": "^5.9.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.13",
