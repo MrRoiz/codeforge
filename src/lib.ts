@@ -3,3 +3,4 @@ export * from '@exercises';
 export * from '@utils/config';
 export * from '@utils/generate';
 export * from '@utils/runTests';
+export * from '@utils/state';
