@@ -67,13 +67,19 @@ export async function resetSolution(exercise: Exercise, exercisesDir: string): P
   await fs.writeFile(exerciseFile, renderExerciseFile(exercise));
 }
 
-export async function isSolved(exercise: Exercise, exercisesDir: string): Promise<boolean> {
+/**
+ * Whether the developer has touched the solution — the file exists and differs
+ * from the generated stub. This is only a *dirty* signal (there is user code to
+ * preserve); it says nothing about correctness. Whether an exercise is actually
+ * solved is tracked separately in the progress state.
+ */
+export async function isDirty(exercise: Exercise, exercisesDir: string): Promise<boolean> {
   try {
     const content = await fs.readFile(
       path.join(exerciseDir(exercise.id, exercisesDir), 'exercise.ts'),
       'utf-8',
     );
-    return !content.includes(TODO_MARKER);
+    return content !== renderExerciseFile(exercise);
   } catch {
     return false;
   }
