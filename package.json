@@ -24,8 +24,11 @@
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
     "dev": "tsx src/index.tsx",
-    "prepare": "tsup",
+    "prepare": "husky && tsup",
     "release": "semantic-release"
   },
   "pnpm": {
@@ -51,6 +54,7 @@
     "ts-jest": "^29.4.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.5.13",
     "@semantic-release/changelog": "^7.0.0",
     "@semantic-release/commit-analyzer": "^13.0.1",
     "@semantic-release/exec": "^7.1.0",
@@ -60,6 +64,7 @@
     "@semantic-release/release-notes-generator": "^14.1.1",
     "@types/node": "^24.0.0",
     "@types/react": "^19.0.0",
+    "husky": "^9.1.7",
     "semantic-release": "^25.0.9",
     "tsup": "^8.5.1",
     "tsx": "^4.20.0",
