@@ -1,3 +1,10 @@
+# [1.14.0](https://github.com/MrRoiz/codeforge/compare/v1.13.0...v1.14.0) (2026-09-16)
+
+
+### Features
+
+* **exercises:** add string-compression example and test cases ([d6c4d4b](https://github.com/MrRoiz/codeforge/commit/d6c4d4b00f8adaee748e5fb0419b5927782ed3b2))
+
 # [1.13.0](https://github.com/MrRoiz/codeforge/compare/v1.12.0...v1.13.0) (2026-09-16)
 
 
