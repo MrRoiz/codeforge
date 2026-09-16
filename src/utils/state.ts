@@ -200,3 +200,8 @@ export function resetStat(exerciseId: string): State {
     return { version: STATE_VERSION, exercises };
   });
 }
+
+/** Remove every exercise's recorded progress. */
+export function resetAll(): State {
+  return updateState(() => emptyState());
+}

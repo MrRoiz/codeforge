@@ -58,6 +58,8 @@ contract.
 - **TypeScript-first** exercise templates and **Jest** test suites.
 - **Keyboard-driven TUI** with a game-flavored feel: browse by difficulty, get a
   random challenge, read the statement, reveal hints, and forge your solution.
+- **Progress at a glance** — the home screen shows how much of the catalog you've
+  solved, overall and per difficulty, plus your total attempts.
 - **Honest testing** — the test file is regenerated every run, so you cannot
   "fix" the tests to make yourself pass.
 - **Big-O feedback** — every run reads your solution and gives a rough
@@ -176,9 +178,11 @@ timed. Re-checking an old solution never inflates the count, because opening
 existing work never starts the clock — you'd have to reset it (which starts a
 fresh, countable attempt) first.
 
-The file is written atomically, so an interrupted run can't corrupt it. Delete
-it to reset your progress, or press `x` on an exercise to clear just that
-exercise's stats.
+The file is written atomically, so an interrupted run can't corrupt it. Press
+`x` on an exercise to clear just that exercise's stats, or choose **Reset
+Progress** on the main menu to clear everything (it asks for confirmation first).
+The main menu also shows a live overview — solved out of the catalog, per
+difficulty, plus total attempts.
 
 ## Complexity
 
@@ -250,6 +254,8 @@ src/
     runTests.ts      spawns the isolated Jest runner
     jestRunner.ts    runs Jest in a child process, returns JSON results
   app/               TUI screens (Ink + React)
+    hooks/           action hooks (exercise flow, config)
+    store/           Jotai atoms (screen, config, session, progress)
   components/        logo, selector, shared UI
   lib.ts             programmatic API (packaged as dist/lib.js)
   index.tsx          TUI entry / bin (packaged as dist/index.js)

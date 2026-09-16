@@ -8,3 +8,6 @@ export const statusAtom = atom<string | undefined>(undefined);
 
 /** True while a screen is capturing text (settings, search) — gates global keys. */
 export const searchActiveAtom = atom(false);
+
+/** True while the main menu asks for confirmation before clearing all progress. */
+export const resetConfirmAtom = atom(false);

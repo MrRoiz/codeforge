@@ -1,16 +1,23 @@
 import { useExerciseActions } from '@app/hooks/useExerciseActions';
 import { useTerminalSize } from '@app/hooks/useTerminalSize';
-import { exercisesDirAtom, screenAtom, statusAtom } from '@app/store';
+import {
+  exercisesDirAtom,
+  progressAtom,
+  resetConfirmAtom,
+  screenAtom,
+  statusAtom,
+} from '@app/store';
 import { ProgressOverview } from '@components/ProgressOverview';
 import { Select } from '@components/Select';
-import { CenteredColumn, KeyHints } from '@components/ui';
+import { CenteredColumn, ConfirmPrompt, KeyHints } from '@components/ui';
 import { getRandomExercise } from '@exercises';
+import { resetAll } from '@utils/state';
 import { pickWelcome } from '@utils/welcome';
-import { Box, Text, useApp } from 'ink';
+import { Box, Text, useApp, useInput } from 'ink';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useState } from 'react';
 
-export type MenuAction = 'train' | 'random' | 'settings' | 'quit';
+export type MenuAction = 'train' | 'random' | 'settings' | 'reset' | 'quit';
 
 // below this many columns the progress card stacks under the menu
 const STACK_BELOW = 76;
@@ -20,11 +27,26 @@ export function MainMenu() {
   const { columns } = useTerminalSize();
   const exercisesDir = useAtomValue(exercisesDirAtom);
   const [status, setStatus] = useAtom(statusAtom);
+  const [confirming, setConfirming] = useAtom(resetConfirmAtom);
   const setScreen = useSetAtom(screenAtom);
+  const setProgress = useSetAtom(progressAtom);
   const { openExercise } = useExerciseActions();
   const [welcome] = useState(() => pickWelcome());
 
   const stacked = columns < STACK_BELOW;
+
+  useInput(
+    (input, key) => {
+      if (input === 'y' || input === 'Y') {
+        setProgress(resetAll());
+        setStatus('All progress cleared');
+        setConfirming(false);
+      } else if (input === 'n' || input === 'N' || key.escape) {
+        setConfirming(false);
+      }
+    },
+    { isActive: confirming },
+  );
 
   const onSelect = (action: MenuAction) => {
     if (action === 'quit') {
@@ -36,6 +58,9 @@ export function MainMenu() {
     if (action === 'settings') {
       setStatus(undefined);
       setScreen('settings');
+    }
+    if (action === 'reset') {
+      setConfirming(true);
     }
     if (action === 'random') {
       void openExercise(getRandomExercise());
@@ -51,6 +76,7 @@ export function MainMenu() {
       <Box flexDirection={stacked ? 'column' : 'row'} marginTop={2}>
         <Box flexDirection="column" flexShrink={0}>
           <Select<MenuAction>
+            isActive={!confirming}
             items={[
               {
                 key: 'train',
@@ -65,6 +91,12 @@ export function MainMenu() {
                 value: 'settings',
                 hint: 'where exercises are created',
               },
+              {
+                key: 'reset',
+                label: '🧹 Reset Progress',
+                value: 'reset',
+                hint: 'clear all stats',
+              },
               { key: 'quit', label: '🚪 Quit', value: 'quit' },
             ]}
             onSelect={onSelect}
@@ -75,6 +107,17 @@ export function MainMenu() {
           <ProgressOverview />
         </Box>
       </Box>
+
+      {confirming ? (
+        <ConfirmPrompt
+          title="Reset all progress?"
+          description="Clears every exercise's attempts, solves and best times. Your solution files are left untouched."
+          hints={[
+            ['y', 'reset everything'],
+            ['n / esc', 'cancel'],
+          ]}
+        />
+      ) : null}
 
       <Box marginTop={2} flexDirection="column">
         <Text dimColor>exercises → {exercisesDir}</Text>

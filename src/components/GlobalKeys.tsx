@@ -1,4 +1,4 @@
-import { confirmAtom, screenAtom, searchActiveAtom } from '@app/store';
+import { confirmAtom, resetConfirmAtom, screenAtom, searchActiveAtom } from '@app/store';
 import { openRepo } from '@utils/open';
 import { useApp, useInput } from 'ink';
 import { useAtomValue } from 'jotai';
@@ -12,6 +12,7 @@ export function GlobalKeys() {
   const { exit } = useApp();
   const screen = useAtomValue(screenAtom);
   const confirm = useAtomValue(confirmAtom);
+  const resetConfirm = useAtomValue(resetConfirmAtom);
   const searchActive = useAtomValue(searchActiveAtom);
 
   useInput(
@@ -23,7 +24,7 @@ export function GlobalKeys() {
         openRepo();
       }
     },
-    { isActive: screen !== 'settings' && !searchActive && !confirm },
+    { isActive: screen !== 'settings' && !searchActive && !confirm && !resetConfirm },
   );
 
   return null;
