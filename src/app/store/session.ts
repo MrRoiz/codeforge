@@ -1,0 +1,24 @@
+import type { Exercise } from '@exercises/types';
+import type { ComplexityResult } from '@utils/complexity';
+import type { GeneratedPaths } from '@utils/generate';
+import type { TestRunResult } from '@utils/runTests';
+import { atom } from 'jotai';
+
+/** Which destructive action the user is being asked to confirm. */
+export type ConfirmKind = 'solution' | 'stats';
+
+/** The answer to a confirmation prompt. */
+export type Decision = 'reset' | 'cancel';
+
+// The open-exercise session spans several screens, so its state lives here to
+// survive the exercise → running → results → exercise flow without unmounting.
+
+export const exerciseAtom = atom<Exercise | null>(null);
+export const pathsAtom = atom<GeneratedPaths | null>(null);
+export const startedAtom = atom(false);
+export const startedAtAtom = atom<number | null>(null);
+export const elapsedMsAtom = atom<number | null>(null);
+export const hasContentAtom = atom(false);
+export const resultAtom = atom<TestRunResult | null>(null);
+export const complexityAtom = atom<ComplexityResult | null>(null);
+export const confirmAtom = atom<ConfirmKind | null>(null);

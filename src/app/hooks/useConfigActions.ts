@@ -1,5 +1,5 @@
 import fs from 'node:fs/promises';
-import { configAtom, errorAtom, statusAtom } from '@app/state';
+import { configAtom, errorAtom, statusAtom } from '@app/store';
 import { type Config, saveConfig } from '@utils/config';
 import { useAtom, useSetAtom } from 'jotai';
 

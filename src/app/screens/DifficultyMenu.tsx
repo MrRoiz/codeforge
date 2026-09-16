@@ -3,7 +3,7 @@ import {
   difficultyAtom,
   difficultyCountsAtom,
   screenAtom,
-} from '@app/state';
+} from '@app/store';
 import { Select } from '@components/Select';
 import { KeyHints } from '@components/ui';
 import { Box, Text, useInput } from 'ink';

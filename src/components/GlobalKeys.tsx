@@ -1,4 +1,4 @@
-import { confirmAtom, screenAtom, searchActiveAtom } from '@app/state';
+import { confirmAtom, screenAtom, searchActiveAtom } from '@app/store';
 import { openRepo } from '@utils/open';
 import { useApp, useInput } from 'ink';
 import { useAtomValue } from 'jotai';

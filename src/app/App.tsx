@@ -6,7 +6,7 @@ import { MainMenu } from '@app/screens/MainMenu';
 import { ResultsView } from '@app/screens/ResultsView';
 import { RunningView } from '@app/screens/RunningView';
 import { SettingsView } from '@app/screens/SettingsView';
-import { screenAtom } from '@app/state';
+import { screenAtom } from '@app/store';
 import { ErrorBanner } from '@components/ErrorBanner';
 import { GlobalKeys } from '@components/GlobalKeys';
 import { useAtomValue } from 'jotai';

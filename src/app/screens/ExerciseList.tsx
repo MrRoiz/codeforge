@@ -1,5 +1,5 @@
 import { useExerciseActions } from '@app/hooks/useExerciseActions';
-import { filteredExercisesAtom, progressAtom, screenAtom, searchActiveAtom } from '@app/state';
+import { filteredExercisesAtom, progressAtom, screenAtom, searchActiveAtom } from '@app/store';
 import { Select } from '@components/Select';
 import { TextInput } from '@components/TextInput';
 import { DifficultyBadge, formatDate, KeyHints, Stats } from '@components/ui';

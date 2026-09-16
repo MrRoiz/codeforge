@@ -1,5 +1,5 @@
 import { useConfigActions } from '@app/hooks/useConfigActions';
-import { defaultDirAtom, exercisesDirAtom, screenAtom } from '@app/state';
+import { defaultDirAtom, exercisesDirAtom, screenAtom } from '@app/store';
 import { TextInput } from '@components/TextInput';
 import { KeyHints } from '@components/ui';
 import { expandPath } from '@utils/config';

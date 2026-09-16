@@ -1,5 +1,5 @@
 import { useExerciseActions } from '@app/hooks/useExerciseActions';
-import { complexityAtom, elapsedMsAtom, exerciseAtom, resultAtom, screenAtom } from '@app/state';
+import { complexityAtom, elapsedMsAtom, exerciseAtom, resultAtom, screenAtom } from '@app/store';
 import { ScrollView } from '@components/ScrollView';
 import { formatDuration, KeyHints } from '@components/ui';
 import { pickQuote } from '@utils/quotes';

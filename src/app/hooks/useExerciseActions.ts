@@ -13,7 +13,7 @@ import {
   screenAtom,
   startedAtAtom,
   startedAtom,
-} from '@app/state';
+} from '@app/store';
 import type { Exercise } from '@exercises/types';
 import { analyzeSolutionComplexity } from '@utils/complexity';
 import {
@@ -41,7 +41,7 @@ import { useRef } from 'react';
 /**
  * The imperative side of an exercise session: creating files, starting and
  * resetting, launching the editor, running the tests and moving between
- * screens. All state it touches lives in `@app/state` atoms, so screens can
+ * screens. All state it touches lives in `@app/store` atoms, so screens can
  * read it without prop drilling while these actions stay in one place.
  *
  * Atoms the actions both read and write use `useAtom`; write-only atoms use

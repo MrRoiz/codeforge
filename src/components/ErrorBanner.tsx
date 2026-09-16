@@ -1,4 +1,4 @@
-import { errorAtom } from '@app/state';
+import { errorAtom } from '@app/store';
 import { Box, Text } from 'ink';
 import { useAtomValue } from 'jotai';
 

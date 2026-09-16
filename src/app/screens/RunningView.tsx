@@ -1,4 +1,4 @@
-import { exerciseAtom } from '@app/state';
+import { exerciseAtom } from '@app/store';
 import { Box, Text } from 'ink';
 import { useAtomValue } from 'jotai';
 import { useEffect, useState } from 'react';

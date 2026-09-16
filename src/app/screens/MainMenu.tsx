@@ -1,5 +1,5 @@
 import { useExerciseActions } from '@app/hooks/useExerciseActions';
-import { exercisesDirAtom, screenAtom, statusAtom } from '@app/state';
+import { exercisesDirAtom, screenAtom, statusAtom } from '@app/store';
 import { Select } from '@components/Select';
 import { KeyHints } from '@components/ui';
 import { getRandomExercise } from '@exercises';

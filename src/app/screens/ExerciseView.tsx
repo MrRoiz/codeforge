@@ -10,7 +10,7 @@ import {
   screenAtom,
   startedAtAtom,
   startedAtom,
-} from '@app/state';
+} from '@app/store';
 import { ExerciseDetails, ExerciseHeader, ExerciseStatus } from '@components/exercise';
 import { ConfirmPrompt, KeyHints } from '@components/ui';
 import { Box, useInput } from 'ink';
