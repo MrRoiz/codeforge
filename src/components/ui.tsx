@@ -1,6 +1,8 @@
+import { useTerminalSize } from '@app/hooks/useTerminalSize';
 import type { Exercise } from '@exercises/types';
 import type { ExerciseStat, SolveAttempt } from '@utils/state';
 import { Box, Text } from 'ink';
+import type { ReactNode } from 'react';
 
 const DIFFICULTY_COLORS: Record<Exercise['difficulty'], string> = {
   easy: 'greenBright',
@@ -201,6 +203,31 @@ export function ConfirmPrompt({
       <Text dimColor>{description}</Text>
       <Box marginTop={1}>
         <KeyHints hints={hints} />
+      </Box>
+    </Box>
+  );
+}
+
+/**
+ * A fixed-width column centered on screen, for the menu-style screens. Content
+ * inside is left-aligned; the width shrinks to fit narrow terminals.
+ */
+export function CenteredColumn({
+  maxWidth = 78,
+  minWidth = 40,
+  children,
+}: {
+  maxWidth?: number;
+  minWidth?: number;
+  children: ReactNode;
+}) {
+  const { columns } = useTerminalSize();
+  const width = Math.min(maxWidth, Math.max(minWidth, columns - 4));
+
+  return (
+    <Box flexDirection="column" alignItems="center" width="100%" paddingX={2} paddingY={1}>
+      <Box flexDirection="column" width={width}>
+        {children}
       </Box>
     </Box>
   );

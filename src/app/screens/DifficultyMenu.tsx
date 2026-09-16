@@ -5,7 +5,7 @@ import {
   screenAtom,
 } from '@app/store';
 import { Select } from '@components/Select';
-import { KeyHints } from '@components/ui';
+import { CenteredColumn, KeyHints } from '@components/ui';
 import { Box, Text, useInput } from 'ink';
 import { useAtomValue, useSetAtom } from 'jotai';
 
@@ -21,7 +21,7 @@ export function DifficultyMenu() {
   });
 
   return (
-    <Box flexDirection="column" paddingLeft={2}>
+    <CenteredColumn maxWidth={50} minWidth={30}>
       <Text color="cyanBright" bold>
         SELECT DIFFICULTY
       </Text>
@@ -57,7 +57,7 @@ export function DifficultyMenu() {
           }}
         />
       </Box>
-      <Box marginTop={1}>
+      <Box marginTop={2}>
         <KeyHints
           hints={[
             ['j/k ↑↓', 'navigate'],
@@ -67,6 +67,6 @@ export function DifficultyMenu() {
           ]}
         />
       </Box>
-    </Box>
+    </CenteredColumn>
   );
 }
