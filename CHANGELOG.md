@@ -1,3 +1,11 @@
+# [1.13.0](https://github.com/MrRoiz/codeforge/compare/v1.12.0...v1.13.0) (2026-09-16)
+
+
+### Features
+
+* estimate a solution's time complexity after a run ([36abf60](https://github.com/MrRoiz/codeforge/commit/36abf60359c04d0a90a85c4e56af1f762b31fa1c))
+* **state:** rework progress into v2 solve snapshots ([304ba84](https://github.com/MrRoiz/codeforge/commit/304ba84964752142ad566d009084abe351e3efbc))
+
 # [1.12.0](https://github.com/MrRoiz/codeforge/compare/v1.11.0...v1.12.0) (2026-09-15)
 
 
