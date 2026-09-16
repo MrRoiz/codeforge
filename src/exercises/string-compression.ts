@@ -18,6 +18,12 @@ export const stringCompression: Exercise = {
         'Before: ["a","a","b","b","c","c","c"]\nAfter:  ["a","2","b","2","c","3","c"]\n        └─────── k = 6 ────────┘ └─┘ leftover, ignored\nOnly the first 6 characters ("a","2","b","2","c","3") are the answer — the array is not resized.',
     },
     {
+      input: 'chars = ["a","a","a","b","b"]',
+      output: '4',
+      explanation:
+        'Before: ["a","a","a","b","b"]\nAfter:  ["a","3","b","2","b"]\n        └─── k = 4 ────┘ └─┘ leftover, ignored\nOnly the first 4 characters ("a","3","b","2") are the answer — the array is not resized.',
+    },
+    {
       input: 'chars = ["a"]',
       output: '1',
       explanation:
@@ -48,8 +54,39 @@ export const stringCompression: Exercise = {
         expected: ['a', 'b', '1', '2'],
       },
       { input: [['a', 'a', 'a', 'b', 'b']], expected: ['a', '3', 'b', '2'] },
+      { input: [['a', 'a', 'b']], expected: ['a', '2', 'b'] },
+      { input: [['a', 'b', 'b', 'c']], expected: ['a', 'b', '2', 'c'] },
       { input: [['a', 'b', 'c']], expected: ['a', 'b', 'c'] },
       { input: [['a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a']], expected: ['a', '1', '0'] },
+      {
+        input: [
+          [
+            'x',
+            'x',
+            'x',
+            'x',
+            'x',
+            'x',
+            'x',
+            'x',
+            'x',
+            'x',
+            'y',
+            'y',
+            'y',
+            'y',
+            'y',
+            'y',
+            'y',
+            'y',
+            'y',
+            'y',
+            'y',
+            'y',
+          ],
+        ],
+        expected: ['x', '1', '0', 'y', '1', '2'],
+      },
     ],
   },
 };
