@@ -1,3 +1,10 @@
+# [1.15.0](https://github.com/MrRoiz/codeforge/compare/v1.14.0...v1.15.0) (2026-09-16)
+
+
+### Features
+
+* **exercises:** add ten easy classic exercises ([0cf0b90](https://github.com/MrRoiz/codeforge/commit/0cf0b900102cb2e3e110cc3ff96c0ff53e257958))
+
 # [1.14.0](https://github.com/MrRoiz/codeforge/compare/v1.13.0...v1.14.0) (2026-09-16)
 
 
