@@ -1,9 +1,13 @@
 export { arrangingCoins } from '@exercises/arranging-coins';
 export { bestTimeBuySellStock } from '@exercises/best-time-buy-sell-stock';
+export { binarySearch } from '@exercises/binary-search';
+export { climbingStairs } from '@exercises/climbing-stairs';
 export { containerWithMostWater } from '@exercises/container-with-most-water';
 export { dependencyGraphOrdering } from '@exercises/dependency-graph-ordering';
 export { digitSumWithoutConversion } from '@exercises/digit-sum-without-conversion';
+export { fibonacciNumber } from '@exercises/fibonacci-number';
 export { findPivotIndex } from '@exercises/find-pivot-index';
+export { fizzBuzz } from '@exercises/fizzbuzz';
 export { longestCommonPrefix } from '@exercises/longest-common-prefix';
 export { longestPalindromicSubstring } from '@exercises/longest-palindromic-substring';
 export { longestSubstringNoRepeat } from '@exercises/longest-substring-no-repeat';
@@ -12,13 +16,18 @@ export { maxConsecutiveOnes } from '@exercises/max-consecutive-ones';
 export { meetingRoomsII } from '@exercises/meeting-rooms-ii';
 export { mergeIntervals } from '@exercises/merge-intervals';
 export { minimumWindowSubstring } from '@exercises/minimum-window-substring';
+export { missingNumber } from '@exercises/missing-number';
 export { mostUsedRoutePerCourier } from '@exercises/most-used-route-per-courier';
+export { moveZeroes } from '@exercises/move-zeroes';
 export { numberOfIslands } from '@exercises/number-of-islands';
 export { packageTransportation } from '@exercises/package-transportation';
+export { palindromeNumber } from '@exercises/palindrome-number';
 export { perfectSquares } from '@exercises/perfect-squares';
 export { permutations } from '@exercises/permutations';
 export { productExceptSelf } from '@exercises/product-except-self';
 export { reverseString } from '@exercises/reverse-string';
+export { singleNumber } from '@exercises/single-number';
+export { sqrtX } from '@exercises/sqrt-x';
 export { stepsToMakeArrayNonDecreasing } from '@exercises/steps-to-make-array-non-decreasing';
 export { stringCompression } from '@exercises/string-compression';
 export { ticketItineraryReconstruction } from '@exercises/ticket-itinerary-reconstruction';
@@ -33,16 +42,21 @@ export type {
 } from '@exercises/types';
 export { validationLabel } from '@exercises/types';
 export { uniquePathsII } from '@exercises/unique-paths-ii';
+export { validAnagram } from '@exercises/valid-anagram';
 export { validPalindrome } from '@exercises/valid-palindrome';
 export { validParentheses } from '@exercises/valid-parentheses';
 export { wordBreak } from '@exercises/word-break';
 
 import { arrangingCoins } from '@exercises/arranging-coins';
 import { bestTimeBuySellStock } from '@exercises/best-time-buy-sell-stock';
+import { binarySearch } from '@exercises/binary-search';
+import { climbingStairs } from '@exercises/climbing-stairs';
 import { containerWithMostWater } from '@exercises/container-with-most-water';
 import { dependencyGraphOrdering } from '@exercises/dependency-graph-ordering';
 import { digitSumWithoutConversion } from '@exercises/digit-sum-without-conversion';
+import { fibonacciNumber } from '@exercises/fibonacci-number';
 import { findPivotIndex } from '@exercises/find-pivot-index';
+import { fizzBuzz } from '@exercises/fizzbuzz';
 import { longestCommonPrefix } from '@exercises/longest-common-prefix';
 import { longestPalindromicSubstring } from '@exercises/longest-palindromic-substring';
 import { longestSubstringNoRepeat } from '@exercises/longest-substring-no-repeat';
@@ -51,13 +65,18 @@ import { maxConsecutiveOnes } from '@exercises/max-consecutive-ones';
 import { meetingRoomsII } from '@exercises/meeting-rooms-ii';
 import { mergeIntervals } from '@exercises/merge-intervals';
 import { minimumWindowSubstring } from '@exercises/minimum-window-substring';
+import { missingNumber } from '@exercises/missing-number';
 import { mostUsedRoutePerCourier } from '@exercises/most-used-route-per-courier';
+import { moveZeroes } from '@exercises/move-zeroes';
 import { numberOfIslands } from '@exercises/number-of-islands';
 import { packageTransportation } from '@exercises/package-transportation';
+import { palindromeNumber } from '@exercises/palindrome-number';
 import { perfectSquares } from '@exercises/perfect-squares';
 import { permutations } from '@exercises/permutations';
 import { productExceptSelf } from '@exercises/product-except-self';
 import { reverseString } from '@exercises/reverse-string';
+import { singleNumber } from '@exercises/single-number';
+import { sqrtX } from '@exercises/sqrt-x';
 import { stepsToMakeArrayNonDecreasing } from '@exercises/steps-to-make-array-non-decreasing';
 import { stringCompression } from '@exercises/string-compression';
 import { ticketItineraryReconstruction } from '@exercises/ticket-itinerary-reconstruction';
@@ -65,6 +84,7 @@ import { topNFrequentIps } from '@exercises/top-n-frequent-ips';
 import { twoSum } from '@exercises/two-sum';
 import type { Exercise } from '@exercises/types';
 import { uniquePathsII } from '@exercises/unique-paths-ii';
+import { validAnagram } from '@exercises/valid-anagram';
 import { validPalindrome } from '@exercises/valid-palindrome';
 import { validParentheses } from '@exercises/valid-parentheses';
 import { wordBreak } from '@exercises/word-break';
@@ -81,6 +101,16 @@ export const exercises: Exercise[] = [
   arrangingCoins,
   validPalindrome,
   digitSumWithoutConversion,
+  fizzBuzz,
+  fibonacciNumber,
+  climbingStairs,
+  binarySearch,
+  palindromeNumber,
+  sqrtX,
+  singleNumber,
+  missingNumber,
+  validAnagram,
+  moveZeroes,
   // medium
   longestSubstringNoRepeat,
   productExceptSelf,
