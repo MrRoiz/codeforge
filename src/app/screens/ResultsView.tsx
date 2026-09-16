@@ -1,21 +1,11 @@
+import { useExerciseActions } from '@app/hooks/useExerciseActions';
+import { complexityAtom, elapsedMsAtom, exerciseAtom, resultAtom, screenAtom } from '@app/state';
 import { ScrollView } from '@components/ScrollView';
 import { formatDuration, KeyHints } from '@components/ui';
-import type { Exercise } from '@exercises/types';
-import type { ComplexityResult } from '@utils/complexity';
 import { pickQuote } from '@utils/quotes';
-import type { TestRunResult } from '@utils/runTests';
 import { Box, Text, useInput } from 'ink';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { useEffect, useState } from 'react';
-
-interface Props {
-  exercise: Exercise;
-  result: TestRunResult;
-  elapsedMs?: number | null;
-  complexity?: ComplexityResult | null;
-  onRerun: () => void;
-  onOpenEditor: () => void;
-  onBack: () => void;
-}
 
 // border glow on a pass: cycle for a moment, then settle on green
 const GLOW_COLORS = ['greenBright', 'cyanBright', 'whiteBright'];
@@ -55,30 +45,32 @@ function cleanMessage(msg: string): string[] {
   return chosen.slice(0, 4);
 }
 
-export function ResultsView({
-  exercise,
-  result,
-  elapsedMs,
-  complexity,
-  onRerun,
-  onOpenEditor,
-  onBack,
-}: Props) {
-  useInput((input, key) => {
-    if (key.escape) {
-      onBack();
-    }
-    if (input === 't') {
-      onRerun();
-    }
-    if (input === 'o') {
-      onOpenEditor();
-    }
-  });
+export function ResultsView() {
+  const exercise = useAtomValue(exerciseAtom);
+  const result = useAtomValue(resultAtom);
+  const elapsedMs = useAtomValue(elapsedMsAtom);
+  const complexity = useAtomValue(complexityAtom);
+  const setScreen = useSetAtom(screenAtom);
+  const { run, openEditor } = useExerciseActions();
 
-  const ok = result.passed;
+  const ok = result?.passed ?? false;
   const [glowFrame, setGlowFrame] = useState(0);
   const [quote] = useState(() => (ok ? pickQuote() : ''));
+
+  useInput((input, key) => {
+    if (!exercise) {
+      return;
+    }
+    if (key.escape) {
+      setScreen('exercise');
+    }
+    if (input === 't') {
+      void run(exercise);
+    }
+    if (input === 'o') {
+      void openEditor(exercise);
+    }
+  });
 
   useEffect(() => {
     if (!ok) {
@@ -94,6 +86,10 @@ export function ResultsView({
     }, GLOW_MS);
     return () => clearInterval(id);
   }, [ok]);
+
+  if (!exercise || !result) {
+    return null;
+  }
 
   const pulsing = ok && glowFrame < GLOW_FRAMES;
   const accent = accentColor(ok, pulsing, glowFrame);

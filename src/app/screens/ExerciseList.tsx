@@ -1,18 +1,13 @@
+import { useExerciseActions } from '@app/hooks/useExerciseActions';
+import { filteredExercisesAtom, progressAtom, screenAtom, searchActiveAtom } from '@app/state';
 import { Select } from '@components/Select';
 import { TextInput } from '@components/TextInput';
 import { DifficultyBadge, formatDate, KeyHints, Stats } from '@components/ui';
 import { type Exercise, validationLabel } from '@exercises/types';
-import type { State } from '@utils/state';
+import type { ExerciseStat } from '@utils/state';
 import { Box, Text, useInput } from 'ink';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { useEffect, useState } from 'react';
-
-interface Props {
-  exercises: Exercise[];
-  state: State;
-  onSelect: (exercise: Exercise) => void;
-  onBack: () => void;
-  onSearchActive?: (active: boolean) => void;
-}
 
 const LABEL_WIDTH = 35;
 
@@ -21,19 +16,25 @@ function padLabel(name: string): string {
   return short.padEnd(LABEL_WIDTH);
 }
 
-function solvedMarker(stat?: State['exercises'][string]): string {
+function solvedMarker(stat?: ExerciseStat): string {
   return stat?.solves ? '✓ ' : '  ';
 }
 
-export function ExerciseList({ exercises, state, onSelect, onBack, onSearchActive }: Props) {
+export function ExerciseList() {
+  const exercises = useAtomValue(filteredExercisesAtom);
+  const progress = useAtomValue(progressAtom);
+  const setSearchActive = useSetAtom(searchActiveAtom);
+  const setScreen = useSetAtom(screenAtom);
+  const { openExercise } = useExerciseActions();
+
   const [highlighted, setHighlighted] = useState<Exercise>(exercises[0]);
   const [searching, setSearching] = useState(false);
   const [query, setQuery] = useState('');
 
   useEffect(() => {
-    onSearchActive?.(searching);
-    return () => onSearchActive?.(false);
-  }, [searching, onSearchActive]);
+    setSearchActive(searching);
+    return () => setSearchActive(false);
+  }, [searching, setSearchActive]);
 
   const q = query.trim().toLowerCase();
   const filtered = q
@@ -50,7 +51,7 @@ export function ExerciseList({ exercises, state, onSelect, onBack, onSearchActiv
       return;
     }
     if (key.escape) {
-      onBack();
+      setScreen('difficulty');
     }
     if (input === '/') {
       setQuery('');
@@ -76,7 +77,7 @@ export function ExerciseList({ exercises, state, onSelect, onBack, onSearchActiv
             onChange={setQuery}
             onSubmit={() => {
               if (filtered.length > 0) {
-                onSelect(filtered[0]);
+                void openExercise(filtered[0]);
               }
             }}
             onCancel={exitSearch}
@@ -96,11 +97,11 @@ export function ExerciseList({ exercises, state, onSelect, onBack, onSearchActiv
                 key: e.id,
                 label: padLabel(e.name),
                 value: e,
-                leading: solvedMarker(state.exercises[e.id]),
+                leading: solvedMarker(progress.exercises[e.id]),
                 leadingColor: 'greenBright',
                 hint: `${e.difficulty} · ${e.time}`,
               }))}
-              onSelect={onSelect}
+              onSelect={(e) => void openExercise(e)}
               onHighlight={(e) => setHighlighted(e)}
               isActive={!searching}
             />
@@ -127,7 +128,7 @@ export function ExerciseList({ exercises, state, onSelect, onBack, onSearchActiv
                 <Text dimColor>added: {formatDate(highlighted.createdAt)}</Text>
               </Box>
               <Box marginTop={1}>
-                <Stats stat={state.exercises[highlighted.id]} />
+                <Stats stat={progress.exercises[highlighted.id]} />
               </Box>
               <Box marginTop={1}>
                 <Text wrap="wrap" dimColor>

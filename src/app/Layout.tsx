@@ -1,4 +1,4 @@
-import { useTerminalSize } from '@app/useTerminalSize';
+import { useTerminalSize } from '@app/hooks/useTerminalSize';
 import { Logo } from '@components/Logo';
 import { Box } from 'ink';
 import type { ReactNode } from 'react';

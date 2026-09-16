@@ -1,20 +1,22 @@
+import {
+  type DifficultyChoice,
+  difficultyAtom,
+  difficultyCountsAtom,
+  screenAtom,
+} from '@app/state';
 import { Select } from '@components/Select';
 import { KeyHints } from '@components/ui';
-import type { Exercise } from '@exercises/types';
 import { Box, Text, useInput } from 'ink';
+import { useAtomValue, useSetAtom } from 'jotai';
 
-export type DifficultyChoice = Exercise['difficulty'] | 'all';
+export function DifficultyMenu() {
+  const counts = useAtomValue(difficultyCountsAtom);
+  const setDifficulty = useSetAtom(difficultyAtom);
+  const setScreen = useSetAtom(screenAtom);
 
-interface Props {
-  counts: Record<DifficultyChoice, number>;
-  onSelect: (choice: DifficultyChoice) => void;
-  onBack: () => void;
-}
-
-export function DifficultyMenu({ counts, onSelect, onBack }: Props) {
   useInput((_input, key) => {
     if (key.escape) {
-      onBack();
+      setScreen('menu');
     }
   });
 
@@ -49,7 +51,10 @@ export function DifficultyMenu({ counts, onSelect, onBack }: Props) {
               disabled: counts.hard === 0,
             },
           ]}
-          onSelect={onSelect}
+          onSelect={(choice) => {
+            setDifficulty(choice);
+            setScreen('list');
+          }}
         />
       </Box>
       <Box marginTop={1}>

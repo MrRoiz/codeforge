@@ -1,22 +1,23 @@
+import { useConfigActions } from '@app/hooks/useConfigActions';
+import { defaultDirAtom, exercisesDirAtom, screenAtom } from '@app/state';
 import { TextInput } from '@components/TextInput';
 import { KeyHints } from '@components/ui';
 import { expandPath } from '@utils/config';
 import { Box, Text } from 'ink';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { useState } from 'react';
 
-interface Props {
-  currentDir: string;
-  defaultDir: string;
-  onSave: (dir: string) => void;
-  onBack: () => void;
-}
-
-export function SettingsView({ currentDir, defaultDir, onSave, onBack }: Props) {
+export function SettingsView() {
+  const currentDir = useAtomValue(exercisesDirAtom);
+  const defaultDir = useAtomValue(defaultDirAtom);
+  const setScreen = useSetAtom(screenAtom);
+  const { saveDir } = useConfigActions();
   const [draft, setDraft] = useState(currentDir);
 
-  const submit = () => {
+  const submit = async () => {
     const resolved = draft.trim() === '' ? defaultDir : expandPath(draft);
-    onSave(resolved);
+    await saveDir(resolved);
+    setScreen('menu');
   };
 
   return (
@@ -34,8 +35,8 @@ export function SettingsView({ currentDir, defaultDir, onSave, onBack }: Props) 
           <TextInput
             value={draft}
             onChange={setDraft}
-            onSubmit={submit}
-            onCancel={onBack}
+            onSubmit={() => void submit()}
+            onCancel={() => setScreen('menu')}
             placeholder={defaultDir}
           />
         </Box>

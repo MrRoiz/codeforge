@@ -175,3 +175,33 @@ export function KeyHints({ hints }: { hints: [string, string][] }) {
     </Box>
   );
 }
+
+/** A warning box asking the user to confirm a destructive action. */
+export function ConfirmPrompt({
+  title,
+  description,
+  hints,
+}: {
+  title: string;
+  description: string;
+  hints: [string, string][];
+}) {
+  return (
+    <Box
+      marginTop={1}
+      flexDirection="column"
+      borderStyle="double"
+      borderColor="yellowBright"
+      paddingX={1}
+      flexShrink={0}
+    >
+      <Text bold color="yellowBright">
+        ⚠ {title}
+      </Text>
+      <Text dimColor>{description}</Text>
+      <Box marginTop={1}>
+        <KeyHints hints={hints} />
+      </Box>
+    </Box>
+  );
+}

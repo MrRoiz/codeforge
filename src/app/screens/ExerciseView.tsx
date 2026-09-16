@@ -1,118 +1,84 @@
-import { useElapsed } from '@app/useElapsed';
-import { ScrollView } from '@components/ScrollView';
-import { DifficultyBadge, formatDate, formatDuration, KeyHints, StatColumns } from '@components/ui';
-import { type Exercise, validationLabel } from '@exercises/types';
-import { formatExample } from '@utils/format';
-import type { ExerciseStat } from '@utils/state';
-import { Box, Text, useInput } from 'ink';
+import { useElapsed } from '@app/hooks/useElapsed';
+import { useExerciseActions } from '@app/hooks/useExerciseActions';
+import {
+  confirmAtom,
+  elapsedMsAtom,
+  exerciseAtom,
+  hasContentAtom,
+  pathsAtom,
+  progressAtom,
+  screenAtom,
+  startedAtAtom,
+  startedAtom,
+} from '@app/state';
+import { ExerciseDetails, ExerciseHeader, ExerciseStatus } from '@components/exercise';
+import { ConfirmPrompt, KeyHints } from '@components/ui';
+import { Box, useInput } from 'ink';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { useState } from 'react';
 
-interface Props {
-  exercise: Exercise;
-  stat?: ExerciseStat;
-  exerciseFile: string;
-  testFile: string;
-  started: boolean;
-  startedAt: number | null;
-  elapsedMs: number | null;
-  hasContent: boolean;
-  confirmingReset: boolean;
-  confirmingResetStats: boolean;
-  onStart: () => void;
-  onResetDecision: (decision: 'reset' | 'cancel') => void;
-  onResetStats: () => void;
-  onResetStatsDecision: (decision: 'reset' | 'cancel') => void;
-  onRun: () => void;
-  onOpenEditor: () => void;
-  onRestartTimer: () => void;
-  onBack: () => void;
-}
+export function ExerciseView() {
+  const exercise = useAtomValue(exerciseAtom);
+  const paths = useAtomValue(pathsAtom);
+  const started = useAtomValue(startedAtom);
+  const startedAt = useAtomValue(startedAtAtom);
+  const elapsedMs = useAtomValue(elapsedMsAtom);
+  const hasContent = useAtomValue(hasContentAtom);
+  const confirm = useAtomValue(confirmAtom);
+  const progress = useAtomValue(progressAtom);
+  const setScreen = useSetAtom(screenAtom);
+  const actions = useExerciseActions();
 
-function MultiLine({ label, value, color }: { label: string; value: string; color?: string }) {
-  const text = value
-    .split('\n')
-    .map((line, i) => (i === 0 ? `${label}${line}` : `${' '.repeat(label.length)}${line}`))
-    .join('\n');
-  return (
-    <Box flexDirection="column">
-      <Text color={color}>{text}</Text>
-    </Box>
-  );
-}
-
-function clockStatus(running: boolean, finished: boolean, elapsed: number) {
-  if (running) {
-    return <Text color="cyanBright">⏱ elapsed → {formatDuration(elapsed)}</Text>;
-  }
-  if (finished) {
-    return <Text color="greenBright">✓ solved in {formatDuration(elapsed)}</Text>;
-  }
-  return <Text color="yellowBright">Files ready — the clock is not running.</Text>;
-}
-
-export function ExerciseView({
-  exercise,
-  stat,
-  exerciseFile,
-  testFile,
-  started,
-  startedAt,
-  elapsedMs,
-  hasContent,
-  confirmingReset,
-  confirmingResetStats,
-  onStart,
-  onResetDecision,
-  onResetStats,
-  onResetStatsDecision,
-  onRun,
-  onOpenEditor,
-  onRestartTimer,
-  onBack,
-}: Props) {
   const [showHints, setShowHints] = useState(false);
   const [showTests, setShowTests] = useState(false);
+
   const liveElapsed = useElapsed(startedAt);
   const running = startedAt !== null;
   // a stopped clock with a recorded time means the exercise was just solved
   const finished = !running && elapsedMs != null;
   const elapsed = running ? liveElapsed : (elapsedMs ?? 0);
+  const confirmingReset = confirm === 'solution';
+  const confirmingResetStats = confirm === 'stats';
+  const confirming = confirmingReset || confirmingResetStats;
 
   useInput((input, key) => {
+    if (!exercise) {
+      return;
+    }
     if (confirmingReset) {
       if (input === 'y' || input === 'Y') {
-        onResetDecision('reset');
+        actions.answerReset('reset');
       } else if (input === 'n' || input === 'N' || key.escape) {
-        onResetDecision('cancel');
+        actions.answerReset('cancel');
       }
       return;
     }
     if (confirmingResetStats) {
       if (input === 'y' || input === 'Y') {
-        onResetStatsDecision('reset');
+        actions.answerResetStats('reset');
       } else if (input === 'n' || input === 'N' || key.escape) {
-        onResetStatsDecision('cancel');
+        actions.answerResetStats('cancel');
       }
       return;
     }
     if (key.escape) {
-      onBack();
+      setScreen('list');
       return;
     }
     if (input === 's') {
-      onStart();
+      void actions.requestStart(exercise);
     }
     if (input === 't') {
-      onRun();
+      void actions.run(exercise);
     }
     if (input === 'o') {
-      onOpenEditor();
+      void actions.openEditor(exercise);
     }
     if (input === 'r' && started) {
-      onRestartTimer();
+      actions.restartTimer();
     }
     if (input === 'x') {
-      onResetStats();
+      actions.requestResetStats();
     }
     if (input === 'h') {
       setShowHints((v) => !v);
@@ -122,24 +88,9 @@ export function ExerciseView({
     }
   });
 
-  const hasCustomTests = Boolean(exercise.tests.fileBody);
-
-  const headerInfo = (
-    <Box flexDirection="column">
-      <Box>
-        <Text bold color="whiteBright">
-          {exercise.name}
-        </Text>
-        <Text> </Text>
-        <DifficultyBadge difficulty={exercise.difficulty} />
-      </Box>
-      <Text dimColor>
-        {exercise.type} · {exercise.time}
-      </Text>
-      <Text dimColor>source: {validationLabel(exercise)}</Text>
-      <Text dimColor>added: {formatDate(exercise.createdAt)}</Text>
-    </Box>
-  );
+  if (!exercise || !paths) {
+    return null;
+  }
 
   return (
     <Box
@@ -150,239 +101,44 @@ export function ExerciseView({
       paddingLeft={2}
       paddingRight={2}
     >
-      <Box
-        borderStyle="double"
-        borderColor="cyan"
-        paddingX={1}
-        flexDirection="column"
-        flexShrink={0}
-        marginBottom={1}
-      >
-        {stat?.attempts ? (
-          <Box width="100%" alignItems="center">
-            {headerInfo}
-            <Box flexGrow={1} justifyContent="space-evenly">
-              <StatColumns stat={stat} />
-            </Box>
-          </Box>
-        ) : (
-          <Box
-            position="relative"
-            width="100%"
-            minHeight={4}
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Box position="absolute" left={0} top={0}>
-              {headerInfo}
-            </Box>
-            <Text dimColor>not attempted yet</Text>
-          </Box>
-        )}
-      </Box>
+      <ExerciseHeader exercise={exercise} stat={progress.exercises[exercise.id]} />
 
-      <ScrollView isActive>
-        <Box flexDirection="column">
-          <Text wrap="wrap">{exercise.description}</Text>
-        </Box>
-
-        <Box marginTop={1} flexDirection="column">
-          <Text color="yellowBright" bold>
-            EXAMPLES
-          </Text>
-          <Box flexDirection="column" marginLeft={1}>
-            {exercise.examples.map((ex, i) => (
-              <Box key={JSON.stringify(ex.input)} flexDirection="column">
-                {i > 0 ? (
-                  <Box
-                    borderStyle="single"
-                    borderColor="gray"
-                    borderTop
-                    borderBottom={false}
-                    borderLeft={false}
-                    borderRight={false}
-                    marginTop={1}
-                    marginBottom={1}
-                  />
-                ) : null}
-                <Box flexDirection="row" alignItems="flex-start">
-                  <Box
-                    flexDirection="column"
-                    flexGrow={1}
-                    flexBasis={0}
-                    flexShrink={1}
-                    marginRight={2}
-                  >
-                    <MultiLine
-                      label="Input:  "
-                      value={formatExample(ex.input)}
-                      color="greenBright"
-                    />
-                  </Box>
-                  <Box flexDirection="column" flexGrow={1} flexBasis={0} flexShrink={1}>
-                    <MultiLine
-                      label="Output: "
-                      value={formatExample(ex.output)}
-                      color="greenBright"
-                    />
-                  </Box>
-                </Box>
-                {ex.explanation ? <MultiLine label="Note:   " value={ex.explanation} /> : null}
-              </Box>
-            ))}
-          </Box>
-        </Box>
-
-        <Box marginTop={1} flexDirection="column">
-          <Text color="yellowBright" bold>
-            TEST CASES {showTests ? '' : `(${exercise.tests.cases.length}) — press c to reveal`}
-          </Text>
-          {showTests ? (
-            <Box flexDirection="column" marginLeft={1}>
-              {hasCustomTests ? (
-                <Text dimColor>
-                  This exercise is graded by a custom validator that accepts any correct answer.
-                </Text>
-              ) : (
-                exercise.tests.cases.map((t, i) => (
-                  <Text key={JSON.stringify(t.input)} wrap="wrap">
-                    <Text dimColor>{`${i + 1}. `}</Text>
-                    <Text color="greenBright">{JSON.stringify(t.input)}</Text>
-                    <Text dimColor> → </Text>
-                    <Text color="cyanBright">{JSON.stringify(t.expected)}</Text>
-                    {t.sorted ? <Text dimColor> (order-insensitive)</Text> : null}
-                  </Text>
-                ))
-              )}
-            </Box>
-          ) : null}
-        </Box>
-
-        <Box marginTop={1} flexDirection="column">
-          <Text color="yellowBright" bold>
-            CONSTRAINTS
-          </Text>
-          <Box flexDirection="column" marginLeft={1}>
-            {exercise.constraints.map((c) => (
-              <Text key={c} dimColor>
-                • {c}
-              </Text>
-            ))}
-          </Box>
-        </Box>
-
-        <Box marginTop={1} flexDirection="column">
-          <Text color="yellowBright" bold>
-            HINTS {showHints ? '' : '(hidden — press h)'}
-          </Text>
-          {showHints ? (
-            <Box flexDirection="column" marginLeft={1}>
-              {exercise.hints.map((h, i) => (
-                <Text key={h} color="magentaBright">
-                  {i + 1}. {h}
-                </Text>
-              ))}
-            </Box>
-          ) : null}
-        </Box>
-      </ScrollView>
+      <ExerciseDetails exercise={exercise} showTests={showTests} showHints={showHints} />
 
       {confirmingReset ? (
-        <Box
-          marginTop={1}
-          flexDirection="column"
-          borderStyle="double"
-          borderColor="yellowBright"
-          paddingX={1}
-          flexShrink={0}
-        >
-          <Text bold color="yellowBright">
-            ⚠ Reset the previous solution?
-          </Text>
-          <Text dimColor>
-            Starting the clock on existing work isn't allowed — exercise.ts will be replaced with
-            the starter stub so you can solve it fresh.
-          </Text>
-          <Box marginTop={1}>
-            <KeyHints
-              hints={[
-                ['y', 'reset & start'],
-                ['n / esc', 'cancel'],
-              ]}
-            />
-          </Box>
-        </Box>
+        <ConfirmPrompt
+          title="Reset the previous solution?"
+          description="Starting the clock on existing work isn't allowed — exercise.ts will be replaced with the starter stub so you can solve it fresh."
+          hints={[
+            ['y', 'reset & start'],
+            ['n / esc', 'cancel'],
+          ]}
+        />
       ) : null}
 
       {confirmingResetStats ? (
-        <Box
-          marginTop={1}
-          flexDirection="column"
-          borderStyle="double"
-          borderColor="yellowBright"
-          paddingX={1}
-          flexShrink={0}
-        >
-          <Text bold color="yellowBright">
-            ⚠ Reset this exercise's stats?
-          </Text>
-          <Text dimColor>
-            Clears its attempts, solves and best/last times. Your solution file is left untouched.
-          </Text>
-          <Box marginTop={1}>
-            <KeyHints
-              hints={[
-                ['y', 'reset stats'],
-                ['n / esc', 'cancel'],
-              ]}
-            />
-          </Box>
-        </Box>
+        <ConfirmPrompt
+          title="Reset this exercise's stats?"
+          description="Clears its attempts, solves and best/last times. Your solution file is left untouched."
+          hints={[
+            ['y', 'reset stats'],
+            ['n / esc', 'cancel'],
+          ]}
+        />
       ) : null}
 
-      <Box
-        marginTop={1}
-        flexDirection="column"
-        borderStyle="round"
-        borderColor={started ? 'gray' : 'yellowBright'}
-        paddingX={1}
-        flexShrink={0}
-      >
-        {started ? (
-          <>
-            {clockStatus(running, finished, elapsed)}
-            <Text dimColor>
-              Solve it in your editor of choice — codeforge only checks the output.
-            </Text>
-            <Text color="cyanBright">solution → {exerciseFile}</Text>
-            <Text dimColor>tests → {testFile} (auto-generated)</Text>
-          </>
-        ) : (
-          <>
-            <Text color="yellowBright">Not started yet. Press s to create the exercise files.</Text>
-            <Text dimColor>will create → {exerciseFile}</Text>
-          </>
-        )}
-        {!running && hasContent ? (
-          <Box
-            marginTop={1}
-            borderStyle="round"
-            borderColor="magentaBright"
-            paddingX={1}
-            flexDirection="column"
-          >
-            <Text color="magentaBright">
-              ⚠ exercise.ts already has content. Keep working on it with{' '}
-              <Text color="cyanBright">o</Text> — but the clock won't start on its own. Press{' '}
-              <Text color="cyanBright">s</Text> to start it manually; only a timed run counts as a
-              solve.
-            </Text>
-          </Box>
-        ) : null}
-      </Box>
+      <ExerciseStatus
+        started={started}
+        running={running}
+        finished={finished}
+        elapsed={elapsed}
+        exerciseFile={paths.exerciseFile}
+        testFile={paths.testFile}
+        hasContent={hasContent}
+      />
 
       <Box marginTop={1} flexShrink={0}>
-        {confirmingReset || confirmingResetStats ? null : (
+        {confirming ? null : (
           <KeyHints
             hints={[
               ...(running || finished
@@ -390,7 +146,9 @@ export function ExerciseView({
                 : ([['s', started ? 'start timer' : 'start']] as [string, string][])),
               ['t', 'run tests'],
               ['o', 'open in editor'],
-              ...(stat?.attempts ? ([['x', 'reset stats']] as [string, string][]) : []),
+              ...(progress.exercises[exercise.id]?.attempts
+                ? ([['x', 'reset stats']] as [string, string][])
+                : []),
               ['c', showTests ? 'hide tests' : 'show tests'],
               ['h', showHints ? 'hide hints' : 'show hints'],
               ['j/k', 'scroll'],

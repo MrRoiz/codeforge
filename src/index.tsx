@@ -2,6 +2,7 @@
 import { App } from '@app/App';
 import { enterFullScreen, exitFullScreen } from '@utils/screen';
 import { render } from 'ink';
+import { Provider } from 'jotai';
 import React from 'react';
 
 if (!process.stdin.isTTY) {
@@ -11,7 +12,7 @@ if (!process.stdin.isTTY) {
 
 enterFullScreen();
 
-const app = render(React.createElement(App));
+const app = render(React.createElement(Provider, null, React.createElement(App)));
 
 const restore = () => exitFullScreen();
 process.on('exit', restore);
