@@ -1,3 +1,11 @@
+# [1.16.0](https://github.com/MrRoiz/codeforge/compare/v1.15.0...v1.16.0) (2026-09-16)
+
+
+### Features
+
+* **home:** reset all progress from the menu with confirmation ([93c157c](https://github.com/MrRoiz/codeforge/commit/93c157c7ae229eb2368b20b8b67682b77f5d30d3))
+* **home:** show progress overview and a random welcome ([4f2bd18](https://github.com/MrRoiz/codeforge/commit/4f2bd18848b8d8179e16ecc58d23d485e99184a9))
+
 # [1.15.0](https://github.com/MrRoiz/codeforge/compare/v1.14.0...v1.15.0) (2026-09-16)
 
 
