@@ -1,3 +1,12 @@
+# [1.17.0](https://github.com/MrRoiz/codeforge/compare/v1.16.0...v1.17.0) (2026-09-17)
+
+
+### Features
+
+* **home:** align progress rows with space-between and move attempts up ([ce94ad2](https://github.com/MrRoiz/codeforge/commit/ce94ad25ca6e8916fc55074245df96b4ccdcfef5))
+* **results:** flag new best time and complexity on a solve ([29c72b4](https://github.com/MrRoiz/codeforge/commit/29c72b41b1ae1b5d4726afab65661943623c9c61))
+* **results:** rework run and result screens with attempt tracking ([7685bf7](https://github.com/MrRoiz/codeforge/commit/7685bf773f098670af0d2a4b0e658b8c88b03624))
+
 # [1.16.0](https://github.com/MrRoiz/codeforge/compare/v1.15.0...v1.16.0) (2026-09-16)
 
 
