@@ -1,17 +1,11 @@
 import { useExerciseActions } from '@app/hooks/useExerciseActions';
+import { useProgress } from '@app/hooks/useProgress';
 import { useTerminalSize } from '@app/hooks/useTerminalSize';
-import {
-  exercisesDirAtom,
-  progressAtom,
-  resetConfirmAtom,
-  screenAtom,
-  statusAtom,
-} from '@app/store';
+import { exercisesDirAtom, resetConfirmAtom, screenAtom, statusAtom } from '@app/store';
 import { ProgressOverview } from '@components/ProgressOverview';
 import { Select } from '@components/Select';
 import { CenteredColumn, ConfirmPrompt, KeyHints } from '@components/ui';
 import { getRandomExercise } from '@exercises';
-import { resetAll } from '@utils/state';
 import { pickWelcome } from '@utils/welcome';
 import { Box, Text, useApp, useInput } from 'ink';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
@@ -29,7 +23,7 @@ export function MainMenu() {
   const [status, setStatus] = useAtom(statusAtom);
   const [confirming, setConfirming] = useAtom(resetConfirmAtom);
   const setScreen = useSetAtom(screenAtom);
-  const setProgress = useSetAtom(progressAtom);
+  const progress = useProgress();
   const { openExercise } = useExerciseActions();
   const [welcome] = useState(() => pickWelcome());
 
@@ -38,7 +32,7 @@ export function MainMenu() {
   useInput(
     (input, key) => {
       if (input === 'y' || input === 'Y') {
-        setProgress(resetAll());
+        progress.resetAll();
         setStatus('All progress cleared');
         setConfirming(false);
       } else if (input === 'n' || input === 'N' || key.escape) {

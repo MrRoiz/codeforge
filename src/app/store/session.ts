@@ -10,10 +10,17 @@ export type ConfirmKind = 'solution' | 'stats';
 /** The answer to a confirmation prompt. */
 export type Decision = 'reset' | 'cancel';
 
+/** The stage a test run is in, surfaced on the running screen. */
+export type RunPhase = 'preparing' | 'testing' | 'analyzing';
+
 // The open-exercise session spans several screens, so its state lives here to
 // survive the exercise → running → results → exercise flow without unmounting.
 
 export const exerciseAtom = atom<Exercise | null>(null);
+export const runPhaseAtom = atom<RunPhase | null>(null);
+
+/** Timed runs made on the currently open exercise since it was entered. */
+export const sessionAttemptsAtom = atom<number>(0);
 export const pathsAtom = atom<GeneratedPaths | null>(null);
 export const startedAtom = atom(false);
 export const startedAtAtom = atom<number | null>(null);

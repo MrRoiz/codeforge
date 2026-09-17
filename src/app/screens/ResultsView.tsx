@@ -1,5 +1,12 @@
 import { useExerciseActions } from '@app/hooks/useExerciseActions';
-import { complexityAtom, elapsedMsAtom, exerciseAtom, resultAtom, screenAtom } from '@app/store';
+import {
+  complexityAtom,
+  elapsedMsAtom,
+  exerciseAtom,
+  resultAtom,
+  screenAtom,
+  sessionAttemptsAtom,
+} from '@app/store';
 import { ScrollView } from '@components/ScrollView';
 import { formatDuration, KeyHints } from '@components/ui';
 import { pickQuote } from '@utils/quotes';
@@ -27,6 +34,39 @@ function bar(passed: number, total: number, width = 30): string {
   return '█'.repeat(filled) + '░'.repeat(width - filled);
 }
 
+/** A prominent result tile: the headline number plus a one-line detail. */
+function StatCard({
+  label,
+  value,
+  detail,
+  color,
+  marginRight = 0,
+}: {
+  label: string;
+  value: string;
+  detail: string;
+  color: string;
+  marginRight?: number;
+}) {
+  return (
+    <Box
+      flexGrow={1}
+      flexBasis={0}
+      marginRight={marginRight}
+      borderStyle="double"
+      borderColor={color}
+      paddingX={2}
+      flexDirection="column"
+    >
+      <Text dimColor>{label}</Text>
+      <Text bold color={color}>
+        {value}
+      </Text>
+      <Text dimColor>{detail}</Text>
+    </Box>
+  );
+}
+
 function cleanMessage(msg: string): string[] {
   // biome-ignore lint/suspicious/noControlCharactersInRegex: matching the ANSI escape sequence
   const stripped = msg.replace(/\u001b\[[0-9;]*m/g, '');
@@ -50,6 +90,7 @@ export function ResultsView() {
   const result = useAtomValue(resultAtom);
   const elapsedMs = useAtomValue(elapsedMsAtom);
   const complexity = useAtomValue(complexityAtom);
+  const sessionAttempts = useAtomValue(sessionAttemptsAtom);
   const setScreen = useSetAtom(screenAtom);
   const { run, openEditor } = useExerciseActions();
 
@@ -93,6 +134,9 @@ export function ResultsView() {
 
   const pulsing = ok && glowFrame < GLOW_FRAMES;
   const accent = accentColor(ok, pulsing, glowFrame);
+  // a passing timed run is the only one with a time worth showing
+  const timeMs = ok && elapsedMs != null ? elapsedMs : null;
+  const attempts = sessionAttempts;
 
   return (
     <Box
@@ -125,6 +169,37 @@ export function ResultsView() {
         ) : null}
       </Box>
 
+      {timeMs != null || complexity != null || attempts > 0 ? (
+        <Box flexShrink={0} flexDirection="row">
+          {timeMs == null ? null : (
+            <StatCard
+              label="TIME"
+              value={formatDuration(timeMs)}
+              detail="timed solve"
+              color="cyanBright"
+              marginRight={attempts > 0 || complexity != null ? 1 : 0}
+            />
+          )}
+          {attempts === 0 ? null : (
+            <StatCard
+              label="ATTEMPTS"
+              value={String(attempts)}
+              detail="this session"
+              color="yellowBright"
+              marginRight={complexity == null ? 0 : 1}
+            />
+          )}
+          {complexity == null ? null : (
+            <StatCard
+              label="COMPLEXITY"
+              value={complexity.label}
+              detail={`${complexity.confidence} confidence · ${complexity.detail}`}
+              color="magentaBright"
+            />
+          )}
+        </Box>
+      ) : null}
+
       <Box marginTop={1} flexShrink={0}>
         <Text>
           <Text color={ok ? 'greenBright' : 'yellowBright'}>
@@ -136,27 +211,6 @@ export function ResultsView() {
           </Text>
         </Text>
       </Box>
-
-      {ok && elapsedMs != null ? (
-        <Box marginTop={1} flexShrink={0}>
-          <Text color="cyanBright">⏱ solved in {formatDuration(elapsedMs)}</Text>
-        </Box>
-      ) : null}
-
-      {complexity ? (
-        <Box marginTop={1} flexShrink={0}>
-          <Text>
-            <Text dimColor>estimated complexity: </Text>
-            <Text bold color="magentaBright">
-              {complexity.label}
-            </Text>
-            <Text dimColor>
-              {'  '}
-              {complexity.confidence} confidence · {complexity.detail}
-            </Text>
-          </Text>
-        </Box>
-      ) : null}
 
       <Box marginTop={1} flexDirection="column" flexGrow={1} flexShrink={1} minHeight={0}>
         <ScrollView isActive>

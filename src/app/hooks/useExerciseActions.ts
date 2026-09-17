@@ -1,3 +1,4 @@
+import { useProgress } from '@app/hooks/useProgress';
 import {
   complexityAtom,
   confirmAtom,
@@ -8,8 +9,8 @@ import {
   exercisesDirAtom,
   hasContentAtom,
   pathsAtom,
-  progressAtom,
   resultAtom,
+  runPhaseAtom,
   screenAtom,
   startedAtAtom,
   startedAtom,
@@ -33,7 +34,6 @@ import {
 } from '@utils/open';
 import { runJest } from '@utils/runTests';
 import { enterFullScreen, exitFullScreen } from '@utils/screen';
-import { recordAttempt, recordSolve, resetStat } from '@utils/state';
 import { useApp } from 'ink';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useRef } from 'react';
@@ -49,6 +49,7 @@ import { useRef } from 'react';
  */
 export function useExerciseActions() {
   const { suspendTerminal } = useApp();
+  const progress = useProgress();
   const exercisesDir = useAtomValue(exercisesDirAtom);
   const [exercise, setExercise] = useAtom(exerciseAtom);
   const [startedAt, setStartedAt] = useAtom(startedAtAtom);
@@ -60,14 +61,15 @@ export function useExerciseActions() {
   const setResult = useSetAtom(resultAtom);
   const setComplexity = useSetAtom(complexityAtom);
   const setConfirm = useSetAtom(confirmAtom);
-  const setProgress = useSetAtom(progressAtom);
   const setScreen = useSetAtom(screenAtom);
   const setError = useSetAtom(errorAtom);
+  const setRunPhase = useSetAtom(runPhaseAtom);
 
   // Opening an exercise only shows the problem — nothing is written to disk.
   const openExercise = async (ex: Exercise) => {
     setError(null);
     setExercise(ex);
+    progress.resetSession();
     setPaths(exercisePaths(ex, exercisesDir));
     setResult(null);
     setElapsedMs(null);
@@ -88,6 +90,7 @@ export function useExerciseActions() {
     setConfirm(null);
     try {
       const generated = await ensureGenerated(ex, exercisesDir);
+      progress.resetSession();
       if (reset) {
         await resetSolution(ex, exercisesDir);
         setStartedAt(Date.now());
@@ -137,10 +140,11 @@ export function useExerciseActions() {
     if (decision === 'cancel' || !exercise) {
       return;
     }
-    setProgress(resetStat(exercise.id));
+    progress.resetStat(exercise.id);
   };
 
   const restartTimer = () => {
+    progress.resetSession();
     setStartedAt(Date.now());
     setElapsedMs(null);
   };
@@ -197,42 +201,47 @@ export function useExerciseActions() {
 
   const run = async (ex: Exercise) => {
     setScreen('running');
+    setRunPhase('preparing');
     try {
-      await ensureGenerated(ex, exercisesDir); // create on first run, never overwrite
-      setStarted(true);
-      setError(null);
-    } catch (err) {
-      setError(String(err));
-    }
-    const r = await runJest(exerciseDir(ex.id, exercisesDir));
-    setResult(r);
-    // the file has been edited by now — refresh so the "content exists" notice
-    // reflects reality
-    setHasContent(await isDirty(ex, exercisesDir));
-    const cx = await analyzeSolutionComplexity(ex, exercisesDir);
-    setComplexity(cx);
-    // running tests never starts or resets the clock; only 's' and 'r' do.
-    // The state is the source of truth: progress is recorded only while the
-    // clock is running, and a solve is counted whenever a timed run passes.
-    const timed = startedAt !== null;
-    const ms = r.passed && timed ? Date.now() - startedAt : null;
-    if (timed) {
-      setProgress(recordAttempt(ex.id));
-      if (r.passed) {
-        setProgress(
-          recordSolve(ex.id, {
+      try {
+        await ensureGenerated(ex, exercisesDir); // create on first run, never overwrite
+        setStarted(true);
+        setError(null);
+      } catch (err) {
+        setError(String(err));
+      }
+      setRunPhase('testing');
+      const r = await runJest(exerciseDir(ex.id, exercisesDir));
+      setRunPhase('analyzing');
+      setResult(r);
+      // the file has been edited by now — refresh so the "content exists" notice
+      // reflects reality
+      setHasContent(await isDirty(ex, exercisesDir));
+      const cx = await analyzeSolutionComplexity(ex, exercisesDir);
+      setComplexity(cx);
+      // running tests never starts or resets the clock; only 's' and 'r' do.
+      // The state is the source of truth: progress is recorded only while the
+      // clock is running, and a solve is counted whenever a timed run passes.
+      const timed = startedAt !== null;
+      const ms = r.passed && timed ? Date.now() - startedAt : null;
+      if (timed) {
+        progress.recordAttempt(ex.id);
+        if (r.passed) {
+          progress.recordSolve(ex.id, {
             elapsedMs: ms,
             complexity: cx ? { label: cx.label, confidence: cx.confidence } : undefined,
-          }),
-        );
+          });
+        }
       }
+      // solving stops the clock — the final time is frozen in `elapsedMs`
+      if (r.passed) {
+        setStartedAt(null);
+      }
+      setElapsedMs(ms);
+      setScreen('results');
+    } finally {
+      setRunPhase(null);
     }
-    // solving stops the clock — the final time is frozen in `elapsedMs`
-    if (r.passed) {
-      setStartedAt(null);
-    }
-    setElapsedMs(ms);
-    setScreen('results');
   };
 
   return {
