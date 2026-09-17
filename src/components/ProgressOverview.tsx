@@ -5,12 +5,32 @@ import { useAtomValue } from 'jotai';
 
 const DIFFICULTIES = ['easy', 'medium', 'hard'] as const;
 const BAR_WIDTH = 20;
-const LABEL_WIDTH = 9;
-const VALUE_WIDTH = 4;
 
 function progressBar(solved: number, total: number): string {
   const filled = total === 0 ? 0 : Math.round((solved / total) * BAR_WIDTH);
   return '█'.repeat(filled) + '░'.repeat(BAR_WIDTH - filled);
+}
+
+interface RowProps {
+  label: string;
+  labelColor?: string;
+  value: string;
+  valueColor?: string;
+  valueBold?: boolean;
+}
+
+/** A label on the left and its value on the right, filling the card width. */
+function Row({ label, labelColor, value, valueColor, valueBold = false }: RowProps) {
+  return (
+    <Box width="100%" justifyContent="space-between">
+      <Text color={labelColor} dimColor={labelColor === undefined}>
+        {label}
+      </Text>
+      <Text color={valueColor} bold={valueBold}>
+        {value}
+      </Text>
+    </Box>
+  );
 }
 
 /** Home-screen card: how much of the catalog is solved and how much you grinded. */
@@ -24,31 +44,26 @@ export function ProgressOverview() {
         PROGRESS
       </Text>
 
-      <Box marginTop={1} flexDirection="column">
+      <Box marginTop={1} flexDirection="column" width={BAR_WIDTH}>
         <Text color={complete ? 'greenBright' : 'cyanBright'}>{progressBar(solved, total)}</Text>
 
-        <Text>
-          <Text dimColor>{'solved'.padEnd(LABEL_WIDTH)}</Text>
-          <Text bold color={complete ? 'greenBright' : 'whiteBright'}>
-            {`${solved}/${total}`.padStart(VALUE_WIDTH)}
-          </Text>
-        </Text>
+        <Row label="attempts" value={String(attempts)} valueColor="magentaBright" />
+
+        <Row
+          label="solved"
+          value={`${solved}/${total}`}
+          valueColor={complete ? 'greenBright' : 'whiteBright'}
+          valueBold
+        />
 
         {DIFFICULTIES.map((difficulty) => (
-          <Text key={difficulty}>
-            <Text color={difficultyColor(difficulty)}>{difficulty.padEnd(LABEL_WIDTH)}</Text>
-            <Text dimColor>
-              {`${byDifficulty[difficulty].solved}/${byDifficulty[difficulty].total}`.padStart(
-                VALUE_WIDTH,
-              )}
-            </Text>
-          </Text>
+          <Row
+            key={difficulty}
+            label={difficulty}
+            labelColor={difficultyColor(difficulty)}
+            value={`${byDifficulty[difficulty].solved}/${byDifficulty[difficulty].total}`}
+          />
         ))}
-
-        <Text>
-          <Text dimColor>{'attempts'.padEnd(LABEL_WIDTH)}</Text>
-          <Text color="magentaBright">{String(attempts).padStart(VALUE_WIDTH)}</Text>
-        </Text>
       </Box>
     </Box>
   );
