@@ -3,6 +3,7 @@ import {
   complexityAtom,
   elapsedMsAtom,
   exerciseAtom,
+  newBestAtom,
   resultAtom,
   screenAtom,
   sessionAttemptsAtom,
@@ -40,12 +41,14 @@ function StatCard({
   value,
   detail,
   color,
+  best = false,
   marginRight = 0,
 }: {
   label: string;
   value: string;
   detail: string;
   color: string;
+  best?: boolean;
   marginRight?: number;
 }) {
   return (
@@ -58,7 +61,14 @@ function StatCard({
       paddingX={2}
       flexDirection="column"
     >
-      <Text dimColor>{label}</Text>
+      <Box>
+        <Text dimColor>{label}</Text>
+        {best ? (
+          <Text bold color="greenBright">
+            {'  '}★ NEW BEST
+          </Text>
+        ) : null}
+      </Box>
       <Text bold color={color}>
         {value}
       </Text>
@@ -91,6 +101,7 @@ export function ResultsView() {
   const elapsedMs = useAtomValue(elapsedMsAtom);
   const complexity = useAtomValue(complexityAtom);
   const sessionAttempts = useAtomValue(sessionAttemptsAtom);
+  const newBest = useAtomValue(newBestAtom);
   const setScreen = useSetAtom(screenAtom);
   const { run, openEditor } = useExerciseActions();
 
@@ -177,6 +188,7 @@ export function ResultsView() {
               value={formatDuration(timeMs)}
               detail="timed solve"
               color="cyanBright"
+              best={newBest.time}
               marginRight={attempts > 0 || complexity != null ? 1 : 0}
             />
           )}
@@ -195,6 +207,7 @@ export function ResultsView() {
               value={complexity.label}
               detail={`${complexity.confidence} confidence · ${complexity.detail}`}
               color="magentaBright"
+              best={newBest.complexity}
             />
           )}
         </Box>

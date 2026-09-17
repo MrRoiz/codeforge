@@ -148,6 +148,31 @@ export function applySolve(
   return next;
 }
 
+/** Whether a passing run sets new bests against an exercise's recorded stats. */
+export interface SolveStanding {
+  /** the run is faster than the recorded best time */
+  time: boolean;
+  /** the run's growth class is lower than the recorded best */
+  complexity: boolean;
+}
+
+/** Classify a solve against the current stat, without mutating anything (pure). */
+export function solveStanding(
+  stat: ExerciseStat | undefined,
+  outcome: SolveOutcome,
+): SolveStanding {
+  const bestTime = stat?.bestTimeAttempt?.timeMs;
+  const time = outcome.elapsedMs != null && (bestTime == null || outcome.elapsedMs < bestTime);
+
+  const rank = outcome.complexity ? complexityRank(outcome.complexity.label) : null;
+  const bestRank = stat?.bestComplexityAttempt?.complexity
+    ? complexityRank(stat.bestComplexityAttempt.complexity.label)
+    : null;
+  const complexity = rank != null && (bestRank == null || rank < bestRank);
+
+  return { time, complexity };
+}
+
 /** Replace one exercise's stat via a pure step (pure). */
 export function withStat(
   state: State,

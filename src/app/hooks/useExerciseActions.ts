@@ -8,6 +8,7 @@ import {
   exerciseAtom,
   exercisesDirAtom,
   hasContentAtom,
+  newBestAtom,
   pathsAtom,
   resultAtom,
   runPhaseAtom,
@@ -64,6 +65,7 @@ export function useExerciseActions() {
   const setScreen = useSetAtom(screenAtom);
   const setError = useSetAtom(errorAtom);
   const setRunPhase = useSetAtom(runPhaseAtom);
+  const setNewBest = useSetAtom(newBestAtom);
 
   // Opening an exercise only shows the problem — nothing is written to disk.
   const openExercise = async (ex: Exercise) => {
@@ -202,6 +204,7 @@ export function useExerciseActions() {
   const run = async (ex: Exercise) => {
     setScreen('running');
     setRunPhase('preparing');
+    setNewBest({ time: false, complexity: false });
     try {
       try {
         await ensureGenerated(ex, exercisesDir); // create on first run, never overwrite

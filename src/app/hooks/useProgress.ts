@@ -1,12 +1,13 @@
-import { progressAtom, sessionAttemptsAtom } from '@app/store';
+import { newBestAtom, progressAtom, sessionAttemptsAtom } from '@app/store';
 import {
   recordAttempt as persistAttempt,
   resetAll as persistResetAll,
   resetStat as persistResetStat,
   recordSolve as persistSolve,
   type SolveOutcome,
+  solveStanding,
 } from '@utils/state';
-import { useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 
 /**
  * The single place that mutates progress. Every method persists the change to
@@ -15,8 +16,10 @@ import { useSetAtom } from 'jotai';
  * timed runs of the currently open exercise, since it was last entered.
  */
 export function useProgress() {
+  const state = useAtomValue(progressAtom);
   const setProgress = useSetAtom(progressAtom);
   const setSessionAttempts = useSetAtom(sessionAttemptsAtom);
+  const setNewBest = useSetAtom(newBestAtom);
 
   return {
     /** Record a timed attempt: bump the persisted total and this try's count. */
@@ -25,8 +28,11 @@ export function useProgress() {
       setSessionAttempts((n) => n + 1);
     },
 
-    /** Record a passing run with its time and complexity. */
+    /** Record a passing run, flagging any new personal bests it sets. */
     recordSolve(exerciseId: string, outcome: SolveOutcome = {}) {
+      // `state` is from the current render; a prior `recordAttempt` only touches
+      // the counters, never the best-time/best-complexity snapshots compared here.
+      setNewBest(solveStanding(state.exercises[exerciseId], outcome));
       setProgress(persistSolve(exerciseId, outcome));
     },
 
@@ -45,6 +51,7 @@ export function useProgress() {
     /** Restart the current try's count when a new exercise is entered. */
     resetSession() {
       setSessionAttempts(0);
+      setNewBest({ time: false, complexity: false });
     },
   };
 }

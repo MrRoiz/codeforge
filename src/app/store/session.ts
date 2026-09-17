@@ -21,6 +21,14 @@ export const runPhaseAtom = atom<RunPhase | null>(null);
 
 /** Timed runs made on the currently open exercise since it was entered. */
 export const sessionAttemptsAtom = atom<number>(0);
+
+/** Which metrics of the last passing run are new personal bests. */
+export interface NewBest {
+  time: boolean;
+  complexity: boolean;
+}
+
+export const newBestAtom = atom<NewBest>({ time: false, complexity: false });
 export const pathsAtom = atom<GeneratedPaths | null>(null);
 export const startedAtom = atom(false);
 export const startedAtAtom = atom<number | null>(null);
