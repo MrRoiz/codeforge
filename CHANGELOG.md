@@ -1,3 +1,10 @@
+# [1.19.0](https://github.com/MrRoiz/codeforge/compare/v1.18.0...v1.19.0) (2026-09-18)
+
+
+### Features
+
+* **exercises:** add chainable calculator exercise ([05e3308](https://github.com/MrRoiz/codeforge/commit/05e3308e6d71ec3f69bb201a772a2da5e7bf9770))
+
 # [1.18.0](https://github.com/MrRoiz/codeforge/compare/v1.17.0...v1.18.0) (2026-09-18)
 
 
