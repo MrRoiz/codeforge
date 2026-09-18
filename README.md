@@ -195,11 +195,12 @@ estimated complexity: O(n)  high confidence · 1 nesting level
 ```
 
 It reasons about the shape of your code — how deeply loops and array methods
-nest, whether you sort, whether a search space halves, whether you recurse — so
-it's comfortable with `O(1)`, `O(log n)`, `O(n)`, `O(n log n)` and `O(n²)`, and
-honest when it can't tell (it says so, and lowers its confidence rather than
-guessing). The estimate travels with your progress, so an exercise's best
-complexity sits next to its best time.
+nest, whether they walk the same collection or different ones, whether you sort,
+whether a search space halves, whether you recurse — so it's comfortable with
+`O(1)`, `O(log n)`, `O(n)`, `O(n log n)`, `O(n²)` and multi-variable products
+like `O(n·m)`, and honest when it can't tell (it says so, and lowers its
+confidence rather than guessing). The estimate travels with your progress, so an
+exercise's best complexity sits next to its best time.
 
 It's a heuristic, not a proof: it can't see through data structures or
 amortization. Treat it as a nudge — a way to catch an accidental brute force
