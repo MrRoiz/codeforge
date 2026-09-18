@@ -1,3 +1,10 @@
+# [1.18.0](https://github.com/MrRoiz/codeforge/compare/v1.17.0...v1.18.0) (2026-09-18)
+
+
+### Features
+
+* **complexity:** estimate multi-variable growth like O(n·m) ([d590914](https://github.com/MrRoiz/codeforge/commit/d590914842bd556a75c919827d57ee07abdfa885))
+
 # [1.17.0](https://github.com/MrRoiz/codeforge/compare/v1.16.0...v1.17.0) (2026-09-17)
 
 
