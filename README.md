@@ -52,7 +52,8 @@ contract.
   Window (Longest Substring, Minimum Window Substring), Prefix/Suffix & Intervals
   (Product Except Self, Merge Intervals, Meeting Rooms II), Graph/Grid (Number of
   Islands, Dependency Graph Ordering), DP (Word Break, Unique Paths II, Perfect
-  Squares, Longest Palindromic Substring), design (LRU Cache), plus
+  Squares, Longest Palindromic Substring), design (LRU Cache, Chainable
+  Calculator), plus
   practical-logic tasks (Weighted Voting, Top-N Frequent IPs, Ticket Itinerary,
   Most-Used Route Per Courier).
 - **TypeScript-first** exercise templates and **Jest** test suites.

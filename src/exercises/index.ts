@@ -1,6 +1,7 @@
 export { arrangingCoins } from '@exercises/arranging-coins';
 export { bestTimeBuySellStock } from '@exercises/best-time-buy-sell-stock';
 export { binarySearch } from '@exercises/binary-search';
+export { chainableCalculator } from '@exercises/chainable-calculator';
 export { climbingStairs } from '@exercises/climbing-stairs';
 export { containerWithMostWater } from '@exercises/container-with-most-water';
 export { dependencyGraphOrdering } from '@exercises/dependency-graph-ordering';
@@ -50,6 +51,7 @@ export { wordBreak } from '@exercises/word-break';
 import { arrangingCoins } from '@exercises/arranging-coins';
 import { bestTimeBuySellStock } from '@exercises/best-time-buy-sell-stock';
 import { binarySearch } from '@exercises/binary-search';
+import { chainableCalculator } from '@exercises/chainable-calculator';
 import { climbingStairs } from '@exercises/climbing-stairs';
 import { containerWithMostWater } from '@exercises/container-with-most-water';
 import { dependencyGraphOrdering } from '@exercises/dependency-graph-ordering';
@@ -129,6 +131,7 @@ export const exercises: Exercise[] = [
   dependencyGraphOrdering,
   ticketItineraryReconstruction,
   lruCache,
+  chainableCalculator,
   packageTransportation,
   stepsToMakeArrayNonDecreasing,
   // hard
