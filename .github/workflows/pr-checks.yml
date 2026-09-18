@@ -1,4 +1,4 @@
-name: Checks
+name: PR Checks
 
 # Runs on pull requests only. Pushes to main are checked by the release
 # workflow's `checks` job, so lint/typecheck never run twice for one commit.
@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 jobs:
-  checks:
+  pr-checks:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -32,3 +32,6 @@ jobs:
 
       - name: Typecheck
         run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test
