@@ -1,3 +1,10 @@
+# [1.20.0](https://github.com/MrRoiz/codeforge/compare/v1.19.0...v1.20.0) (2026-09-22)
+
+
+### Features
+
+* **exercises:** add ten data-structure practice exercises ([5d9fe82](https://github.com/MrRoiz/codeforge/commit/5d9fe82b651737f2ab40cd28edb2b8c43e2201b1))
+
 # [1.19.0](https://github.com/MrRoiz/codeforge/compare/v1.18.0...v1.19.0) (2026-09-18)
 
 
