@@ -3,19 +3,28 @@ export { bestTimeBuySellStock } from '@exercises/best-time-buy-sell-stock';
 export { binarySearch } from '@exercises/binary-search';
 export { chainableCalculator } from '@exercises/chainable-calculator';
 export { climbingStairs } from '@exercises/climbing-stairs';
+export { coinChange } from '@exercises/coin-change';
 export { containerWithMostWater } from '@exercises/container-with-most-water';
 export { dependencyGraphOrdering } from '@exercises/dependency-graph-ordering';
 export { digitSumWithoutConversion } from '@exercises/digit-sum-without-conversion';
 export { fibonacciNumber } from '@exercises/fibonacci-number';
 export { findPivotIndex } from '@exercises/find-pivot-index';
 export { fizzBuzz } from '@exercises/fizzbuzz';
+export { groupAnagrams } from '@exercises/group-anagrams';
+export { findKthLargest } from '@exercises/kth-largest-element';
+export { largestRectangleArea } from '@exercises/largest-rectangle-in-histogram';
 export { longestCommonPrefix } from '@exercises/longest-common-prefix';
+export { longestConsecutive } from '@exercises/longest-consecutive-sequence';
+export { lengthOfLIS } from '@exercises/longest-increasing-subsequence';
 export { longestPalindromicSubstring } from '@exercises/longest-palindromic-substring';
 export { longestSubstringNoRepeat } from '@exercises/longest-substring-no-repeat';
 export { lruCache } from '@exercises/lru-cache';
 export { maxConsecutiveOnes } from '@exercises/max-consecutive-ones';
+export { maxDepthBinaryTree } from '@exercises/max-depth-binary-tree';
 export { meetingRoomsII } from '@exercises/meeting-rooms-ii';
 export { mergeIntervals } from '@exercises/merge-intervals';
+export { mergeTwoSortedLists } from '@exercises/merge-two-sorted-lists';
+export { minStack } from '@exercises/min-stack';
 export { minimumWindowSubstring } from '@exercises/minimum-window-substring';
 export { missingNumber } from '@exercises/missing-number';
 export { mostUsedRoutePerCourier } from '@exercises/most-used-route-per-courier';
@@ -46,6 +55,7 @@ export { uniquePathsII } from '@exercises/unique-paths-ii';
 export { validAnagram } from '@exercises/valid-anagram';
 export { validPalindrome } from '@exercises/valid-palindrome';
 export { validParentheses } from '@exercises/valid-parentheses';
+export { validateBst } from '@exercises/validate-bst';
 export { wordBreak } from '@exercises/word-break';
 
 import { arrangingCoins } from '@exercises/arranging-coins';
@@ -53,19 +63,28 @@ import { bestTimeBuySellStock } from '@exercises/best-time-buy-sell-stock';
 import { binarySearch } from '@exercises/binary-search';
 import { chainableCalculator } from '@exercises/chainable-calculator';
 import { climbingStairs } from '@exercises/climbing-stairs';
+import { coinChange } from '@exercises/coin-change';
 import { containerWithMostWater } from '@exercises/container-with-most-water';
 import { dependencyGraphOrdering } from '@exercises/dependency-graph-ordering';
 import { digitSumWithoutConversion } from '@exercises/digit-sum-without-conversion';
 import { fibonacciNumber } from '@exercises/fibonacci-number';
 import { findPivotIndex } from '@exercises/find-pivot-index';
 import { fizzBuzz } from '@exercises/fizzbuzz';
+import { groupAnagrams } from '@exercises/group-anagrams';
+import { findKthLargest } from '@exercises/kth-largest-element';
+import { largestRectangleArea } from '@exercises/largest-rectangle-in-histogram';
 import { longestCommonPrefix } from '@exercises/longest-common-prefix';
+import { longestConsecutive } from '@exercises/longest-consecutive-sequence';
+import { lengthOfLIS } from '@exercises/longest-increasing-subsequence';
 import { longestPalindromicSubstring } from '@exercises/longest-palindromic-substring';
 import { longestSubstringNoRepeat } from '@exercises/longest-substring-no-repeat';
 import { lruCache } from '@exercises/lru-cache';
 import { maxConsecutiveOnes } from '@exercises/max-consecutive-ones';
+import { maxDepthBinaryTree } from '@exercises/max-depth-binary-tree';
 import { meetingRoomsII } from '@exercises/meeting-rooms-ii';
 import { mergeIntervals } from '@exercises/merge-intervals';
+import { mergeTwoSortedLists } from '@exercises/merge-two-sorted-lists';
+import { minStack } from '@exercises/min-stack';
 import { minimumWindowSubstring } from '@exercises/minimum-window-substring';
 import { missingNumber } from '@exercises/missing-number';
 import { mostUsedRoutePerCourier } from '@exercises/most-used-route-per-courier';
@@ -89,6 +108,7 @@ import { uniquePathsII } from '@exercises/unique-paths-ii';
 import { validAnagram } from '@exercises/valid-anagram';
 import { validPalindrome } from '@exercises/valid-palindrome';
 import { validParentheses } from '@exercises/valid-parentheses';
+import { validateBst } from '@exercises/validate-bst';
 import { wordBreak } from '@exercises/word-break';
 
 export const exercises: Exercise[] = [
@@ -113,6 +133,8 @@ export const exercises: Exercise[] = [
   missingNumber,
   validAnagram,
   moveZeroes,
+  mergeTwoSortedLists,
+  maxDepthBinaryTree,
   // medium
   longestSubstringNoRepeat,
   productExceptSelf,
@@ -134,8 +156,16 @@ export const exercises: Exercise[] = [
   chainableCalculator,
   packageTransportation,
   stepsToMakeArrayNonDecreasing,
+  groupAnagrams,
+  longestConsecutive,
+  minStack,
+  validateBst,
+  findKthLargest,
+  coinChange,
+  lengthOfLIS,
   // hard
   minimumWindowSubstring,
+  largestRectangleArea,
 ];
 
 export function getExerciseById(id: string): Exercise | undefined {
