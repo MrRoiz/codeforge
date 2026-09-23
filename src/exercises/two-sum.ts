@@ -2,7 +2,6 @@ import type { Exercise } from '@exercises/types';
 
 export const twoSum: Exercise = {
   id: 'two-sum',
-  validation: [{ level: 'reported', source: 'GoDaddy' }],
   name: 'Two Sum',
   createdAt: '2026-09-14',
   difficulty: 'easy',

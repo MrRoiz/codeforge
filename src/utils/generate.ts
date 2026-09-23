@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 import * as path from 'node:path';
-import { type Exercise, validationLabel } from '@exercises/types';
+import type { Exercise } from '@exercises/types';
 import { formatExample } from '@utils/format';
 
 export interface GeneratedPaths {
@@ -111,7 +111,6 @@ function renderExerciseFile(exercise: Exercise): string {
  * ============================================================================
  *  ${exercise.name.toUpperCase()}
  *  Difficulty: ${exercise.difficulty.toUpperCase()} | Type: ${exercise.type} | Time: ${exercise.time}
- *  Source: ${validationLabel(exercise)}
  * ============================================================================
  *
  * ${exercise.description}

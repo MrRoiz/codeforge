@@ -2,7 +2,6 @@ import type { Exercise } from '@exercises/types';
 
 export const mergeIntervals: Exercise = {
   id: 'merge-intervals',
-  validation: [{ level: 'reported', source: 'GoDaddy' }],
   name: 'Merge Intervals',
   createdAt: '2026-09-14',
   difficulty: 'medium',

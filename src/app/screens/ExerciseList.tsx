@@ -3,7 +3,7 @@ import { filteredExercisesAtom, progressAtom, screenAtom, searchActiveAtom } fro
 import { Select } from '@components/Select';
 import { TextInput } from '@components/TextInput';
 import { DifficultyBadge, formatDate, KeyHints, Stats } from '@components/ui';
-import { type Exercise, validationLabel } from '@exercises/types';
+import type { Exercise } from '@exercises/types';
 import type { ExerciseStat } from '@utils/state';
 import { Box, Text, useInput } from 'ink';
 import { useAtomValue, useSetAtom } from 'jotai';
@@ -120,9 +120,6 @@ export function ExerciseList() {
               <Box marginTop={1}>
                 <DifficultyBadge difficulty={highlighted.difficulty} />
                 <Text dimColor>{`  ${highlighted.type}`}</Text>
-              </Box>
-              <Box marginTop={1}>
-                <Text dimColor>source: {validationLabel(highlighted)}</Text>
               </Box>
               <Box marginTop={1}>
                 <Text dimColor>added: {formatDate(highlighted.createdAt)}</Text>

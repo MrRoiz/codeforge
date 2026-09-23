@@ -2,7 +2,6 @@ import type { Exercise } from '@exercises/types';
 
 export const stringCompression: Exercise = {
   id: 'string-compression',
-  validation: [{ level: 'reported', source: 'GoDaddy' }],
   name: 'String Compression',
   createdAt: '2026-09-14',
   difficulty: 'medium',

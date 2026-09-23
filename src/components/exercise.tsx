@@ -1,6 +1,6 @@
 import { ScrollView } from '@components/ScrollView';
 import { DifficultyBadge, formatDate, formatDuration, StatColumns } from '@components/ui';
-import { type Exercise, validationLabel } from '@exercises/types';
+import type { Exercise } from '@exercises/types';
 import { formatExample } from '@utils/format';
 import type { ExerciseStat } from '@utils/state';
 import { Box, Text } from 'ink';
@@ -46,7 +46,6 @@ export function ExerciseHeader({ exercise, stat }: { exercise: Exercise; stat?: 
       <Text dimColor>
         {exercise.type} · {exercise.time}
       </Text>
-      <Text dimColor>source: {validationLabel(exercise)}</Text>
       <Text dimColor>added: {formatDate(exercise.createdAt)}</Text>
     </Box>
   );

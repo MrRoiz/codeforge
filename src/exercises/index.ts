@@ -35,6 +35,7 @@ export { palindromeNumber } from '@exercises/palindrome-number';
 export { perfectSquares } from '@exercises/perfect-squares';
 export { permutations } from '@exercises/permutations';
 export { productExceptSelf } from '@exercises/product-except-self';
+export { representativeLeadAssignment } from '@exercises/representative-lead-assignment';
 export { reverseString } from '@exercises/reverse-string';
 export { singleNumber } from '@exercises/single-number';
 export { sqrtX } from '@exercises/sqrt-x';
@@ -43,14 +44,7 @@ export { stringCompression } from '@exercises/string-compression';
 export { ticketItineraryReconstruction } from '@exercises/ticket-itinerary-reconstruction';
 export { topNFrequentIps } from '@exercises/top-n-frequent-ips';
 export { twoSum } from '@exercises/two-sum';
-export type {
-  Exercise,
-  ExerciseTest,
-  TestConfig,
-  Validation,
-  ValidationLevel,
-} from '@exercises/types';
-export { validationLabel } from '@exercises/types';
+export type { Exercise, ExerciseTest, TestConfig } from '@exercises/types';
 export { uniquePathsII } from '@exercises/unique-paths-ii';
 export { validAnagram } from '@exercises/valid-anagram';
 export { validPalindrome } from '@exercises/valid-palindrome';
@@ -95,6 +89,7 @@ import { palindromeNumber } from '@exercises/palindrome-number';
 import { perfectSquares } from '@exercises/perfect-squares';
 import { permutations } from '@exercises/permutations';
 import { productExceptSelf } from '@exercises/product-except-self';
+import { representativeLeadAssignment } from '@exercises/representative-lead-assignment';
 import { reverseString } from '@exercises/reverse-string';
 import { singleNumber } from '@exercises/single-number';
 import { sqrtX } from '@exercises/sqrt-x';
@@ -148,6 +143,7 @@ export const exercises: Exercise[] = [
   stringCompression,
   topNFrequentIps,
   mostUsedRoutePerCourier,
+  representativeLeadAssignment,
   uniquePathsII,
   wordBreak,
   dependencyGraphOrdering,

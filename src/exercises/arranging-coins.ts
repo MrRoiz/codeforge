@@ -2,7 +2,6 @@ import type { Exercise } from '@exercises/types';
 
 export const arrangingCoins: Exercise = {
   id: 'arranging-coins',
-  validation: [{ level: 'reported', source: 'GoDaddy' }],
   name: 'Arranging Coins',
   createdAt: '2026-09-14',
   difficulty: 'easy',

@@ -2,7 +2,6 @@ import type { Exercise } from '@exercises/types';
 
 export const bestTimeBuySellStock: Exercise = {
   id: 'best-time-buy-sell-stock',
-  validation: [{ level: 'reported', source: 'GoDaddy' }],
   name: 'Best Time to Buy and Sell Stock',
   createdAt: '2026-09-14',
   difficulty: 'easy',

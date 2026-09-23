@@ -359,37 +359,6 @@ automatically.
   output — solving happens in the user's own editor. Keep it that way.
 - **TypeScript-first**, formatted with the project's existing style.
 
-### Provenance labels
-
-Every exercise shows where it came from, declared **inline on the exercise
-object**. Omit it and the label defaults to **`AI checked`** (tests reviewed by
-AI only). Levels:
-
-| Level        | Meaning                                                   |
-| ------------ | --------------------------------------------------------- |
-| `ai-checked` | default — tests reviewed by AI, no human confirmation      |
-| `reported`   | seen in public candidate reports / aggregators             |
-| `verified`   | a human confirmed it was used in a real interview          |
-
-`validation` is a **list**, so an exercise can accumulate provenance over time:
-
-```ts
-// src/exercises/two-sum.ts
-export const twoSum: Exercise = {
-  id: 'two-sum',
-  validation: [
-    { level: 'reported', source: 'GoDaddy' },
-    // a human later confirmed it was asked at EPAM:
-    // { level: 'verified', source: 'EPAM' },
-  ],
-  ...
-};
-```
-
-That renders as `GoDaddy (reported) · AI checked`. Add a `verified` entry and it
-becomes `GoDaddy (reported) · EPAM (human-verified) · AI checked`. Please don't
-claim `verified` without first-hand knowledge.
-
 ### Development
 
 For local development no build is needed — run straight from source:

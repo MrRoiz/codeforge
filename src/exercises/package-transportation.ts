@@ -2,7 +2,6 @@ import type { Exercise } from '@exercises/types';
 
 export const packageTransportation: Exercise = {
   id: 'package-transportation',
-  validation: [{ level: 'reported', source: 'Amazon' }],
   name: 'Package Transportation',
   createdAt: '2026-09-14',
   difficulty: 'medium',

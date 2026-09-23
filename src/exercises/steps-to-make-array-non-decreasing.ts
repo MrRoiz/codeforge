@@ -2,7 +2,6 @@ import type { Exercise } from '@exercises/types';
 
 export const stepsToMakeArrayNonDecreasing: Exercise = {
   id: 'steps-to-make-array-non-decreasing',
-  validation: [{ level: 'reported', source: 'PayPal' }],
   name: 'Steps to Make Array Non-decreasing',
   createdAt: '2026-09-15',
   difficulty: 'medium',
