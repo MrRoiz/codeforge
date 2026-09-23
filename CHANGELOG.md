@@ -1,3 +1,10 @@
+# [1.21.0](https://github.com/MrRoiz/codeforge/compare/v1.20.0...v1.21.0) (2026-09-23)
+
+
+### Features
+
+* **exercises:** add representative lead assignment exercise ([af40a08](https://github.com/MrRoiz/codeforge/commit/af40a08d8c70bb0e5584589fabba4fbfc7e3713e))
+
 # [1.20.0](https://github.com/MrRoiz/codeforge/compare/v1.19.0...v1.20.0) (2026-09-22)
 
 
