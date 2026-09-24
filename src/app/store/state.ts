@@ -3,7 +3,7 @@ import type { Exercise } from '@exercises/types';
 import { loadState, type State } from '@utils/state';
 import { atom } from 'jotai';
 
-export const progressAtom = atom<State>(loadState());
+export const appStateAtom = atom<State>(loadState());
 
 export interface DifficultyProgress {
   solved: number;
@@ -22,7 +22,7 @@ export interface ProgressSummary {
 
 /** A read-only roll-up of the progress state for the home screen. */
 export const progressSummaryAtom = atom((get): ProgressSummary => {
-  const state = get(progressAtom);
+  const state = get(appStateAtom);
   const byDifficulty: Record<Exercise['difficulty'], DifficultyProgress> = {
     easy: { solved: 0, total: 0 },
     medium: { solved: 0, total: 0 },

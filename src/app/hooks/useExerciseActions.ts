@@ -1,4 +1,4 @@
-import { useProgress } from '@app/hooks/useProgress';
+import { useAppPersistedState } from '@app/hooks/useAppPersistedState';
 import {
   complexityAtom,
   confirmAtom,
@@ -50,7 +50,7 @@ import { useRef } from 'react';
  */
 export function useExerciseActions() {
   const { suspendTerminal } = useApp();
-  const progress = useProgress();
+  const persistedState = useAppPersistedState();
   const exercisesDir = useAtomValue(exercisesDirAtom);
   const [exercise, setExercise] = useAtom(exerciseAtom);
   const [startedAt, setStartedAt] = useAtom(startedAtAtom);
@@ -71,7 +71,7 @@ export function useExerciseActions() {
   const openExercise = async (ex: Exercise) => {
     setError(null);
     setExercise(ex);
-    progress.resetSession();
+    persistedState.resetSession();
     setPaths(exercisePaths(ex, exercisesDir));
     setResult(null);
     setElapsedMs(null);
@@ -92,7 +92,7 @@ export function useExerciseActions() {
     setConfirm(null);
     try {
       const generated = await ensureGenerated(ex, exercisesDir);
-      progress.resetSession();
+      persistedState.resetSession();
       if (reset) {
         await resetSolution(ex, exercisesDir);
         setStartedAt(Date.now());
@@ -142,18 +142,18 @@ export function useExerciseActions() {
     if (decision === 'cancel' || !exercise) {
       return;
     }
-    progress.resetExercise(exercise.id);
+    persistedState.resetExercise(exercise.id);
   };
 
   // `n`: persist the note the user typed for the open exercise.
   const saveNote = (note: string) => {
     if (exercise) {
-      progress.saveNote(exercise.id, note);
+      persistedState.saveNote(exercise.id, note);
     }
   };
 
   const restartTimer = () => {
-    progress.resetSession();
+    persistedState.resetSession();
     setStartedAt(Date.now());
     setElapsedMs(null);
   };
@@ -235,9 +235,9 @@ export function useExerciseActions() {
       const timed = startedAt !== null;
       const ms = r.passed && timed ? Date.now() - startedAt : null;
       if (timed) {
-        progress.recordAttempt(ex.id);
+        persistedState.recordAttempt(ex.id);
         if (r.passed) {
-          progress.recordSolve(ex.id, {
+          persistedState.recordSolve(ex.id, {
             elapsedMs: ms,
             complexity: cx ? { label: cx.label, confidence: cx.confidence } : undefined,
           });

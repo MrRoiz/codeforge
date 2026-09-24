@@ -310,7 +310,7 @@ export function resetExercise(exerciseId: string): State {
   });
 }
 
-/** Remove every exercise's recorded progress. */
+/** Remove every exercise's recorded data. */
 export function resetAll(): State {
   return updateState(() => emptyState());
 }

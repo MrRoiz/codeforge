@@ -1,5 +1,5 @@
+import { useAppPersistedState } from '@app/hooks/useAppPersistedState';
 import { useExerciseActions } from '@app/hooks/useExerciseActions';
-import { useProgress } from '@app/hooks/useProgress';
 import { useTerminalSize } from '@app/hooks/useTerminalSize';
 import { exercisesDirAtom, resetConfirmAtom, screenAtom, statusAtom } from '@app/store';
 import { ProgressOverview } from '@components/ProgressOverview';
@@ -23,7 +23,7 @@ export function MainMenu() {
   const [status, setStatus] = useAtom(statusAtom);
   const [confirming, setConfirming] = useAtom(resetConfirmAtom);
   const setScreen = useSetAtom(screenAtom);
-  const progress = useProgress();
+  const persistedState = useAppPersistedState();
   const { openExercise } = useExerciseActions();
   const [welcome] = useState(() => pickWelcome());
 
@@ -32,8 +32,8 @@ export function MainMenu() {
   useInput(
     (input, key) => {
       if (input === 'y' || input === 'Y') {
-        progress.resetAll();
-        setStatus('All progress cleared');
+        persistedState.resetAll();
+        setStatus('Everything reset');
         setConfirming(false);
       } else if (input === 'n' || input === 'N' || key.escape) {
         setConfirming(false);

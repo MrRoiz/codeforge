@@ -1,5 +1,5 @@
 import { useExerciseActions } from '@app/hooks/useExerciseActions';
-import { filteredExercisesAtom, progressAtom, screenAtom, searchActiveAtom } from '@app/store';
+import { appStateAtom, filteredExercisesAtom, screenAtom, searchActiveAtom } from '@app/store';
 import { Select } from '@components/Select';
 import { TextInput } from '@components/TextInput';
 import { DifficultyBadge, formatDate, KeyHints, Stats, truncateNote } from '@components/ui';
@@ -22,7 +22,7 @@ function solvedMarker(stat?: ExerciseStat): string {
 
 export function ExerciseList() {
   const exercises = useAtomValue(filteredExercisesAtom);
-  const progress = useAtomValue(progressAtom);
+  const state = useAtomValue(appStateAtom);
   const setSearchActive = useSetAtom(searchActiveAtom);
   const setScreen = useSetAtom(screenAtom);
   const { openExercise } = useExerciseActions();
@@ -40,7 +40,7 @@ export function ExerciseList() {
   const filtered = q
     ? exercises.filter((e) => e.name.toLowerCase().includes(q) || e.type.toLowerCase().includes(q))
     : exercises;
-  const highlightedNote = progress.exercises[highlighted.id]?.note;
+  const highlightedNote = state.exercises[highlighted.id]?.note;
 
   const exitSearch = () => {
     setSearching(false);
@@ -98,7 +98,7 @@ export function ExerciseList() {
                 key: e.id,
                 label: padLabel(e.name),
                 value: e,
-                leading: solvedMarker(progress.exercises[e.id]),
+                leading: solvedMarker(state.exercises[e.id]),
                 leadingColor: 'greenBright',
                 hint: `${e.difficulty} · ${e.time}`,
               }))}
@@ -134,7 +134,7 @@ export function ExerciseList() {
                 </Box>
               ) : null}
               <Box marginTop={1}>
-                <Stats stat={progress.exercises[highlighted.id]} />
+                <Stats stat={state.exercises[highlighted.id]} />
               </Box>
               <Box marginTop={1}>
                 <Text wrap="wrap" dimColor>

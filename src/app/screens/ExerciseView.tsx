@@ -1,12 +1,12 @@
 import { useElapsed } from '@app/hooks/useElapsed';
 import { useExerciseActions } from '@app/hooks/useExerciseActions';
 import {
+  appStateAtom,
   confirmAtom,
   elapsedMsAtom,
   exerciseAtom,
   hasContentAtom,
   pathsAtom,
-  progressAtom,
   screenAtom,
   searchActiveAtom,
   startedAtAtom,
@@ -28,7 +28,7 @@ export function ExerciseView() {
   const elapsedMs = useAtomValue(elapsedMsAtom);
   const hasContent = useAtomValue(hasContentAtom);
   const confirm = useAtomValue(confirmAtom);
-  const progress = useAtomValue(progressAtom);
+  const state = useAtomValue(appStateAtom);
   const setScreen = useSetAtom(screenAtom);
   const setSearchActive = useSetAtom(searchActiveAtom);
   const actions = useExerciseActions();
@@ -46,7 +46,7 @@ export function ExerciseView() {
   const confirmingReset = confirm === 'solution';
   const confirmingResetExercise = confirm === 'exercise';
   const confirming = confirmingReset || confirmingResetExercise;
-  const note = exercise ? progress.exercises[exercise.id]?.note : undefined;
+  const note = exercise ? state.exercises[exercise.id]?.note : undefined;
   const noteAtLimit = noteDraft.length >= MAX_NOTE_LENGTH;
 
   // While typing, let TextInput own the keyboard: block the app-wide `q`/`p`
@@ -133,7 +133,7 @@ export function ExerciseView() {
       paddingLeft={2}
       paddingRight={2}
     >
-      <ExerciseHeader exercise={exercise} stat={progress.exercises[exercise.id]} note={note} />
+      <ExerciseHeader exercise={exercise} stat={state.exercises[exercise.id]} note={note} />
 
       <ExerciseDetails exercise={exercise} showTests={showTests} showHints={showHints} />
 
@@ -221,7 +221,7 @@ export function ExerciseView() {
               ['t', 'run tests'],
               ['o', 'open in editor'],
               ['n', note ? 'edit note' : 'add note'],
-              ...(progress.exercises[exercise.id]?.attempts || note
+              ...(state.exercises[exercise.id]?.attempts || note
                 ? ([['x', 'reset exercise']] as [string, string][])
                 : []),
               ['c', showTests ? 'hide tests' : 'show tests'],
