@@ -42,6 +42,8 @@ export interface ExerciseStat {
   bestTimeAttempt?: SolveAttempt;
   /** the passing run with the lowest growth class */
   bestComplexityAttempt?: SolveAttempt;
+  /** free-form note the user wrote for this exercise */
+  note?: string;
 }
 
 export interface State {
@@ -199,6 +201,21 @@ export function applySolve(
   return next;
 }
 
+/** Set (or clear, when blank) an exercise's note (pure). */
+export function applyNote(stat: ExerciseStat, note: string): ExerciseStat {
+  const trimmed = note.trim();
+  if (trimmed) {
+    return { ...stat, note: trimmed };
+  }
+  const { note: _note, ...rest } = stat;
+  return rest;
+}
+
+/** Whether a stat carries nothing worth persisting. */
+export function isEmptyStat(stat: ExerciseStat): boolean {
+  return !stat.note && stat.attempts === 0 && stat.solves === 0;
+}
+
 /** Whether a passing run sets new bests against an exercise's recorded stats. */
 export interface SolveStanding {
   /** the run is faster than the recorded best time */
@@ -268,8 +285,21 @@ export function recordSolve(exerciseId: string, outcome: SolveOutcome = {}): Sta
   return updateState((state) => withStat(state, exerciseId, (stat) => applySolve(stat, outcome)));
 }
 
-/** Remove one exercise's recorded progress (attempts, solves and snapshots). */
-export function resetStat(exerciseId: string): State {
+/** Set or clear an exercise's note, dropping the entry when nothing is left. */
+export function recordNote(exerciseId: string, note: string): State {
+  return updateState((state) => {
+    const next = withStat(state, exerciseId, (stat) => applyNote(stat, note));
+    if (isEmptyStat(next.exercises[exerciseId])) {
+      const exercises = { ...next.exercises };
+      delete exercises[exerciseId];
+      return { version: STATE_VERSION, exercises };
+    }
+    return next;
+  });
+}
+
+/** Remove one exercise's recorded data (attempts, solves, snapshots and note). */
+export function resetExercise(exerciseId: string): State {
   return updateState((state) => {
     const exercises = { ...state.exercises };
     delete exercises[exerciseId];

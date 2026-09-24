@@ -1,8 +1,9 @@
 import { newBestAtom, progressAtom, sessionAttemptsAtom } from '@app/store';
 import {
   recordAttempt as persistAttempt,
+  recordNote as persistNote,
   resetAll as persistResetAll,
-  resetStat as persistResetStat,
+  resetExercise as persistResetExercise,
   recordSolve as persistSolve,
   type SolveOutcome,
   solveStanding,
@@ -36,9 +37,14 @@ export function useProgress() {
       setProgress(persistSolve(exerciseId, outcome));
     },
 
-    /** Clear one exercise's stats and restart this try's count. */
-    resetStat(exerciseId: string) {
-      setProgress(persistResetStat(exerciseId));
+    /** Save (or clear, when blank) an exercise's note. */
+    saveNote(exerciseId: string, note: string) {
+      setProgress(persistNote(exerciseId, note));
+    },
+
+    /** Clear one exercise's recorded data and restart this try's count. */
+    resetExercise(exerciseId: string) {
+      setProgress(persistResetExercise(exerciseId));
       setSessionAttempts(0);
     },
 

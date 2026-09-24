@@ -134,15 +134,22 @@ export function useExerciseActions() {
     void startExercise(exercise, true);
   };
 
-  // `x`: clear this exercise's recorded stats (kept behind a confirm).
-  const requestResetStats = () => setConfirm('stats');
+  // `x`: clear this exercise's recorded data (kept behind a confirm).
+  const requestResetExercise = () => setConfirm('exercise');
 
-  const answerResetStats = (decision: Decision) => {
+  const answerResetExercise = (decision: Decision) => {
     setConfirm(null);
     if (decision === 'cancel' || !exercise) {
       return;
     }
-    progress.resetStat(exercise.id);
+    progress.resetExercise(exercise.id);
+  };
+
+  // `n`: persist the note the user typed for the open exercise.
+  const saveNote = (note: string) => {
+    if (exercise) {
+      progress.saveNote(exercise.id, note);
+    }
   };
 
   const restartTimer = () => {
@@ -251,8 +258,9 @@ export function useExerciseActions() {
     openExercise,
     requestStart,
     answerReset,
-    requestResetStats,
-    answerResetStats,
+    requestResetExercise,
+    answerResetExercise,
+    saveNote,
     restartTimer,
     openEditor,
     run,

@@ -5,7 +5,7 @@ import type { TestRunResult } from '@utils/runTests';
 import { atom } from 'jotai';
 
 /** Which destructive action the user is being asked to confirm. */
-export type ConfirmKind = 'solution' | 'stats';
+export type ConfirmKind = 'solution' | 'exercise';
 
 /** The answer to a confirmation prompt. */
 export type Decision = 'reset' | 'cancel';
