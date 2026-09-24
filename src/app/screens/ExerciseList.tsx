@@ -40,6 +40,7 @@ export function ExerciseList() {
   const filtered = q
     ? exercises.filter((e) => e.name.toLowerCase().includes(q) || e.type.toLowerCase().includes(q))
     : exercises;
+  const highlightedNote = progress.exercises[highlighted.id]?.note;
 
   const exitSearch = () => {
     setSearching(false);
@@ -124,6 +125,14 @@ export function ExerciseList() {
               <Box marginTop={1}>
                 <Text dimColor>added: {formatDate(highlighted.createdAt)}</Text>
               </Box>
+              {highlightedNote ? (
+                <Box marginTop={1}>
+                  <Text wrap="wrap">
+                    <Text dimColor>note: </Text>
+                    <Text color="magentaBright">{highlightedNote}</Text>
+                  </Text>
+                </Box>
+              ) : null}
               <Box marginTop={1}>
                 <Stats stat={progress.exercises[highlighted.id]} />
               </Box>
