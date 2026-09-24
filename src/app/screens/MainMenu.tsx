@@ -87,9 +87,9 @@ export function MainMenu() {
               },
               {
                 key: 'reset',
-                label: '🧹 Reset Progress',
+                label: '🧹 Reset Everything',
                 value: 'reset',
-                hint: 'clear all stats',
+                hint: 'stats + notes',
               },
               { key: 'quit', label: '🚪 Quit', value: 'quit' },
             ]}
@@ -104,8 +104,8 @@ export function MainMenu() {
 
       {confirming ? (
         <ConfirmPrompt
-          title="Reset all progress?"
-          description="Clears every exercise's attempts, solves and best times. Your solution files are left untouched."
+          title="Reset everything?"
+          description="Removes every exercise's attempts, solves, best times and notes. Your solution files are left untouched."
           hints={[
             ['y', 'reset everything'],
             ['n / esc', 'cancel'],
