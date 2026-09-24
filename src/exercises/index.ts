@@ -5,12 +5,14 @@ export { chainableCalculator } from '@exercises/chainable-calculator';
 export { climbingStairs } from '@exercises/climbing-stairs';
 export { coinChange } from '@exercises/coin-change';
 export { containerWithMostWater } from '@exercises/container-with-most-water';
+export { courseSchedule } from '@exercises/course-schedule';
 export { dependencyGraphOrdering } from '@exercises/dependency-graph-ordering';
 export { digitSumWithoutConversion } from '@exercises/digit-sum-without-conversion';
 export { fibonacciNumber } from '@exercises/fibonacci-number';
 export { findPivotIndex } from '@exercises/find-pivot-index';
 export { fizzBuzz } from '@exercises/fizzbuzz';
 export { groupAnagrams } from '@exercises/group-anagrams';
+export { invertBinaryTree } from '@exercises/invert-binary-tree';
 export { findKthLargest } from '@exercises/kth-largest-element';
 export { largestRectangleArea } from '@exercises/largest-rectangle-in-histogram';
 export { longestCommonPrefix } from '@exercises/longest-common-prefix';
@@ -59,12 +61,14 @@ import { chainableCalculator } from '@exercises/chainable-calculator';
 import { climbingStairs } from '@exercises/climbing-stairs';
 import { coinChange } from '@exercises/coin-change';
 import { containerWithMostWater } from '@exercises/container-with-most-water';
+import { courseSchedule } from '@exercises/course-schedule';
 import { dependencyGraphOrdering } from '@exercises/dependency-graph-ordering';
 import { digitSumWithoutConversion } from '@exercises/digit-sum-without-conversion';
 import { fibonacciNumber } from '@exercises/fibonacci-number';
 import { findPivotIndex } from '@exercises/find-pivot-index';
 import { fizzBuzz } from '@exercises/fizzbuzz';
 import { groupAnagrams } from '@exercises/group-anagrams';
+import { invertBinaryTree } from '@exercises/invert-binary-tree';
 import { findKthLargest } from '@exercises/kth-largest-element';
 import { largestRectangleArea } from '@exercises/largest-rectangle-in-histogram';
 import { longestCommonPrefix } from '@exercises/longest-common-prefix';
@@ -130,6 +134,7 @@ export const exercises: Exercise[] = [
   moveZeroes,
   mergeTwoSortedLists,
   maxDepthBinaryTree,
+  invertBinaryTree,
   // medium
   longestSubstringNoRepeat,
   productExceptSelf,
@@ -147,6 +152,7 @@ export const exercises: Exercise[] = [
   uniquePathsII,
   wordBreak,
   dependencyGraphOrdering,
+  courseSchedule,
   ticketItineraryReconstruction,
   lruCache,
   chainableCalculator,

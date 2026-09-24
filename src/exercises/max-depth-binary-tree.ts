@@ -8,19 +8,20 @@ export const maxDepthBinaryTree: Exercise = {
   type: 'Trees',
   time: '10-15 min',
   description:
-    'Given the root of a binary tree, return its maximum depth — the number of nodes along the longest path from the root down to the farthest leaf node. An empty tree has depth 0. Trees are given in level-order form, using `null` for missing children.',
+    'Given the root of a binary tree, return its maximum depth — the number of nodes along the longest path from the root down to the farthest leaf. A node is `{ val, left, right }`, where an absent child is `null`. An empty tree has depth 0.',
   examples: [
     {
-      input: 'root = [3,9,20,null,null,15,7]',
+      input:
+        'root = { val: 3, left: { val: 9, left: null, right: null }, right: { val: 20, left: { val: 15, left: null, right: null }, right: { val: 7, left: null, right: null } } }',
       output: '3',
       explanation: 'The longest path is 3 -> 20 -> 15 (or 7), which has three nodes.',
     },
-    { input: 'root = []', output: '0' },
+    { input: 'root = null', output: '0' },
   ],
   constraints: [
     'The number of nodes is in the range [0, 10^4]',
-    '-100 <= Node.val <= 100',
-    'Input is a level-order array where `null` marks an absent child',
+    '-100 <= TreeNode.val <= 100',
+    'A node is `{ val, left, right }`; `null` marks an absent child',
   ],
   functionSignature: 'export function maxDepth(root: TreeNode | null): number',
   hints: [
@@ -29,16 +30,10 @@ export const maxDepthBinaryTree: Exercise = {
     'A recursive solution is the most direct',
     'BFS by levels also works — count the levels you drain',
   ],
-  stub: `export class TreeNode {
+  stub: `export interface TreeNode {
   val: number;
   left: TreeNode | null;
   right: TreeNode | null;
-
-  constructor(val = 0, left: TreeNode | null = null, right: TreeNode | null = null) {
-    this.val = val;
-    this.left = left;
-    this.right = right;
-  }
 }
 
 export function maxDepth(root: TreeNode | null): number {
@@ -46,58 +41,137 @@ export function maxDepth(root: TreeNode | null): number {
   throw new Error('Not implemented');
 }`,
   tests: {
-    fileBody: `import { TreeNode, maxDepth } from './exercise.js';
-
-const build = (values: (number | null)[]): TreeNode | null => {
-  if (values.length === 0 || values[0] === null) {
-    return null;
-  }
-  const root = new TreeNode(values[0]);
-  const queue: TreeNode[] = [root];
-  let index = 1;
-  while (queue.length > 0 && index < values.length) {
-    const node = queue.shift() as TreeNode;
-    const left = values[index++];
-    if (left !== null && left !== undefined) {
-      node.left = new TreeNode(left);
-      queue.push(node.left);
-    }
-    const right = values[index++];
-    if (right !== null && right !== undefined) {
-      node.right = new TreeNode(right);
-      queue.push(node.right);
-    }
-  }
-  return root;
-};
-
-describe('Maximum Depth of Binary Tree', () => {
-  it('case 1: balanced tree', () => {
-    expect(maxDepth(build([3, 9, 20, null, null, 15, 7]))).toBe(3);
-  });
-
-  it('case 2: empty tree', () => {
-    expect(maxDepth(build([]))).toBe(0);
-    expect(maxDepth(null)).toBe(0);
-  });
-
-  it('case 3: single node', () => {
-    expect(maxDepth(build([1]))).toBe(1);
-  });
-
-  it('case 4: a balanced tree is shallower than a chain', () => {
-    expect(maxDepth(build([1, 2, 3, 4, 5]))).toBe(3);
-    expect(maxDepth(build([1, 2, null, 3, null, 4, null, 5]))).toBe(5);
-  });
-
-  it('case 5: only a right subtree', () => {
-    expect(maxDepth(build([1, null, 2, null, 3]))).toBe(3);
-  });
-
-  it('case 6: tree with uneven branches', () => {
-    expect(maxDepth(build([1, 2, 3, 4, null, null, 5, 6]))).toBe(4);
-  });
-});`,
-    cases: [],
+    cases: [
+      {
+        input: [
+          {
+            val: 3,
+            left: { val: 9, left: null, right: null },
+            right: {
+              val: 20,
+              left: { val: 15, left: null, right: null },
+              right: { val: 7, left: null, right: null },
+            },
+          },
+        ],
+        expected: 3,
+      },
+      { input: [null], expected: 0 },
+      { input: [{ val: 1, left: null, right: null }], expected: 1 },
+      {
+        input: [
+          {
+            val: 1,
+            left: {
+              val: 2,
+              left: { val: 4, left: null, right: null },
+              right: { val: 5, left: null, right: null },
+            },
+            right: { val: 3, left: null, right: null },
+          },
+        ],
+        expected: 3,
+      },
+      {
+        input: [
+          {
+            val: 1,
+            left: {
+              val: 2,
+              left: {
+                val: 3,
+                left: { val: 4, left: { val: 5, left: null, right: null }, right: null },
+                right: null,
+              },
+              right: null,
+            },
+            right: null,
+          },
+        ],
+        expected: 5,
+      },
+      {
+        input: [
+          {
+            val: 1,
+            left: null,
+            right: {
+              val: 2,
+              left: null,
+              right: { val: 3, left: null, right: null },
+            },
+          },
+        ],
+        expected: 3,
+      },
+      {
+        input: [
+          {
+            val: 1,
+            left: {
+              val: 2,
+              left: { val: 4, left: { val: 6, left: null, right: null }, right: null },
+              right: null,
+            },
+            right: {
+              val: 3,
+              left: null,
+              right: { val: 5, left: null, right: null },
+            },
+          },
+        ],
+        expected: 4,
+      },
+      {
+        input: [
+          {
+            val: 1,
+            left: {
+              val: 2,
+              left: { val: 4, left: null, right: null },
+              right: { val: 5, left: null, right: null },
+            },
+            right: {
+              val: 3,
+              left: { val: 6, left: null, right: null },
+              right: { val: 7, left: null, right: null },
+            },
+          },
+        ],
+        expected: 3,
+      },
+      {
+        input: [
+          {
+            val: 1,
+            left: {
+              val: 2,
+              left: { val: 4, left: null, right: null },
+              right: { val: 5, left: null, right: null },
+            },
+            right: {
+              val: 3,
+              left: { val: 6, left: null, right: null },
+              right: null,
+            },
+          },
+        ],
+        expected: 3,
+      },
+      {
+        input: [
+          {
+            val: 1,
+            left: {
+              val: 2,
+              left: { val: 3, left: null, right: null },
+              right: null,
+            },
+            right: null,
+          },
+        ],
+        expected: 3,
+      },
+    ],
   },
 };
