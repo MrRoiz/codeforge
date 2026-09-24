@@ -1,3 +1,17 @@
+# [1.22.0](https://github.com/MrRoiz/codeforge/compare/v1.21.0...v1.22.0) (2026-09-24)
+
+
+### Features
+
+* **exercises:** add course schedule and invert binary tree ([0cabda4](https://github.com/MrRoiz/codeforge/commit/0cabda40660d92d68b6fc4134bd055a91711d7c8))
+* **exercise:** write and show a per-exercise note ([ed5e80d](https://github.com/MrRoiz/codeforge/commit/ed5e80dbd816def6f6d6c6efeb0ad02dbe281e36))
+* **home:** rename reset actions to reset exercise/everything ([fd3b479](https://github.com/MrRoiz/codeforge/commit/fd3b479f18e86f82f0013ed0d94c59195717026c))
+* **input:** add maxLength and block typing at the cap ([fd5e51a](https://github.com/MrRoiz/codeforge/commit/fd5e51a66d238d21cf8639b0eab6b9e13b2c4266))
+* **list:** show the note in the exercise preview ([80369f5](https://github.com/MrRoiz/codeforge/commit/80369f53bf38746c3761e76b71931702eafba252))
+* **notes:** truncate long notes and show a character counter ([7ae0d67](https://github.com/MrRoiz/codeforge/commit/7ae0d6748ee27aee8a4f097e68eae0bf9a354266))
+* **state:** cap saved notes at 120 characters ([68daf5d](https://github.com/MrRoiz/codeforge/commit/68daf5d7211b20d5dbea7eb2322f4933d373309b))
+* **state:** persist a per-exercise note ([c67a7e1](https://github.com/MrRoiz/codeforge/commit/c67a7e1d00022fe2d1bc1f2c0133a095b8f43263))
+
 # [1.21.0](https://github.com/MrRoiz/codeforge/compare/v1.20.0...v1.21.0) (2026-09-23)
 
 
