@@ -8,6 +8,8 @@ interface Props {
   onCancel?: () => void;
   isActive?: boolean;
   placeholder?: string;
+  /** caps both what is rendered and what can be entered */
+  maxLength?: number;
 }
 
 export function TextInput({
@@ -17,17 +19,22 @@ export function TextInput({
   onCancel,
   isActive = true,
   placeholder,
+  maxLength,
 }: Props) {
-  const [cursor, setCursor] = useState(value.length);
+  // A parent can hand us a longer value (e.g. a hand-edited note in state.json);
+  // never render more than the cap, or one frame floods the terminal.
+  const limit = maxLength ?? Number.POSITIVE_INFINITY;
+  const shown = value.length > limit ? value.slice(0, limit) : value;
+  const [cursor, setCursor] = useState(shown.length);
 
   useEffect(() => {
-    setCursor((c) => Math.min(c, value.length));
-  }, [value.length]);
+    setCursor((c) => Math.min(c, shown.length));
+  }, [shown.length]);
 
   useInput(
     (input, key) => {
       if (key.return) {
-        onSubmit(value);
+        onSubmit(shown);
         return;
       }
       if (key.escape) {
@@ -39,14 +46,14 @@ export function TextInput({
         return;
       }
       if (key.rightArrow) {
-        setCursor((c) => Math.min(value.length, c + 1));
+        setCursor((c) => Math.min(shown.length, c + 1));
         return;
       }
       if (key.backspace || key.delete) {
         if (cursor === 0) {
           return;
         }
-        onChange(value.slice(0, cursor - 1) + value.slice(cursor));
+        onChange(shown.slice(0, cursor - 1) + shown.slice(cursor));
         setCursor((c) => Math.max(0, c - 1));
         return;
       }
@@ -60,26 +67,33 @@ export function TextInput({
         return;
       }
       if (key.ctrl && input === 'e') {
-        setCursor(value.length);
+        setCursor(shown.length);
         return;
       }
       if (input && !key.ctrl && !key.meta && !key.tab) {
-        onChange(value.slice(0, cursor) + input + value.slice(cursor));
-        setCursor((c) => c + input.length);
+        // block new characters once the cap is reached; a paste that would
+        // overflow only fills the remaining room
+        const room = limit - shown.length;
+        if (room <= 0) {
+          return;
+        }
+        const inserted = input.length > room ? input.slice(0, room) : input;
+        onChange(shown.slice(0, cursor) + inserted + shown.slice(cursor));
+        setCursor(cursor + inserted.length);
       }
     },
     { isActive },
   );
 
-  const before = value.slice(0, cursor);
-  const after = value.slice(cursor);
+  const before = shown.slice(0, cursor);
+  const after = shown.slice(cursor);
 
   return (
     <Box>
       <Text>{before}</Text>
       <Text inverse>{after.length > 0 ? after[0] : ' '}</Text>
       <Text>{after.slice(1)}</Text>
-      {value.length === 0 && placeholder ? <Text dimColor> {placeholder}</Text> : null}
+      {shown.length === 0 && placeholder ? <Text dimColor> {placeholder}</Text> : null}
     </Box>
   );
 }
