@@ -1,3 +1,10 @@
+# [1.23.0](https://github.com/MrRoiz/codeforge/compare/v1.22.0...v1.23.0) (2026-09-24)
+
+
+### Features
+
+* **state:** back up progress to backups/ before resetting ([0c01518](https://github.com/MrRoiz/codeforge/commit/0c01518411cc8a574e9f1a5f3c6c801dd3145511))
+
 # [1.22.0](https://github.com/MrRoiz/codeforge/compare/v1.21.0...v1.22.0) (2026-09-24)
 
 
