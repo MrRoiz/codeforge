@@ -61,6 +61,9 @@ contract.
   random challenge, read the statement, reveal hints, and forge your solution.
 - **Progress at a glance** — the home screen shows how much of the catalog you've
   solved, overall and per difficulty, plus your total attempts.
+- **Personal notes** — attach a one-line note to any exercise (where you saw it,
+  the key insight, a pitfall); it's saved with your progress and shown in the
+  exercise header and list.
 - **Honest testing** — the test file is regenerated every run, so you cannot
   "fix" the tests to make yourself pass.
 - **Big-O feedback** — every run reads your solution and gives a rough
@@ -112,7 +115,7 @@ codeforge
 3. **Train** to browse by difficulty, or **Random Challenge** for a surprise.
 4. Open an exercise to **read it** — nothing is written yet. You can browse the
    statement, examples, constraints, hints (`h`), and the full graded test cases
-   (`c`) to decide whether to attempt it.
+   (`c`) to decide whether to attempt it. Press **`n`** to jot a personal note.
 
    ![Reading an exercise statement](https://raw.githubusercontent.com/MrRoiz/codeforge/main/docs/screenshot-exercise.png)
 
@@ -168,10 +171,10 @@ Resolution order (highest first):
 codeforge keeps a small record of your practice in
 `~/.codeforge/state.json`, independent of which exercises directory you use. For
 each exercise it remembers your attempts and solves, the moment of your last
-run, and snapshots of your best solves — the fastest, and the cleanest in
-complexity. Solved exercises are marked with a `✓` in the exercise list, and the
-highlighted exercise lays its stats out as columns, both in the list's detail
-panel and on the exercise page.
+run, snapshots of your best solves — the fastest, and the cleanest in
+complexity — and your personal note. Solved exercises are marked with a `✓` in
+the exercise list, and the highlighted exercise lays its stats out as columns,
+both in the list's detail panel and on the exercise page.
 
 An *attempt* is a test run made while the clock is running; runs with the clock
 stopped aren't recorded at all. A *solve* is counted whenever a run passes while
@@ -180,10 +183,22 @@ existing work never starts the clock — you'd have to reset it (which starts a
 fresh, countable attempt) first.
 
 The file is written atomically, so an interrupted run can't corrupt it. Press
-`x` on an exercise to clear just that exercise's stats, or choose **Reset
-Progress** on the main menu to clear everything (it asks for confirmation first).
-The main menu also shows a live overview — solved out of the catalog, per
-difficulty, plus total attempts.
+`x` on an exercise to reset just that exercise — its attempts, solves, best times
+and your note — or choose **Reset Everything** on the main menu to clear it all
+(it asks for confirmation first). The main menu also shows a live overview —
+solved out of the catalog, per difficulty, plus total attempts.
+
+## Personal notes
+
+Every exercise can carry a one-line note of your own — where you saw it, the key
+insight, the pitfall that tripped you. Press **`n`** on the exercise page to write
+or edit it (`↵` saves, `esc` cancels; submitting it blank clears it).
+
+Notes live beside your progress in `~/.codeforge/state.json` and appear in two
+places: the exercise header, right under `added:`, and the highlighted exercise's
+panel in the list. They're private to you and never touch the generated exercise
+files. A note is part of an exercise's record, so resetting that exercise (`x`) or
+choosing **Reset Everything** clears it too.
 
 ## Complexity
 
@@ -235,7 +250,8 @@ independently and leave the TUI running.
 | `t`        | Run tests                       |
 | `o`        | Open in your editor             |
 | `r`        | Restart the clock               |
-| `x`        | Reset this exercise's stats     |
+| `n`        | Add/edit your note              |
+| `x`        | Reset this exercise (stats + note) |
 | `c`        | Show/hide the graded test cases |
 | `h`        | Toggle hints                    |
 | `p`        | Open the project on GitHub      |
@@ -255,6 +271,7 @@ src/
     generate.ts      renders exercise.ts + the Jest test file
     runTests.ts      spawns the isolated Jest runner
     jestRunner.ts    runs Jest in a child process, returns JSON results
+    state/           progress + notes persistence (state.json)
   app/               TUI screens (Ink + React)
     hooks/           action hooks (exercise flow, config)
     store/           Jotai atoms (screen, config, session, progress)
