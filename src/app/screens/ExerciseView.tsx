@@ -15,7 +15,7 @@ import {
 import { ExerciseDetails, ExerciseHeader, ExerciseStatus } from '@components/exercise';
 import { TextInput } from '@components/TextInput';
 import { ConfirmPrompt, KeyHints } from '@components/ui';
-import { MAX_NOTE_LENGTH } from '@utils/state';
+import { backupsDirLabel, MAX_NOTE_LENGTH } from '@utils/state';
 import { Box, Text, useInput } from 'ink';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useEffect, useState } from 'react';
@@ -48,6 +48,7 @@ export function ExerciseView() {
   const confirming = confirmingReset || confirmingResetExercise;
   const note = exercise ? state.exercises[exercise.id]?.note : undefined;
   const noteAtLimit = noteDraft.length >= MAX_NOTE_LENGTH;
+  const backupDir = backupsDirLabel();
 
   // While typing, let TextInput own the keyboard: block the app-wide `q`/`p`
   // shortcuts, exactly like the exercise-list search does.
@@ -193,7 +194,7 @@ export function ExerciseView() {
       {confirmingResetExercise ? (
         <ConfirmPrompt
           title="Reset this exercise?"
-          description="Removes its attempts, solves, best times and your note. Your solution file is left untouched."
+          description={`Removes its attempts, solves, best times and your note. Your solution file is left untouched. Your current progress is backed up to ${backupDir} first, so you can recover it.`}
           hints={[
             ['y', 'reset exercise'],
             ['n / esc', 'cancel'],

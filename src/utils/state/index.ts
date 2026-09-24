@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import {
   BIG_O,
@@ -268,12 +269,47 @@ function saveState(state: State): void {
   fs.renameSync(tmp, file);
 }
 
+/** Folder holding one timestamped copy of the state per reset. */
+export function backupsDir(): string {
+  return path.join(codeforgeHome(), 'backups');
+}
+
+/** The backups folder as shown in the UI, shortened to `~` under the home dir. */
+export function backupsDirLabel(): string {
+  const dir = backupsDir();
+  const home = os.homedir();
+  return dir.startsWith(`${home}${path.sep}`) ? `~${dir.slice(home.length)}` : dir;
+}
+
+/** Filesystem-safe timestamp for a backup folder name (ISO, no `:`/`.`). */
+export function backupTimestamp(at = new Date()): string {
+  return at.toISOString().replace(/[:.]/g, '-');
+}
+
+/** Copy the current state aside before a reset, so it can be recovered. */
+function backupState(state: State, at = new Date()): void {
+  if (Object.keys(state.exercises).length === 0) {
+    return;
+  }
+  const dir = path.join(backupsDir(), backupTimestamp(at));
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, 'state.json'), `${JSON.stringify(state, null, 2)}\n`);
+}
+
 /**
  * The single read-modify-write path: load, apply a pure change, persist it.
  * Every writer goes through here so a write can never leave a partial file.
+ * Pass `backup` to copy the previous state aside before overwriting it.
  */
-export function updateState(apply: (state: State) => State): State {
-  const next = apply(loadState());
+export function updateState(
+  apply: (state: State) => State,
+  options: { backup?: boolean } = {},
+): State {
+  const prev = loadState();
+  const next = apply(prev);
+  if (options.backup) {
+    backupState(prev);
+  }
   saveState(next);
   return next;
 }
@@ -303,14 +339,17 @@ export function recordNote(exerciseId: string, note: string): State {
 
 /** Remove one exercise's recorded data (attempts, solves, snapshots and note). */
 export function resetExercise(exerciseId: string): State {
-  return updateState((state) => {
-    const exercises = { ...state.exercises };
-    delete exercises[exerciseId];
-    return { version: STATE_VERSION, exercises };
-  });
+  return updateState(
+    (state) => {
+      const exercises = { ...state.exercises };
+      delete exercises[exerciseId];
+      return { version: STATE_VERSION, exercises };
+    },
+    { backup: true },
+  );
 }
 
 /** Remove every exercise's recorded data. */
 export function resetAll(): State {
-  return updateState(() => emptyState());
+  return updateState(() => emptyState(), { backup: true });
 }

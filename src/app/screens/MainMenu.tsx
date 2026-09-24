@@ -6,6 +6,7 @@ import { ProgressOverview } from '@components/ProgressOverview';
 import { Select } from '@components/Select';
 import { CenteredColumn, ConfirmPrompt, KeyHints } from '@components/ui';
 import { getRandomExercise } from '@exercises';
+import { backupsDirLabel } from '@utils/state';
 import { pickWelcome } from '@utils/welcome';
 import { Box, Text, useApp, useInput } from 'ink';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
@@ -28,12 +29,13 @@ export function MainMenu() {
   const [welcome] = useState(() => pickWelcome());
 
   const stacked = columns < STACK_BELOW;
+  const backupDir = backupsDirLabel();
 
   useInput(
     (input, key) => {
       if (input === 'y' || input === 'Y') {
         persistedState.resetAll();
-        setStatus('Everything reset');
+        setStatus(`Everything reset — progress backed up to ${backupDir}`);
         setConfirming(false);
       } else if (input === 'n' || input === 'N' || key.escape) {
         setConfirming(false);
@@ -105,7 +107,7 @@ export function MainMenu() {
       {confirming ? (
         <ConfirmPrompt
           title="Reset everything?"
-          description="Removes every exercise's attempts, solves, best times and notes. Your solution files are left untouched."
+          description={`Removes every exercise's attempts, solves, best times and notes. Your solution files are left untouched. Your current progress is backed up to ${backupDir} first, so you can recover it.`}
           hints={[
             ['y', 'reset everything'],
             ['n / esc', 'cancel'],
