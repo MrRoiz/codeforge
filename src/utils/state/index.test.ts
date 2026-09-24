@@ -1,6 +1,13 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { applyNote, type ExerciseStat, emptyState, isEmptyStat, withStat } from './index.js';
+import {
+  applyNote,
+  type ExerciseStat,
+  emptyState,
+  isEmptyStat,
+  MAX_NOTE_LENGTH,
+  withStat,
+} from './index.js';
 
 const BASE: ExerciseStat = { attempts: 3, solves: 2 };
 
@@ -14,6 +21,11 @@ test('applyNote replaces an existing note', () => {
 
 test('applyNote clears the note on blank input', () => {
   assert.deepEqual(applyNote({ ...BASE, note: 'old' }, '   '), BASE);
+});
+
+test('applyNote cuts a note to the max length', () => {
+  const long = 'x'.repeat(MAX_NOTE_LENGTH + 50);
+  assert.equal(applyNote(BASE, long).note, long.slice(0, MAX_NOTE_LENGTH));
 });
 
 test('applyNote does not mutate its input', () => {

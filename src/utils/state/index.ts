@@ -62,6 +62,9 @@ export interface SolveOutcome {
 const STATE_VERSION = 2;
 const EMPTY_STAT: ExerciseStat = { attempts: 0, solves: 0 };
 
+/** Longest note we persist; longer text is cut when saved. */
+export const MAX_NOTE_LENGTH = 120;
+
 // lower is better; single-variable labels the analyzer can emit (unknown labels rank as null)
 const COMPLEXITY_RANK: Record<string, number> = {
   [BIG_O.constant]: 0,
@@ -205,7 +208,7 @@ export function applySolve(
 export function applyNote(stat: ExerciseStat, note: string): ExerciseStat {
   const trimmed = note.trim();
   if (trimmed) {
-    return { ...stat, note: trimmed };
+    return { ...stat, note: trimmed.slice(0, MAX_NOTE_LENGTH) };
   }
   const { note: _note, ...rest } = stat;
   return rest;
