@@ -2,7 +2,7 @@ import { useExerciseActions } from '@app/hooks/useExerciseActions';
 import { filteredExercisesAtom, progressAtom, screenAtom, searchActiveAtom } from '@app/store';
 import { Select } from '@components/Select';
 import { TextInput } from '@components/TextInput';
-import { DifficultyBadge, formatDate, KeyHints, Stats } from '@components/ui';
+import { DifficultyBadge, formatDate, KeyHints, Stats, truncateNote } from '@components/ui';
 import type { Exercise } from '@exercises/types';
 import type { ExerciseStat } from '@utils/state';
 import { Box, Text, useInput } from 'ink';
@@ -129,7 +129,7 @@ export function ExerciseList() {
                 <Box marginTop={1}>
                   <Text wrap="wrap">
                     <Text dimColor>note: </Text>
-                    <Text color="magentaBright">{highlightedNote}</Text>
+                    <Text color="magentaBright">{truncateNote(highlightedNote)}</Text>
                   </Text>
                 </Box>
               ) : null}

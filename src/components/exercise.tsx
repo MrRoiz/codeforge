@@ -1,5 +1,11 @@
 import { ScrollView } from '@components/ScrollView';
-import { DifficultyBadge, formatDate, formatDuration, StatColumns } from '@components/ui';
+import {
+  DifficultyBadge,
+  formatDate,
+  formatDuration,
+  StatColumns,
+  truncateNote,
+} from '@components/ui';
 import type { Exercise } from '@exercises/types';
 import { formatExample } from '@utils/format';
 import type { ExerciseStat } from '@utils/state';
@@ -58,7 +64,7 @@ export function ExerciseHeader({
       {note ? (
         <Text wrap="wrap">
           <Text dimColor>note: </Text>
-          <Text color="magentaBright">{note}</Text>
+          <Text color="magentaBright">{truncateNote(note)}</Text>
         </Text>
       ) : null}
     </Box>

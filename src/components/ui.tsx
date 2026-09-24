@@ -1,6 +1,6 @@
 import { useTerminalSize } from '@app/hooks/useTerminalSize';
 import type { Exercise } from '@exercises/types';
-import type { ExerciseStat, SolveAttempt } from '@utils/state';
+import { type ExerciseStat, MAX_NOTE_LENGTH, type SolveAttempt } from '@utils/state';
 import { Box, Text } from 'ink';
 import type { ReactNode } from 'react';
 
@@ -66,6 +66,15 @@ export function formatDateTime(iso: string): string {
     minute: '2-digit',
     hour12: false,
   });
+}
+
+/**
+ * Clip a note for display. Notes saved through the app are already capped; this
+ * only shortens a longer one added by hand to state.json, without rewriting it.
+ */
+export function truncateNote(note: string): string {
+  const flat = note.replace(/\s+/g, ' ').trim();
+  return flat.length > MAX_NOTE_LENGTH ? `${flat.slice(0, MAX_NOTE_LENGTH).trimEnd()}…` : flat;
 }
 
 /** One solve snapshot: its time and complexity (whichever are recorded). */

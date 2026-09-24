@@ -15,6 +15,7 @@ import {
 import { ExerciseDetails, ExerciseHeader, ExerciseStatus } from '@components/exercise';
 import { TextInput } from '@components/TextInput';
 import { ConfirmPrompt, KeyHints } from '@components/ui';
+import { MAX_NOTE_LENGTH } from '@utils/state';
 import { Box, Text, useInput } from 'ink';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useEffect, useState } from 'react';
@@ -46,6 +47,7 @@ export function ExerciseView() {
   const confirmingResetExercise = confirm === 'exercise';
   const confirming = confirmingReset || confirmingResetExercise;
   const note = exercise ? progress.exercises[exercise.id]?.note : undefined;
+  const noteAtLimit = noteDraft.length >= MAX_NOTE_LENGTH;
 
   // While typing, let TextInput own the keyboard: block the app-wide `q`/`p`
   // shortcuts, exactly like the exercise-list search does.
@@ -55,7 +57,8 @@ export function ExerciseView() {
   }, [editingNote, setSearchActive]);
 
   const openNoteEditor = () => {
-    setNoteDraft(note ?? '');
+    // a note is one line and capped; collapse any stray whitespace/newlines
+    setNoteDraft((note ?? '').replace(/\s+/g, ' ').trim().slice(0, MAX_NOTE_LENGTH));
     setEditingNote(true);
   };
 
@@ -154,7 +157,13 @@ export function ExerciseView() {
               onSubmit={submitNote}
               onCancel={() => setEditingNote(false)}
               placeholder="e.g. reuse the two-pointer window"
+              maxLength={MAX_NOTE_LENGTH}
             />
+          </Box>
+          <Box>
+            <Text color={noteAtLimit ? 'redBright' : 'cyan'} bold={noteAtLimit}>
+              {noteDraft.length}/{MAX_NOTE_LENGTH}
+            </Text>
           </Box>
           <Box marginTop={1}>
             <KeyHints
