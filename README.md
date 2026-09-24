@@ -192,7 +192,9 @@ solved out of the catalog, per difficulty, plus total attempts.
 
 Every exercise can carry a one-line note of your own — where you saw it, the key
 insight, the pitfall that tripped you. Press **`n`** on the exercise page to write
-or edit it (`↵` saves, `esc` cancels; submitting it blank clears it).
+or edit it (`↵` saves, `esc` cancels; submitting it blank clears it). Notes are
+capped at 120 characters; anything longer already in `state.json` is shown
+truncated with an ellipsis rather than rewritten.
 
 Notes live beside your progress in `~/.codeforge/state.json` and appear in two
 places: the exercise header, right under `added:`, and the highlighted exercise's
