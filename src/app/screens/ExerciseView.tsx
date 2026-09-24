@@ -8,14 +8,16 @@ import {
   pathsAtom,
   progressAtom,
   screenAtom,
+  searchActiveAtom,
   startedAtAtom,
   startedAtom,
 } from '@app/store';
 import { ExerciseDetails, ExerciseHeader, ExerciseStatus } from '@components/exercise';
+import { TextInput } from '@components/TextInput';
 import { ConfirmPrompt, KeyHints } from '@components/ui';
-import { Box, useInput } from 'ink';
+import { Box, Text, useInput } from 'ink';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export function ExerciseView() {
   const exercise = useAtomValue(exerciseAtom);
@@ -27,10 +29,13 @@ export function ExerciseView() {
   const confirm = useAtomValue(confirmAtom);
   const progress = useAtomValue(progressAtom);
   const setScreen = useSetAtom(screenAtom);
+  const setSearchActive = useSetAtom(searchActiveAtom);
   const actions = useExerciseActions();
 
   const [showHints, setShowHints] = useState(false);
   const [showTests, setShowTests] = useState(false);
+  const [editingNote, setEditingNote] = useState(false);
+  const [noteDraft, setNoteDraft] = useState('');
 
   const liveElapsed = useElapsed(startedAt);
   const running = startedAt !== null;
@@ -38,11 +43,32 @@ export function ExerciseView() {
   const finished = !running && elapsedMs != null;
   const elapsed = running ? liveElapsed : (elapsedMs ?? 0);
   const confirmingReset = confirm === 'solution';
-  const confirmingResetStats = confirm === 'stats';
-  const confirming = confirmingReset || confirmingResetStats;
+  const confirmingResetExercise = confirm === 'exercise';
+  const confirming = confirmingReset || confirmingResetExercise;
+  const note = exercise ? progress.exercises[exercise.id]?.note : undefined;
+
+  // While typing, let TextInput own the keyboard: block the app-wide `q`/`p`
+  // shortcuts, exactly like the exercise-list search does.
+  useEffect(() => {
+    setSearchActive(editingNote);
+    return () => setSearchActive(false);
+  }, [editingNote, setSearchActive]);
+
+  const openNoteEditor = () => {
+    setNoteDraft(note ?? '');
+    setEditingNote(true);
+  };
+
+  const submitNote = (value: string) => {
+    actions.saveNote(value);
+    setEditingNote(false);
+  };
 
   useInput((input, key) => {
     if (!exercise) {
+      return;
+    }
+    if (editingNote) {
       return;
     }
     if (confirmingReset) {
@@ -53,11 +79,11 @@ export function ExerciseView() {
       }
       return;
     }
-    if (confirmingResetStats) {
+    if (confirmingResetExercise) {
       if (input === 'y' || input === 'Y') {
-        actions.answerResetStats('reset');
+        actions.answerResetExercise('reset');
       } else if (input === 'n' || input === 'N' || key.escape) {
-        actions.answerResetStats('cancel');
+        actions.answerResetExercise('cancel');
       }
       return;
     }
@@ -78,7 +104,10 @@ export function ExerciseView() {
       actions.restartTimer();
     }
     if (input === 'x') {
-      actions.requestResetStats();
+      actions.requestResetExercise();
+    }
+    if (input === 'n') {
+      openNoteEditor();
     }
     if (input === 'h') {
       setShowHints((v) => !v);
@@ -101,9 +130,45 @@ export function ExerciseView() {
       paddingLeft={2}
       paddingRight={2}
     >
-      <ExerciseHeader exercise={exercise} stat={progress.exercises[exercise.id]} />
+      <ExerciseHeader exercise={exercise} stat={progress.exercises[exercise.id]} note={note} />
 
       <ExerciseDetails exercise={exercise} showTests={showTests} showHints={showHints} />
+
+      {editingNote ? (
+        <Box
+          marginTop={1}
+          flexDirection="column"
+          borderStyle="round"
+          borderColor="magentaBright"
+          paddingX={1}
+          flexShrink={0}
+        >
+          <Text bold color="magentaBright">
+            ✎ NOTE
+          </Text>
+          <Text dimColor>Saved with your progress. Enter to save, esc to cancel.</Text>
+          <Box marginTop={1}>
+            <TextInput
+              value={noteDraft}
+              onChange={setNoteDraft}
+              onSubmit={submitNote}
+              onCancel={() => setEditingNote(false)}
+              placeholder="e.g. reuse the two-pointer window"
+            />
+          </Box>
+          <Box marginTop={1}>
+            <KeyHints
+              hints={[
+                ['type', 'write note'],
+                ['←→', 'move cursor'],
+                ['ctrl+u', 'clear'],
+                ['↵', 'save'],
+                ['esc', 'cancel'],
+              ]}
+            />
+          </Box>
+        </Box>
+      ) : null}
 
       {confirmingReset ? (
         <ConfirmPrompt
@@ -116,12 +181,12 @@ export function ExerciseView() {
         />
       ) : null}
 
-      {confirmingResetStats ? (
+      {confirmingResetExercise ? (
         <ConfirmPrompt
-          title="Reset this exercise's stats?"
-          description="Clears its attempts, solves and best/last times. Your solution file is left untouched."
+          title="Reset this exercise?"
+          description="Removes its attempts, solves, best times and your note. Your solution file is left untouched."
           hints={[
-            ['y', 'reset stats'],
+            ['y', 'reset exercise'],
             ['n / esc', 'cancel'],
           ]}
         />
@@ -138,7 +203,7 @@ export function ExerciseView() {
       />
 
       <Box marginTop={1} flexShrink={0}>
-        {confirming ? null : (
+        {confirming || editingNote ? null : (
           <KeyHints
             hints={[
               ...(running || finished
@@ -146,8 +211,9 @@ export function ExerciseView() {
                 : ([['s', started ? 'start timer' : 'start']] as [string, string][])),
               ['t', 'run tests'],
               ['o', 'open in editor'],
-              ...(progress.exercises[exercise.id]?.attempts
-                ? ([['x', 'reset stats']] as [string, string][])
+              ['n', note ? 'edit note' : 'add note'],
+              ...(progress.exercises[exercise.id]?.attempts || note
+                ? ([['x', 'reset exercise']] as [string, string][])
                 : []),
               ['c', showTests ? 'hide tests' : 'show tests'],
               ['h', showHints ? 'hide hints' : 'show hints'],

@@ -32,8 +32,16 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
   );
 }
 
-/** The bordered title bar: exercise metadata plus the recorded stats. */
-export function ExerciseHeader({ exercise, stat }: { exercise: Exercise; stat?: ExerciseStat }) {
+/** The bordered title bar: exercise metadata, recorded stats and the user's note. */
+export function ExerciseHeader({
+  exercise,
+  stat,
+  note,
+}: {
+  exercise: Exercise;
+  stat?: ExerciseStat;
+  note?: string;
+}) {
   const headerInfo = (
     <Box flexDirection="column">
       <Box>
@@ -47,6 +55,12 @@ export function ExerciseHeader({ exercise, stat }: { exercise: Exercise; stat?: 
         {exercise.type} · {exercise.time}
       </Text>
       <Text dimColor>added: {formatDate(exercise.createdAt)}</Text>
+      {note ? (
+        <Text wrap="wrap">
+          <Text dimColor>note: </Text>
+          <Text color="magentaBright">{note}</Text>
+        </Text>
+      ) : null}
     </Box>
   );
 
