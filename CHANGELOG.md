@@ -1,3 +1,10 @@
+## [1.23.1](https://github.com/MrRoiz/codeforge/compare/v1.23.0...v1.23.1) (2026-09-25)
+
+
+### Bug Fixes
+
+* **list:** make the exercise list scrollable ([39bfece](https://github.com/MrRoiz/codeforge/commit/39bfecea712dab776a1fec66f52f958877d08091))
+
 # [1.23.0](https://github.com/MrRoiz/codeforge/compare/v1.22.0...v1.23.0) (2026-09-24)
 
 
