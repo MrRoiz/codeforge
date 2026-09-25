@@ -1,5 +1,5 @@
 import { Box, Text, useInput } from 'ink';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 export interface SelectItem<T> {
   /** stable identity for React list keys */
@@ -34,6 +34,8 @@ interface SelectProps<T> {
   initialIndex?: number;
   marker?: string;
   color?: string;
+  /** cap the number of rendered rows; the window follows the selection */
+  maxVisible?: number;
 }
 
 export function Select<T>({
@@ -44,9 +46,31 @@ export function Select<T>({
   initialIndex = 0,
   marker = '❯',
   color = 'cyanBright',
+  maxVisible,
 }: SelectProps<T>) {
   const [index, setIndex] = useState(initialIndex);
+  const [offset, setOffset] = useState(0);
   const lastInput = useRef<string | null>(null);
+
+  const windowed = maxVisible !== undefined && items.length > maxVisible;
+  const maxOffset = windowed ? items.length - maxVisible : 0;
+
+  // Slide the window only when the selection leaves it, keeping it sticky.
+  useLayoutEffect(() => {
+    if (!windowed) {
+      setOffset(0);
+      return;
+    }
+    setOffset((prev) => {
+      let next = prev;
+      if (index < prev) {
+        next = index;
+      } else if (index >= prev + maxVisible) {
+        next = index - maxVisible + 1;
+      }
+      return Math.max(0, Math.min(maxOffset, next));
+    });
+  }, [index, maxOffset, maxVisible, windowed]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: only re-notify when the selection moves
   useEffect(() => {
@@ -94,10 +118,16 @@ export function Select<T>({
     { isActive },
   );
 
+  const start = windowed ? offset : 0;
+  const visible = windowed ? items.slice(start, start + maxVisible) : items;
+  const hiddenAbove = start;
+  const hiddenBelow = items.length - (start + visible.length);
+
   return (
     <Box flexDirection="column">
-      {items.map((item, i) => {
-        const active = i === index;
+      {hiddenAbove > 0 ? <Text dimColor>{`  ↑ ${hiddenAbove} more`}</Text> : null}
+      {visible.map((item, i) => {
+        const active = start + i === index;
         const dim = item.disabled;
         return (
           <Box key={item.key}>
@@ -116,6 +146,7 @@ export function Select<T>({
           </Box>
         );
       })}
+      {hiddenBelow > 0 ? <Text dimColor>{`  ↓ ${hiddenBelow} more`}</Text> : null}
     </Box>
   );
 }

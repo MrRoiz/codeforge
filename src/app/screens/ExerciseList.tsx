@@ -1,4 +1,5 @@
 import { useExerciseActions } from '@app/hooks/useExerciseActions';
+import { useTerminalSize } from '@app/hooks/useTerminalSize';
 import { appStateAtom, filteredExercisesAtom, screenAtom, searchActiveAtom } from '@app/store';
 import { Select } from '@components/Select';
 import { TextInput } from '@components/TextInput';
@@ -26,6 +27,11 @@ export function ExerciseList() {
   const setSearchActive = useSetAtom(searchActiveAtom);
   const setScreen = useSetAtom(screenAtom);
   const { openExercise } = useExerciseActions();
+  const { rows } = useTerminalSize();
+
+  // Leave room for the logo, title, search box and key hints; keep the list
+  // within the terminal so long exercise collections stay scrollable.
+  const maxVisible = Math.max(5, rows - 20);
 
   const [highlighted, setHighlighted] = useState<Exercise>(exercises[0]);
   const [searching, setSearching] = useState(false);
@@ -105,6 +111,7 @@ export function ExerciseList() {
               onSelect={(e) => void openExercise(e)}
               onHighlight={(e) => setHighlighted(e)}
               isActive={!searching}
+              maxVisible={maxVisible}
             />
           )}
         </Box>
