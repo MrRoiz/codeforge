@@ -33,7 +33,7 @@ import {
   launchInForeground,
   resolveEditor,
 } from '@utils/open';
-import { runJest } from '@utils/runTests';
+import { runTests } from '@utils/runTests';
 import { enterFullScreen, exitFullScreen } from '@utils/screen';
 import { useApp } from 'ink';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
@@ -221,7 +221,7 @@ export function useExerciseActions() {
         setError(String(err));
       }
       setRunPhase('testing');
-      const r = await runJest(exerciseDir(ex.id, exercisesDir));
+      const r = await runTests(exerciseDir(ex.id, exercisesDir));
       setRunPhase('analyzing');
       setResult(r);
       // the file has been edited by now — refresh so the "content exists" notice

@@ -48,46 +48,48 @@ export function calculator(initial = 0): ChainableCalculator {
   throw new Error('Not implemented');
 }`,
   tests: {
-    fileBody: `import { calculator } from './exercise.js';
+    fileBody: `import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
+import { calculator } from './exercise.ts';
 
 describe('Chainable Calculator', () => {
   it('case 1: starts at zero', () => {
-    expect(calculator().value()).toBe(0);
+    assert.strictEqual(calculator().value(), 0);
   });
 
   it('case 2: chains add, subtract and multiply', () => {
-    expect(calculator().add(5).subtract(2).multiply(3).value()).toBe(9);
+    assert.strictEqual(calculator().add(5).subtract(2).multiply(3).value(), 9);
   });
 
   it('case 3: supports division and a seeded start', () => {
-    expect(calculator(10).divide(5).value()).toBe(2);
-    expect(calculator().add(20).divide(4).subtract(1).value()).toBe(4);
+    assert.strictEqual(calculator(10).divide(5).value(), 2);
+    assert.strictEqual(calculator().add(20).divide(4).subtract(1).value(), 4);
   });
 
   it('case 4: every operation returns the same object for chaining', () => {
     const calc = calculator();
-    expect(calc.add(1)).toBe(calc);
-    expect(calc.subtract(1)).toBe(calc);
-    expect(calc.multiply(2)).toBe(calc);
-    expect(calc.divide(2)).toBe(calc);
+    assert.strictEqual(calc.add(1), calc);
+    assert.strictEqual(calc.subtract(1), calc);
+    assert.strictEqual(calc.multiply(2), calc);
+    assert.strictEqual(calc.divide(2), calc);
   });
 
   it('case 5: separate calculators do not share state', () => {
     const a = calculator(1);
     const b = calculator(10);
     a.add(5);
-    expect(a.value()).toBe(6);
-    expect(b.value()).toBe(10);
+    assert.strictEqual(a.value(), 6);
+    assert.strictEqual(b.value(), 10);
   });
 
   it('case 6: preserves operation order', () => {
-    expect(calculator().add(2).multiply(3).value()).toBe(6);
-    expect(calculator().multiply(3).add(2).value()).toBe(2);
+    assert.strictEqual(calculator().add(2).multiply(3).value(), 6);
+    assert.strictEqual(calculator().multiply(3).add(2).value(), 2);
   });
 
   it('case 7: dividing by zero throws', () => {
     const calc = calculator().add(1);
-    expect(() => calc.divide(0)).toThrow();
+    assert.throws(() => calc.divide(0));
   });
 });`,
     cases: [],

@@ -31,7 +31,9 @@ export const dependencyGraphOrdering: Exercise = {
     'If you process fewer than `tasks` nodes, a cycle exists -> return []',
   ],
   tests: {
-    fileBody: `import { findOrder } from './exercise.js';
+    fileBody: `import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
+import { findOrder } from './exercise.ts';
 
 // any topological order is accepted — validate instead of comparing exactly
 const isValidOrder = (tasks: number, deps: number[][], order: number[]): boolean => {
@@ -46,34 +48,34 @@ const isValidOrder = (tasks: number, deps: number[][], order: number[]): boolean
 describe('Dependency Graph Ordering', () => {
   it('case 1: linear chain is ordered correctly', () => {
     const deps = [[1, 0], [2, 1], [3, 2]];
-    expect(isValidOrder(4, deps, findOrder(4, deps))).toBe(true);
+    assert.strictEqual(isValidOrder(4, deps, findOrder(4, deps)), true);
   });
 
   it('case 2: cycle returns []', () => {
-    expect(findOrder(4, [[1, 0], [2, 1], [0, 2]])).toEqual([]);
+    assert.deepStrictEqual(findOrder(4, [[1, 0], [2, 1], [0, 2]]), []);
   });
 
   it('case 3: fan-out yields a valid order', () => {
     const deps = [[1, 0], [2, 0]];
-    expect(isValidOrder(3, deps, findOrder(3, deps))).toBe(true);
+    assert.strictEqual(isValidOrder(3, deps, findOrder(3, deps)), true);
   });
 
   it('case 4: single task', () => {
-    expect(findOrder(1, [])).toEqual([0]);
+    assert.deepStrictEqual(findOrder(1, []), [0]);
   });
 
   it('case 5: two-node cycle returns []', () => {
-    expect(findOrder(2, [[1, 0], [0, 1]])).toEqual([]);
+    assert.deepStrictEqual(findOrder(2, [[1, 0], [0, 1]]), []);
   });
 
   it('case 6: no dependencies yields a valid order', () => {
     const order = findOrder(3, []);
-    expect(isValidOrder(3, [], order)).toBe(true);
+    assert.strictEqual(isValidOrder(3, [], order), true);
   });
 
   it('case 7: diamond dependency', () => {
     const deps = [[3, 1], [3, 2], [1, 0], [2, 0]];
-    expect(isValidOrder(4, deps, findOrder(4, deps))).toBe(true);
+    assert.strictEqual(isValidOrder(4, deps, findOrder(4, deps)), true);
   });
 });`,
     cases: [],

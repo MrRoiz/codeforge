@@ -1,6 +1,6 @@
 ---
 name: add-exercise
-description: Add a new coding exercise to the codeforge TUI and prove the tests are strong before committing. Use this whenever the user wants to add, create, contribute, scaffold, or register an exercise or problem for codeforge (e.g. "add a two-sum exercise", "add a new leetcode-style problem", "contribute a sliding-window question"), or asks to check, strengthen, or validate an exercise's generated Jest tests. Covers choosing a non-duplicate problem, the Exercise schema, barrel registration, tricky edge-case tests, and running a reference solution plus deliberately-wrong solutions through the real generator and Jest runner.
+description: Add a new coding exercise to the codeforge TUI and prove the tests are strong before committing. Use this whenever the user wants to add, create, contribute, scaffold, or register an exercise or problem for codeforge (e.g. "add a two-sum exercise", "add a new leetcode-style problem", "contribute a sliding-window question"), or asks to check, strengthen, or validate an exercise's generated tests. Covers choosing a non-duplicate problem, the Exercise schema, barrel registration, tricky edge-case tests, and running a reference solution plus deliberately-wrong solutions through the real generator and test runner.
 ---
 
 # Add a codeforge exercise
@@ -13,7 +13,8 @@ Repo facts you need (from `AGENTS.md`; read it for the full map):
 
 - One file per exercise in `src/exercises/<kebab-id>.ts`, registered in `src/exercises/index.ts`.
 - `pnpm test` is node's built-in runner for the tool's own unit tests — it does **not** run an
-  exercise's Jest suite. Exercise suites are run programmatically by `src/utils/jestRunner.ts`.
+  exercise's suite. Exercise suites are run programmatically by `src/utils/runTests.ts`, which spawns
+  `node --test` (with the `testReporter` support module).
 - The TUI exits when stdin isn't a TTY, so never try to validate by running `pnpm dev`.
 
 ## Workflow
@@ -24,8 +25,8 @@ Repo facts you need (from `AGENTS.md`; read it for the full map):
    existing `type` category string when one fits.
 2. **Write `src/exercises/<kebab-id>.ts`** exporting a single `Exercise` (schema below).
 3. **Register it in `src/exercises/index.ts` in all three places**: a named `export`, a named
-   `import`, and an entry in the `exercises` array under the right difficulty. (The README says
-   "one line"; it is three. Missing any one breaks the build or hides the exercise.)
+   `import`, and an entry in the `exercises` array under the right difficulty. Missing any one
+   breaks the build or hides the exercise.
 4. **Validate it** (next section) — this is the part people skip.
 5. **Run `pnpm lint`, `pnpm typecheck`, `pnpm test`.** CI is lint → typecheck → test, and the
    pre-commit hook runs lint + test, so fix these before claiming done.
@@ -41,7 +42,7 @@ for the simple case, `move-zeroes.ts` for in-place, `lru-cache.ts` for a class.
 - `createdAt`: today's date as `YYYY-MM-DD`.
 - `difficulty`: `'easy' | 'medium' | 'hard'`.
 - `functionSignature`: must include `export` and be a function declaration. The generator parses the
-  name with `/function\s+(\w+)/` and the generated test does `import { name } from './exercise.js'`.
+  name with `/function\s+(\w+)/` and the generated test does `import { name } from './exercise.ts'`.
   If the signature doesn't match, generation throws "Bad function signature".
 - `stub`: for classes/interfaces/tree/list problems (LRU Cache, MinStack, Binary Tree nodes), provide
   the full file body here instead of a one-line signature, and supply the tests via `fileBody` too —
@@ -74,11 +75,13 @@ Choose the comparison mode deliberately:
   sets, wrong when the inner arrays themselves can be in any order.
 - `mutatesInput` / `mutatesInputPrefix`: for in-place problems (`move-zeroes`, `string-compression`).
 - `fileBody`: when answers are "any valid X". Write a validator inside the test and assert on it
-  (see `dependency-graph-ordering.ts`), or expose a class API (`lru-cache.ts`).
+  (see `dependency-graph-ordering.ts`), or expose a class API (`lru-cache.ts`). A `fileBody` test
+  must import `describe`/`it` from `node:test`, `assert` from `node:assert/strict`, and the solution
+  from `./exercise.ts` — it runs on Node's built-in runner.
 
 ## Validate: reference must pass, wrong solutions must fail
 
-The generator and Jest runner are exposed through `src/lib.ts`. There is no CLI to run one exercise,
+The generator and test runner are exposed through `src/lib.ts`. There is no CLI to run one exercise,
 so write a throwaway harness that generates the exercise into a temp dir, drops a candidate solution
 in, and runs the real suite. Write the harness **in the OS temp dir** (e.g. `/tmp/check-<id>.ts`) and
 run it with `pnpm exec tsx /tmp/check-<id>.ts` **from the repo root** — this both resolves the `@`
@@ -91,13 +94,13 @@ import os from 'node:os';
 import path from 'node:path';
 import { getExerciseById } from '@exercises';
 import { ensureGenerated, exerciseDir } from '@utils/generate';
-import { runJest } from '@utils/runTests';
+import { runTests } from '@utils/runTests';
 
 async function trial(exercise: NonNullable<ReturnType<typeof getExerciseById>>, source: string) {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'codeforge-check-'));
   const { exerciseFile } = await ensureGenerated(exercise, root); // writes stub + generated test
   await fs.writeFile(exerciseFile, source); // replace the stub with the candidate
-  const result = await runJest(exerciseDir(exercise.id, root));
+  const result = await runTests(exerciseDir(exercise.id, root));
   await fs.rm(root, { recursive: true, force: true });
   return result;
 }
@@ -105,20 +108,22 @@ async function trial(exercise: NonNullable<ReturnType<typeof getExerciseById>>, 
 // then trial(exercise, eachMutant) must have passed === false.
 ```
 
-The candidate solution must export the exact symbol the test imports (`exercise.js`). Because
+The candidate solution must export the exact symbol the test imports (`exercise.ts`). Because
 generation writes to a temp dir, this never touches the user's real exercises or `~/.codeforge`
 state.
 
 Harness gotchas that cost time on every run:
 
-- `runJest(rootDir)` wants the **per-exercise** directory (the `dir` returned by `ensureGenerated`),
-  not the temp parent. Passing the parent makes Jest find no `exercise.test.ts` and returns
-  `0/0` with `rawError: "Jest runner exited without producing results."`.
+- `runTests(rootDir)` wants the **per-exercise** directory (the `dir` returned by `ensureGenerated`),
+  not the temp parent. Passing the parent makes the runner find no `exercise.test.ts` and returns
+  `0/0` with `rawError: "The test runner exited without producing results."`.
 - Success is `result.passed === true && result.numTotal > 0`. A run that executes zero cases is a
   harness bug, not a passing suite.
-- Don't add `--tsconfig` to the `tsx` command: it sets `TSX_TSCONFIG_PATH`, which `runTests.ts`
-  forwards into the spawned Jest child, whose cwd is the temp exercise dir and therefore has no
-  tsconfig — the child then crashes. Running from the repo root already resolves the aliases.
+- Candidates run through Node's native TypeScript type stripping, so they must be **erasable** — no
+  `enum`, `namespace`, or constructor parameter properties (`constructor(private x)`). A candidate
+  using those fails to load and shows up as a `rawError`, not a test failure.
+- Run the harness from the repo root so the `@` aliases resolve. (No `--tsconfig` is needed; the
+  spawned `node --test` child does not read `TSX_TSCONFIG_PATH`.)
 - The untouched stub should **fail** the suite (it throws `Not implemented`). Run the suite against
   the generated stub once; if it passes, the tests aren't actually exercising the implementation.
 

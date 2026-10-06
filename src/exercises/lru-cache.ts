@@ -47,29 +47,31 @@ export const lruCache: Exercise = {
   }
 }`,
   tests: {
-    fileBody: `import { LRUCache } from './exercise.js';
+    fileBody: `import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
+import { LRUCache } from './exercise.ts';
 
 describe('LRU Cache', () => {
   it('case 1: evicts the least recently used entry', () => {
     const cache = new LRUCache(2);
     cache.put(1, 1);
     cache.put(2, 2);
-    expect(cache.get(1)).toBe(1);
+    assert.strictEqual(cache.get(1), 1);
     cache.put(3, 3); // evicts key 2
-    expect(cache.get(2)).toBe(-1);
+    assert.strictEqual(cache.get(2), -1);
     cache.put(4, 4); // evicts key 1
-    expect(cache.get(1)).toBe(-1);
-    expect(cache.get(3)).toBe(3);
-    expect(cache.get(4)).toBe(4);
+    assert.strictEqual(cache.get(1), -1);
+    assert.strictEqual(cache.get(3), 3);
+    assert.strictEqual(cache.get(4), 4);
   });
 
   it('case 2: capacity of 1', () => {
     const cache = new LRUCache(1);
     cache.put(1, 10);
-    expect(cache.get(1)).toBe(10);
+    assert.strictEqual(cache.get(1), 10);
     cache.put(2, 20); // evicts key 1
-    expect(cache.get(1)).toBe(-1);
-    expect(cache.get(2)).toBe(20);
+    assert.strictEqual(cache.get(1), -1);
+    assert.strictEqual(cache.get(2), 20);
   });
 
   it('case 3: updating an existing key refreshes recency', () => {
@@ -77,15 +79,15 @@ describe('LRU Cache', () => {
     cache.put(1, 1);
     cache.put(2, 2);
     cache.put(1, 10); // key 1 becomes most recently used
-    expect(cache.get(1)).toBe(10);
+    assert.strictEqual(cache.get(1), 10);
     cache.put(3, 3); // evicts key 2
-    expect(cache.get(2)).toBe(-1);
-    expect(cache.get(1)).toBe(10);
+    assert.strictEqual(cache.get(2), -1);
+    assert.strictEqual(cache.get(1), 10);
   });
 
   it('case 4: get on a missing key returns -1', () => {
     const cache = new LRUCache(2);
-    expect(cache.get(99)).toBe(-1);
+    assert.strictEqual(cache.get(99), -1);
   });
 });`,
     cases: [],

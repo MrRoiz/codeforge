@@ -51,7 +51,9 @@ export function mergeTwoLists(
   throw new Error('Not implemented');
 }`,
   tests: {
-    fileBody: `import { ListNode, mergeTwoLists } from './exercise.js';
+    fileBody: `import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
+import { ListNode, mergeTwoLists } from './exercise.ts';
 
 const build = (values: number[]): ListNode | null => {
   const dummy = new ListNode();
@@ -76,29 +78,29 @@ const toArray = (head: ListNode | null): number[] => {
 describe('Merge Two Sorted Lists', () => {
   it('case 1: merges two equal-length lists', () => {
     const merged = mergeTwoLists(build([1, 2, 4]), build([1, 3, 4]));
-    expect(toArray(merged)).toEqual([1, 1, 2, 3, 4, 4]);
+    assert.deepStrictEqual(toArray(merged), [1, 1, 2, 3, 4, 4]);
   });
 
   it('case 2: both lists empty', () => {
-    expect(toArray(mergeTwoLists(build([]), build([])))).toEqual([]);
+    assert.deepStrictEqual(toArray(mergeTwoLists(build([]), build([]))), []);
   });
 
   it('case 3: one list empty', () => {
-    expect(toArray(mergeTwoLists(build([]), build([0])))).toEqual([0]);
-    expect(toArray(mergeTwoLists(build([1, 2, 3]), build([])))).toEqual([1, 2, 3]);
+    assert.deepStrictEqual(toArray(mergeTwoLists(build([]), build([0]))), [0]);
+    assert.deepStrictEqual(toArray(mergeTwoLists(build([1, 2, 3]), build([]))), [1, 2, 3]);
   });
 
   it('case 4: interleaves when one list is much shorter', () => {
-    expect(toArray(mergeTwoLists(build([5]), build([1, 2])))).toEqual([1, 2, 5]);
+    assert.deepStrictEqual(toArray(mergeTwoLists(build([5]), build([1, 2]))), [1, 2, 5]);
   });
 
   it('case 5: keeps duplicates', () => {
-    expect(toArray(mergeTwoLists(build([2, 2, 2]), build([2, 2])))).toEqual([2, 2, 2, 2, 2]);
+    assert.deepStrictEqual(toArray(mergeTwoLists(build([2, 2, 2]), build([2, 2]))), [2, 2, 2, 2, 2]);
   });
 
   it('case 6: handles negative values', () => {
     const merged = mergeTwoLists(build([-5, -2, 3]), build([-4, -1, 10]));
-    expect(toArray(merged)).toEqual([-5, -4, -2, -1, 3, 10]);
+    assert.deepStrictEqual(toArray(merged), [-5, -4, -2, -1, 3, 10]);
   });
 });`,
     cases: [],

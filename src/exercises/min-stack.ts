@@ -48,7 +48,9 @@ export const minStack: Exercise = {
   }
 }`,
   tests: {
-    fileBody: `import { MinStack } from './exercise.js';
+    fileBody: `import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
+import { MinStack } from './exercise.ts';
 
 describe('Min Stack', () => {
   it('case 1: tracks the minimum across push and pop', () => {
@@ -56,20 +58,20 @@ describe('Min Stack', () => {
     stack.push(-2);
     stack.push(0);
     stack.push(-3);
-    expect(stack.getMin()).toBe(-3);
+    assert.strictEqual(stack.getMin(), -3);
     stack.pop();
-    expect(stack.top()).toBe(0);
-    expect(stack.getMin()).toBe(-2);
+    assert.strictEqual(stack.top(), 0);
+    assert.strictEqual(stack.getMin(), -2);
   });
 
   it('case 2: a single element', () => {
     const stack = new MinStack();
     stack.push(5);
-    expect(stack.top()).toBe(5);
-    expect(stack.getMin()).toBe(5);
+    assert.strictEqual(stack.top(), 5);
+    assert.strictEqual(stack.getMin(), 5);
     stack.pop();
     stack.push(7);
-    expect(stack.getMin()).toBe(7);
+    assert.strictEqual(stack.getMin(), 7);
   });
 
   it('case 3: popping the minimum restores the previous minimum', () => {
@@ -77,11 +79,11 @@ describe('Min Stack', () => {
     stack.push(2);
     stack.push(1);
     stack.push(3);
-    expect(stack.getMin()).toBe(1);
+    assert.strictEqual(stack.getMin(), 1);
     stack.pop();
-    expect(stack.getMin()).toBe(1);
+    assert.strictEqual(stack.getMin(), 1);
     stack.pop();
-    expect(stack.getMin()).toBe(2);
+    assert.strictEqual(stack.getMin(), 2);
   });
 
   it('case 4: duplicate minimums are handled', () => {
@@ -89,11 +91,11 @@ describe('Min Stack', () => {
     stack.push(1);
     stack.push(1);
     stack.push(2);
-    expect(stack.getMin()).toBe(1);
+    assert.strictEqual(stack.getMin(), 1);
     stack.pop();
     stack.pop();
-    expect(stack.getMin()).toBe(1);
-    expect(stack.top()).toBe(1);
+    assert.strictEqual(stack.getMin(), 1);
+    assert.strictEqual(stack.top(), 1);
   });
 
   it('case 5: top reflects the most recent push', () => {
@@ -101,10 +103,10 @@ describe('Min Stack', () => {
     stack.push(4);
     stack.push(2);
     stack.push(8);
-    expect(stack.top()).toBe(8);
+    assert.strictEqual(stack.top(), 8);
     stack.pop();
-    expect(stack.top()).toBe(2);
-    expect(stack.getMin()).toBe(2);
+    assert.strictEqual(stack.top(), 2);
+    assert.strictEqual(stack.getMin(), 2);
   });
 });`,
     cases: [],

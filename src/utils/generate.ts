@@ -192,13 +192,13 @@ function renderTestFile(exercise: Exercise): string {
 
       let assertion: string;
       if (mutatesInputPrefix) {
-        assertion = `    expect(norm(args[0].slice(0, result))).toEqual(norm(${expectedLiteral}));`;
+        assertion = `    assert.deepStrictEqual(norm(args[0].slice(0, result)), norm(${expectedLiteral}));`;
       } else if (mutatesInput) {
-        assertion = `    expect(norm(args[0])).toEqual(norm(${expectedLiteral}));`;
+        assertion = `    assert.deepStrictEqual(norm(args[0]), norm(${expectedLiteral}));`;
       } else if (t.sorted) {
-        assertion = `    expect(sortDeep(result)).toEqual(sortDeep(${expectedLiteral}));`;
+        assertion = `    assert.deepStrictEqual(sortDeep(result), sortDeep(${expectedLiteral}));`;
       } else {
-        assertion = `    expect(norm(result)).toEqual(norm(${expectedLiteral}));`;
+        assertion = `    assert.deepStrictEqual(norm(result), norm(${expectedLiteral}));`;
       }
 
       return `  it('case ${i + 1}: ${label.replace(/'/g, "\\'")}', () => {
@@ -210,7 +210,9 @@ ${assertion}
     .join('\n\n');
 
   return `${TEST_HEADER(exercise.name)}
-import { ${fn} } from './exercise.js';
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
+import { ${fn} } from './exercise.ts';
 ${HELPERS}
 describe('${exercise.name}', () => {
 ${cases}

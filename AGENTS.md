@@ -1,15 +1,15 @@
 # AGENTS.md
 
 `codeforge` is a TypeScript/Ink TUI for practicing coding-interview exercises. It generates
-exercise + Jest files into a user directory and runs them in a child process. Node >= 20, pnpm only
-(`pnpm-lock.yaml`, `packageManager: pnpm@10.33.4`).
+exercise + test files into a user directory and runs them in a child process. Node >= 22.18, pnpm
+only (`pnpm-lock.yaml`, `packageManager: pnpm@10.33.4`).
 
 ## Commands
 
 ```bash
 pnpm install        # also runs `prepare` -> husky && tsup (builds dist/)
 pnpm dev            # tsx src/index.tsx — TUI from source, no build needed
-pnpm build          # tsup -> dist/index.js, dist/lib.js, dist/jestRunner.js
+pnpm build          # tsup -> dist/index.js, dist/lib.js, dist/testReporter.js
 pnpm typecheck      # tsc --noEmit
 pnpm test           # node --import tsx --test over src/**/*.test.ts
 pnpm lint           # biome check .   (also formats: pnpm lint:fix)
@@ -23,9 +23,14 @@ runs `pnpm lint` then `pnpm test`. Run lint, typecheck, and test before finishin
 - **The TUI cannot run headless.** `src/index.tsx` exits if `!process.stdin.isTTY`, so `pnpm dev`
   and `node dist/index.js` only work in a real terminal. Do not try to smoke-test the TUI in CI or
   from an agent shell. Verify via unit tests or the programmatic API in `src/lib.ts`.
-- **`pnpm test` is node's built-in runner, not Jest.** Jest/ts-jest are only used *programmatically*
-  by `src/utils/jestRunner.ts` (spawned as a child process to run a user's generated
-  `exercise.test.ts`). There is no jest config file — do not add one or invoke the `jest` CLI.
+- **Generated exercises run on Node's built-in test runner.** `src/utils/runTests.ts`
+  spawns `node --test` in a child process. Suites import `describe`/`it` from `node:test` and assert
+  with `node:assert/strict`; `src/utils/testReporter.ts` turns `node:test` events into the JSON
+  payload the TUI reads. There is no test-framework dependency — do not add one.
+  `pnpm test` (the repo's own tests) also uses `node --test`.
+- Generated suites import the solution as `./exercise.ts` and run via Node's **native type
+  stripping**, so they must stay erasable (no `enum`, `namespace`, or constructor parameter
+  properties). The runner relies on `tsup`'s `removeNodeProtocol: false` to keep `node:test` intact.
 - Only `src/utils/state` and `src/utils/complexity` have unit tests. There is no test suite for the
   TUI or for individual exercises.
 - Tests import with a **`.js` extension** (`from './index.js'`) even though the source is `.ts`.
@@ -40,20 +45,22 @@ runs `pnpm lint` then `pnpm test`. Run lint, typecheck, and test before finishin
 - `src/exercises/` — one file per exercise + barrel `index.ts`. `types.ts` defines `Exercise`.
 - `src/utils/generate.ts` renders `exercise.ts` and the test file. It **never overwrites an existing
   `exercise.ts`** (protects user work) but **always regenerates `exercise.test.ts`**.
-- `src/utils/runTests.ts` spawns `jestRunner`; under `pnpm dev` it spawns the TS runner via tsx, so
-  no build is required for local exercise runs.
+- `src/utils/runTests.ts` spawns `node --test` with the sibling `testReporter` module; under
+  `pnpm dev` that is the `.ts` source (run directly via type stripping), so no build is required for
+  local exercise runs.
 
 ## Adding an exercise
 
 1. Create `src/exercises/<kebab-case-id>.ts` exporting an `Exercise` (see `types.ts`).
 2. Register it in `src/exercises/index.ts` in **three** places: a named `export`, a named `import`,
-   and the `exercises` array. (README says "one line"; it is three.)
+   and the `exercises` array.
 3. `functionSignature` must be an exported function declaration — `generate.ts` parses the name with
-   `/function\s+(\w+)/` and the generated test does `import { fn } from './exercise.js'`. For
+   `/function\s+(\w+)/` and the generated test does `import { fn } from './exercise.ts'`. For
    classes/interfaces (LRU Cache, MinStack, tree/list nodes, …) provide a full `stub` string instead.
 4. Test flags: `sorted: true` for order-insensitive arrays, `mutatesInput` for in-place solutions
    (e.g. move-zeroes), `mutatesInputPrefix` (e.g. string-compression), `fileBody` to hand-write a
-   test file. Generated tests normalize `-0` to `0`.
+   test file (it must import `describe`/`it` from `node:test`, `assert` from `node:assert/strict`,
+   and the solution from `./exercise.ts`). Generated tests normalize `-0` to `0`.
 
 ## Path aliases
 

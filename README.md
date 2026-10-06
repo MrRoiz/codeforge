@@ -56,7 +56,8 @@ contract.
   Calculator), plus
   practical-logic tasks (Weighted Voting, Top-N Frequent IPs, Ticket Itinerary,
   Most-Used Route Per Courier).
-- **TypeScript-first** exercise templates and **Jest** test suites.
+- **TypeScript-first** exercise templates, checked by Node's built-in test
+  runner (no test-framework dependency).
 - **Keyboard-driven TUI** with a game-flavored feel: browse by difficulty, get a
   random challenge, read the statement, reveal hints, and forge your solution.
 - **Progress at a glance** — the home screen shows how much of the catalog you've
@@ -85,8 +86,9 @@ Or run it without installing anything:
 npx @mr_roiz/codeforge
 ```
 
-> Requires Node.js 20 or newer. It's an interactive TUI — run it directly in a
-> terminal (not piped).
+> Requires Node.js **22.18 or newer** (the generated suites run through Node's
+> native TypeScript type stripping). It's an interactive TUI — run it directly in
+> a terminal (not piped).
 
 ## Development
 
@@ -270,9 +272,9 @@ src/
     number-of-islands.ts
     ...
   utils/
-    generate.ts      renders exercise.ts + the Jest test file
-    runTests.ts      spawns the isolated Jest runner
-    jestRunner.ts    runs Jest in a child process, returns JSON results
+    generate.ts      renders exercise.ts + the test file
+    runTests.ts      spawns an isolated node:test run, returns JSON results
+    testReporter.ts  collects node:test results into the JSON the TUI reads
     state/           progress + notes persistence (state.json)
   app/               TUI screens (Ink + React)
     hooks/           action hooks (exercise flow, config)
@@ -283,7 +285,9 @@ src/
 tsup.config.ts       bundler config (entry points, ESM, Node target)
 ```
 
-Adding an exercise is one file plus one line in the barrel.
+Adding an exercise is one new file plus registering it in the barrel
+(`src/exercises/index.ts`): a named `export`, a named `import`, and an entry in
+the `exercises` array.
 
 ## Path aliases
 
@@ -299,15 +303,22 @@ Imports use `@` aliases with **no file extensions** — no more `../../` chains:
 
 They are declared once in `tsconfig.json` (`paths`) and resolved natively by the
 **tsup**/esbuild build (`tsup.config.ts`), which bundles the source into
-`dist/index.js`, `dist/lib.js`, and `dist/jestRunner.js`. `tsx` resolves the same
-aliases in dev. No extension-rewriting step, no runtime loader. (Node's native
-subpath imports only accept `#`, and `tsc` never rewrites `paths`, so a bundler
-is the clean way to keep `@` aliases extensionless.)
+`dist/index.js` and `dist/lib.js` (plus the `testReporter` support module the
+runner loads by path). `tsx` resolves the same aliases in dev. No
+extension-rewriting step, no runtime loader. (Node's native subpath imports only
+accept `#`, and `tsc` never rewrites `paths`, so a bundler is the clean way to
+keep `@` aliases extensionless.)
 
 ## Notes
 
-- Tests run through Jest in an isolated child process, so the TUI never gets
-  clobbered by test output.
+- Tests run through Node's built-in test runner (`node:test`) in an isolated
+  child process, so the TUI never gets clobbered by test output. The suite is
+  plain `node:test` + `node:assert` and imports the solution from `./exercise.ts`,
+  so you can also run it yourself: `node --test exercise.test.ts`.
+- Generated suites run straight from TypeScript via Node's native type stripping,
+  so solutions must be **erasable** TypeScript: no `enum`, `namespace`, or
+  constructor parameter properties (`constructor(private x)`) — the same subset
+  Node executes without a transpiler.
 - Existing solutions are **never overwritten silently** — codeforge only creates
   `exercise.ts` if it is missing, and `t`/`o` never touch it. The one exception is
   `s` on an exercise that already has a solution, which asks first and only wipes
@@ -357,7 +368,7 @@ library, and it gets better with every real problem people add.
 2. Register it in the barrel `src/exercises/index.ts` (export it and add it to
    the `exercises` array).
 
-That's it — the TUI, the generator, and the Jest suite all pick it up
+That's it — the TUI, the generator, and the test suite all pick it up
 automatically.
 
 ### Guidelines
@@ -371,9 +382,10 @@ automatically.
   empty input, duplicates, negatives, boundaries.
 - **Respect the stated constraints.** Don't add tests that violate your own
   `constraints` (e.g. testing `n = 0` when the constraint says `1 <= n`).
-- **Keep dependencies minimal.** The runtime is `ink` + `react`; testing is
-  `jest` + `ts-jest`. Please don't add libraries for things the standard
-  library already does.
+- **Keep dependencies minimal.** The runtime is `ink` + `react` (+ `typescript`
+  for the complexity estimate); the test runner is built into Node. Please don't
+  add libraries — or a test framework — for things the standard library already
+  does.
 - **No solution in the TUI.** codeforge generates the problem and checks the
   output — solving happens in the user's own editor. Keep it that way.
 - **TypeScript-first**, formatted with the project's existing style.
@@ -388,17 +400,18 @@ pnpm dev            # tsx, runs the TUI from src (resolves @ aliases directly)
 pnpm typecheck      # tsc --noEmit
 ```
 
-`pnpm dev` also spawns the TypeScript test runner via tsx, so exercising
+`pnpm dev` runs the generated suites on Node's native test runner (the `.ts`
+shim and reporter are loaded directly via type stripping), so exercising
 solutions works without building.
 
 To produce the distributable CLI:
 
 ```bash
-pnpm build          # tsup → dist/index.js, dist/lib.js, dist/jestRunner.js
+pnpm build          # tsup → dist/index.js, dist/lib.js, dist/testReporter.js
 node dist/index.js  # run the TUI from the build
 ```
 
-`src/lib.ts` is a programmatic API (`exercises`, `ensureGenerated`, `runJest`,
+`src/lib.ts` is a programmatic API (`exercises`, `ensureGenerated`, `runTests`,
 …) and is what the verification harness drives.
 
 There is no separate test suite for the tool itself yet — the fastest
