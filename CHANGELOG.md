@@ -1,3 +1,13 @@
+# [2.0.0](https://github.com/MrRoiz/codeforge/compare/v1.23.1...v2.0.0) (2026-10-06)
+
+
+* refactor(test)!: run generated suites on Node's built-in test runner ([256a711](https://github.com/MrRoiz/codeforge/commit/256a711ee73b449aa808e8d92f62a1851d97dd36))
+
+
+### BREAKING CHANGES
+
+* requires Node >= 22.18 (native type stripping). Solutions must be erasable TypeScript (no enum, namespace, or constructor parameter properties), and multi-file imports must use the .ts extension rather than ts-jest's .js -> .ts mapping.
+
 ## [1.23.1](https://github.com/MrRoiz/codeforge/compare/v1.23.0...v1.23.1) (2026-09-25)
 
 
