@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/MrRoiz/codeforge/compare/v2.0.0...v2.0.1) (2026-10-07)
+
+
+### Bug Fixes
+
+* **docs:** refresh README screenshots for the 2.0 UI ([6f93941](https://github.com/MrRoiz/codeforge/commit/6f9394173424572701f175ee00354fca2b4c7e15))
+
 # [2.0.0](https://github.com/MrRoiz/codeforge/compare/v1.23.1...v2.0.0) (2026-10-06)
 
 
