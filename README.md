@@ -80,6 +80,8 @@ npm install -g @mr_roiz/codeforge
 codeforge
 ```
 
+Check the installed version with `codeforge --version`.
+
 Or run it without installing anything:
 
 ```bash
