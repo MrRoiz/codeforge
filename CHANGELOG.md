@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/MrRoiz/codeforge/compare/v2.0.1...v2.1.0) (2026-10-07)
+
+
+### Features
+
+* **cli:** add --version flag ([42883cd](https://github.com/MrRoiz/codeforge/commit/42883cdd8ea58148cd5aa4a526526b22b9db0c29))
+
 ## [2.0.1](https://github.com/MrRoiz/codeforge/compare/v2.0.0...v2.0.1) (2026-10-07)
 
 
