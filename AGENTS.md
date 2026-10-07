@@ -31,8 +31,11 @@ runs `pnpm lint` then `pnpm test`. Run lint, typecheck, and test before finishin
 - Generated suites import the solution as `./exercise.ts` and run via Node's **native type
   stripping**, so they must stay erasable (no `enum`, `namespace`, or constructor parameter
   properties). The runner relies on `tsup`'s `removeNodeProtocol: false` to keep `node:test` intact.
-- Only `src/utils/state` and `src/utils/complexity` have unit tests. There is no test suite for the
-  TUI or for individual exercises.
+- Only `src/utils/state`, `src/utils/complexity`, and `src/utils/cli` have unit tests. There is no
+  test suite for the TUI or for individual exercises.
+- Unit-tested utils live in their own folder with source and test side by side —
+  `src/utils/<name>/index.ts` + `src/utils/<name>/index.test.ts` (the `complexity`/`state` pattern),
+  imported elsewhere as `@utils/<name>`. Do not use sibling `foo.ts` + `foo.test.ts`.
 - Tests import with a **`.js` extension** (`from './index.js'`) even though the source is `.ts`.
   Match this in new test files. Bundler-style extensionless imports are for `@`-aliased source only.
 - `dist/` is gitignored build output; never edit it.
