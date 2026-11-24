@@ -87,19 +87,25 @@ export function useExerciseActions() {
     setScreen('exercise');
   };
 
-  // Starting creates the solution + test files. `reset` wipes a previous
-  // solution back to the stub (only ever after the user confirms).
-  const startExercise = async (ex: Exercise, reset = false) => {
+  // Shared by start and restart: create the files (never overwriting a
+  // solution), run `prepareSolution` once they exist, then time a fresh session
+  // from `clockStartMs`.
+  const beginExercise = async (
+    ex: Exercise,
+    {
+      clockStartMs,
+      prepareSolution,
+    }: {
+      clockStartMs: number;
+      prepareSolution?: () => Promise<void>;
+    },
+  ) => {
     setConfirm(null);
     try {
       const generated = await ensureGenerated(ex, exercisesDir);
       persistedState.resetSession();
-      if (reset) {
-        await resetSolution(ex, exercisesDir);
-        setStartedAt(Date.now());
-      } else {
-        setStartedAt(startedAt ?? Date.now());
-      }
+      await prepareSolution?.();
+      setStartedAt(clockStartMs);
       setElapsedMs(null);
       setHasContent(await isDirty(ex, exercisesDir));
       setPaths(generated);
@@ -109,6 +115,18 @@ export function useExerciseActions() {
       setError(String(err));
     }
   };
+
+  // Keeps a clock that is already running; otherwise starts it now.
+  const startExercise = (ex: Exercise) =>
+    beginExercise(ex, { clockStartMs: startedAt ?? Date.now() });
+
+  // Wipes the solution back to the stub and restarts the clock (only ever after
+  // the user confirms).
+  const restartExercise = (ex: Exercise) =>
+    beginExercise(ex, {
+      clockStartMs: Date.now(),
+      prepareSolution: () => resetSolution(ex, exercisesDir),
+    });
 
   // `s`: start the exercise. If a previous solution is already on disk, ask
   // before wiping it. The other entry points (`o`, `t`) never reset.
@@ -122,7 +140,7 @@ export function useExerciseActions() {
     } catch {
       // fall through to a plain start
     }
-    await startExercise(ex, false);
+    await startExercise(ex);
   };
 
   // Starting the clock on an existing solution isn't allowed — to time an
@@ -132,7 +150,7 @@ export function useExerciseActions() {
     if (decision === 'cancel' || !exercise) {
       return;
     }
-    void startExercise(exercise, true);
+    void restartExercise(exercise);
   };
 
   // `x`: clear this exercise's recorded data (kept behind a confirm).
