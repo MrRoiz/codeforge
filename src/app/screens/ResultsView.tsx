@@ -22,6 +22,10 @@ const GLOW_FRAMES = 24;
 const GLOW_MS = 140;
 const RESULT_BAR_WIDTH = 30;
 
+// legend line `node:assert` prints above a `+ actual` / `- expected` diff
+const ASSERT_DIFF_LEGEND = '+ actual - expected';
+const MAX_MESSAGE_LINES = 8;
+
 function accentColor(ok: boolean, pulsing: boolean, frame: number): string {
   if (!ok) {
     return 'redBright';
@@ -71,21 +75,33 @@ function StatCard({
   );
 }
 
+/**
+ * The failure lines worth showing for one case. A `node:assert` diff lists every
+ * element of the compared values; keep its header and legend but only the
+ * `+`/`-` lines that differ, so the mismatch fits on screen.
+ */
 function cleanMessage(msg: string): string[] {
-  const stripped = msg.replace(ANSI_PATTERN, '');
-  const lines = stripped
+  const lines = msg
+    .replace(ANSI_PATTERN, '')
     .split('\n')
-    .map((l) => l.trim())
-    .filter((l) => l.length > 0);
-  const interesting = lines.filter(
-    (l) =>
-      l.startsWith('Expected') ||
-      l.startsWith('Received') ||
-      l.startsWith('Error') ||
-      l.includes('Not implemented'),
-  );
-  const chosen = interesting.length > 0 ? interesting : lines;
-  return chosen.slice(0, 4);
+    .map((line) => line.trimEnd())
+    .filter((line) => line.length > 0);
+
+  const legendIndex = lines.indexOf(ASSERT_DIFF_LEGEND);
+  const shown =
+    legendIndex === -1
+      ? lines
+      : [...lines.slice(0, legendIndex + 1), ...lines.slice(legendIndex + 1).filter(isChangedLine)];
+
+  if (shown.length <= MAX_MESSAGE_LINES) {
+    return shown;
+  }
+  const kept = shown.slice(0, MAX_MESSAGE_LINES - 1);
+  return [...kept, `… ${shown.length - kept.length} more lines`];
+}
+
+function isChangedLine(line: string): boolean {
+  return line.startsWith('+') || line.startsWith('-');
 }
 
 export function ResultsView() {
