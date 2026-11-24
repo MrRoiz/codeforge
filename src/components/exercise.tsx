@@ -39,15 +39,8 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 }
 
 /** The bordered title bar: exercise metadata, recorded stats and the user's note. */
-export function ExerciseHeader({
-  exercise,
-  stat,
-  note,
-}: {
-  exercise: Exercise;
-  stat?: ExerciseStat;
-  note?: string;
-}) {
+export function ExerciseHeader({ exercise, stat }: { exercise: Exercise; stat?: ExerciseStat }) {
+  const note = stat?.note;
   const headerInfo = (
     <Box flexDirection="column">
       <Box>
@@ -147,7 +140,7 @@ export function ExerciseDetails({
     : `TEST CASES (${exercise.tests.cases.length}) — press c to reveal`;
 
   return (
-    <ScrollView isActive>
+    <ScrollView>
       <Box flexDirection="column">
         <Text wrap="wrap">{exercise.description}</Text>
       </Box>

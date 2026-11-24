@@ -46,7 +46,8 @@ export function ExerciseView() {
   const confirmingReset = confirm === 'solution';
   const confirmingResetExercise = confirm === 'exercise';
   const confirming = confirmingReset || confirmingResetExercise;
-  const note = exercise ? state.exercises[exercise.id]?.note : undefined;
+  const stat = exercise ? state.exercises[exercise.id] : undefined;
+  const note = stat?.note;
   const noteAtLimit = noteDraft.length >= MAX_NOTE_LENGTH;
   const backupDir = backupsDirLabel();
 
@@ -134,7 +135,7 @@ export function ExerciseView() {
       paddingLeft={2}
       paddingRight={2}
     >
-      <ExerciseHeader exercise={exercise} stat={state.exercises[exercise.id]} note={note} />
+      <ExerciseHeader exercise={exercise} stat={stat} />
 
       <ExerciseDetails exercise={exercise} showTests={showTests} showHints={showHints} />
 
@@ -222,9 +223,7 @@ export function ExerciseView() {
               ['t', 'run tests'],
               ['o', 'open in editor'],
               ['n', note ? 'edit note' : 'add note'],
-              ...(state.exercises[exercise.id]?.attempts || note
-                ? ([['x', 'reset exercise']] as [string, string][])
-                : []),
+              ...(stat?.attempts || note ? ([['x', 'reset exercise']] as [string, string][]) : []),
               ['c', showTests ? 'hide tests' : 'show tests'],
               ['h', showHints ? 'hide hints' : 'show hints'],
               ['j/k', 'scroll'],

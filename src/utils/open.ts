@@ -106,8 +106,19 @@ export function resolveEditor(): EditorCommand | null {
       return { command, args };
     }
   }
-  const found = EDITOR_CANDIDATES.find(isOnPath);
+  const found = probeEditor();
   return found ? { command: found, args: [] } : null;
+}
+
+// PATH does not change while the app runs, so probe it once instead of
+// spawning up to one `which` per candidate on every open
+let probedEditor: string | null | undefined;
+
+function probeEditor(): string | null {
+  if (probedEditor === undefined) {
+    probedEditor = EDITOR_CANDIDATES.find(isOnPath) ?? null;
+  }
+  return probedEditor;
 }
 
 /**

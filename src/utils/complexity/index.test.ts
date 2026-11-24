@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { complexityRank } from '../state/index.js';
 import {
   analyzeSource,
   BIG_O,
+  complexityRank,
   DIMENSION_SEPARATOR,
   formatBigO,
   powerOfN,

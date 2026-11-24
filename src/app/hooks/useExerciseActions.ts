@@ -8,6 +8,7 @@ import {
   exerciseAtom,
   exercisesDirAtom,
   hasContentAtom,
+  NO_NEW_BEST,
   newBestAtom,
   pathsAtom,
   resultAtom,
@@ -96,11 +97,10 @@ export function useExerciseActions() {
       if (reset) {
         await resetSolution(ex, exercisesDir);
         setStartedAt(Date.now());
-        setElapsedMs(null);
       } else {
         setStartedAt(startedAt ?? Date.now());
-        setElapsedMs(null);
       }
+      setElapsedMs(null);
       setHasContent(await isDirty(ex, exercisesDir));
       setPaths(generated);
       setStarted(true);
@@ -114,7 +114,8 @@ export function useExerciseActions() {
   // before wiping it. The other entry points (`o`, `t`) never reset.
   const requestStart = async (ex: Exercise) => {
     try {
-      if ((await isStarted(ex, exercisesDir)) && (await isDirty(ex, exercisesDir))) {
+      // a missing solution file is never dirty
+      if (await isDirty(ex, exercisesDir)) {
         setConfirm('solution');
         return;
       }
@@ -211,7 +212,7 @@ export function useExerciseActions() {
   const run = async (ex: Exercise) => {
     setScreen('running');
     setRunPhase('preparing');
-    setNewBest({ time: false, complexity: false });
+    setNewBest(NO_NEW_BEST);
     try {
       try {
         await ensureGenerated(ex, exercisesDir); // create on first run, never overwrite

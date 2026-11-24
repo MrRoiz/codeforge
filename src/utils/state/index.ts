@@ -1,15 +1,7 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import {
-  BIG_O,
-  BIG_O_PREFIX,
-  BIG_O_SUFFIX,
-  type Confidence,
-  DIMENSION_SEPARATOR,
-  powerOfN,
-  superscriptExponent,
-} from '@utils/complexity';
+import { type Confidence, complexityRank } from '@utils/complexity';
 import { codeforgeHome } from '@utils/config';
 
 /** Estimated time complexity of a solution, as a small persisted snapshot. */
@@ -65,68 +57,6 @@ const EMPTY_STAT: ExerciseStat = { attempts: 0, solves: 0 };
 
 /** Longest note we persist; longer text is cut when saved. */
 export const MAX_NOTE_LENGTH = 120;
-
-// lower is better; single-variable labels the analyzer can emit (unknown labels rank as null)
-const COMPLEXITY_RANK: Record<string, number> = {
-  [BIG_O.constant]: 0,
-  [BIG_O.logarithmic]: 1,
-  [BIG_O.linear]: 2,
-  [BIG_O.linearithmic]: 3,
-  [powerOfN(2)]: 4,
-  [powerOfN(3)]: 5,
-  [powerOfN(4)]: 6,
-  [powerOfN(5)]: 7,
-  [powerOfN(6)]: 8,
-};
-
-const PRODUCT_TERM = /^([a-z])(.*)$/;
-
-/**
- * Rank a multi-variable product like `O(n·m)` by its total degree, placed just
- * better than the single-variable label of the same degree (`O(n·m)` < `O(n²)`).
- * Returns null for anything that isn't a product of dimension symbols.
- */
-function multiVarRank(label: string): number | null {
-  if (!label.startsWith(BIG_O_PREFIX) || !label.endsWith(BIG_O_SUFFIX)) {
-    return null;
-  }
-  const inner = label.slice(BIG_O_PREFIX.length, -BIG_O_SUFFIX.length);
-  if (!inner.includes(DIMENSION_SEPARATOR)) {
-    return null;
-  }
-  let degree = 0;
-  for (const term of inner.split(DIMENSION_SEPARATOR)) {
-    const match = PRODUCT_TERM.exec(term);
-    if (!match) {
-      return null;
-    }
-    const [, , glyph] = match;
-    if (!glyph) {
-      degree += 1;
-      continue;
-    }
-    const exponent = superscriptExponent(glyph);
-    if (exponent === undefined) {
-      return null;
-    }
-    degree += exponent;
-  }
-  if (degree < 2) {
-    return null;
-  }
-  // single-var anchors: O(n)=2, O(n²)=4, O(n³)=5, ... O(nᵈ)=d+2 for d>=2
-  const single = degree === 2 ? 4 : degree + 2;
-  return single - 0.5;
-}
-
-/** Rank a complexity label, or null when it can't be ordered. */
-export function complexityRank(label: string): number | null {
-  const rank = COMPLEXITY_RANK[label];
-  if (rank !== undefined) {
-    return rank;
-  }
-  return multiVarRank(label);
-}
 
 /** Progress lives in the app home, independent of the exercises directory. */
 export function statePath(): string {
@@ -184,22 +114,12 @@ export function applySolve(
 
   const next: ExerciseStat = { ...stat, solves: stat.solves + 1, lastSolve: attempt };
 
-  if (attempt.timeMs != null) {
-    const best = stat.bestTimeAttempt?.timeMs;
-    if (best == null || attempt.timeMs < best) {
-      next.bestTimeAttempt = attempt;
-    }
+  const standing = solveStanding(stat, outcome);
+  if (standing.time) {
+    next.bestTimeAttempt = attempt;
   }
-
-  if (attempt.complexity) {
-    const rank = complexityRank(attempt.complexity.label);
-    const bestRank =
-      stat.bestComplexityAttempt?.complexity == null
-        ? null
-        : complexityRank(stat.bestComplexityAttempt.complexity.label);
-    if (rank != null && (bestRank == null || rank < bestRank)) {
-      next.bestComplexityAttempt = attempt;
-    }
+  if (standing.complexity) {
+    next.bestComplexityAttempt = attempt;
   }
 
   return next;

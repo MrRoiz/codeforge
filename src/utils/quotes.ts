@@ -1,5 +1,7 @@
 // Short lines shown when a run passes: the point is a small motivational lift
-// with a wink. Kept dependency-free.
+// with a wink.
+import { createLinePicker } from '@utils/linePicker';
+
 const QUOTES = [
   'You solved it under pressure. That is the whole skill.',
   'Green tests. The clock never really stood a chance.',
@@ -43,17 +45,5 @@ const QUOTES = [
   'Practice like this is why you will be ready.',
 ];
 
-let lastIndex = -1;
-
 /** Pick a line, avoiding an immediate repeat. */
-export function pickQuote(): string {
-  if (QUOTES.length <= 1) {
-    return QUOTES[0] ?? '';
-  }
-  let index = Math.floor(Math.random() * QUOTES.length);
-  if (index === lastIndex) {
-    index = (index + 1) % QUOTES.length;
-  }
-  lastIndex = index;
-  return QUOTES[index];
-}
+export const pickQuote = createLinePicker(QUOTES);

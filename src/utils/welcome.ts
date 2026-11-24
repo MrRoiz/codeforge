@@ -1,5 +1,7 @@
 // Short lines shown on the home screen: a small grin before a practice
-// session. Kept dependency-free.
+// session.
+import { createLinePicker } from '@utils/linePicker';
+
 const WELCOME = [
   'Welcome back. The bugs were getting comfortable without you.',
   'Your keyboard missed you. The compiler did not.',
@@ -33,17 +35,5 @@ const WELCOME = [
   'Somewhere a semicolon is about to ruin a good day. Stay vigilant.',
 ];
 
-let lastIndex = -1;
-
 /** Pick a line, avoiding an immediate repeat. */
-export function pickWelcome(): string {
-  if (WELCOME.length <= 1) {
-    return WELCOME[0] ?? '';
-  }
-  let index = Math.floor(Math.random() * WELCOME.length);
-  if (index === lastIndex) {
-    index = (index + 1) % WELCOME.length;
-  }
-  lastIndex = index;
-  return WELCOME[index];
-}
+export const pickWelcome = createLinePicker(WELCOME);

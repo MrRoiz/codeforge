@@ -26,7 +26,7 @@ function failed(rawError: string): TestRunResult {
 }
 
 // biome-ignore lint/suspicious/noControlCharactersInRegex: matching the ANSI escape sequence
-const ANSI_PATTERN = /\u001b\[[0-9;]*m/g;
+export const ANSI_PATTERN = /\u001b\[[0-9;]*m/g;
 const SOURCE_LOCATION_PATTERN = /\.(ts|js):\d+/;
 const ERROR_PATTERN = /error/i;
 

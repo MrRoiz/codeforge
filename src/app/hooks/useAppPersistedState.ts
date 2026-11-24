@@ -1,4 +1,4 @@
-import { appStateAtom, newBestAtom, sessionAttemptsAtom } from '@app/store';
+import { appStateAtom, NO_NEW_BEST, newBestAtom, sessionAttemptsAtom } from '@app/store';
 import {
   recordAttempt as persistAttempt,
   recordNote as persistNote,
@@ -57,7 +57,7 @@ export function useAppPersistedState() {
     /** Restart the current try's count when a new exercise is entered. */
     resetSession() {
       setSessionAttempts(0);
-      setNewBest({ time: false, complexity: false });
+      setNewBest(NO_NEW_BEST);
     },
   };
 }

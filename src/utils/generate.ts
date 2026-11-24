@@ -45,15 +45,9 @@ export async function ensureGenerated(
 
   await fs.mkdir(dir, { recursive: true });
 
-  let existing: string | null = null;
-  try {
-    existing = await fs.readFile(exerciseFile, 'utf-8');
-  } catch {
-    existing = null;
-  }
-
   // never clobber the developer's work-in-progress solution
-  if (existing === null) {
+  const hasSolution = await isStarted(exercise, exercisesDir);
+  if (!hasSolution) {
     await fs.writeFile(exerciseFile, renderExerciseFile(exercise));
   }
   // tests are owned by codeforge; always refresh them
@@ -63,7 +57,7 @@ export async function ensureGenerated(
 }
 
 export async function resetSolution(exercise: Exercise, exercisesDir: string): Promise<void> {
-  const exerciseFile = path.join(exerciseDir(exercise.id, exercisesDir), 'exercise.ts');
+  const { exerciseFile } = exercisePaths(exercise, exercisesDir);
   await fs.writeFile(exerciseFile, renderExerciseFile(exercise));
 }
 
@@ -75,20 +69,22 @@ export async function resetSolution(exercise: Exercise, exercisesDir: string): P
  */
 export async function isDirty(exercise: Exercise, exercisesDir: string): Promise<boolean> {
   try {
-    const content = await fs.readFile(
-      path.join(exerciseDir(exercise.id, exercisesDir), 'exercise.ts'),
-      'utf-8',
-    );
+    const { exerciseFile } = exercisePaths(exercise, exercisesDir);
+    const content = await fs.readFile(exerciseFile, 'utf-8');
     return content !== renderExerciseFile(exercise);
   } catch {
     return false;
   }
 }
 
-function commentBlock(label: string, value: string, pad = ' *   '): string {
+const COMMENT_PREFIX = ' *   ';
+
+function commentBlock(label: string, value: string): string {
   const continuation = ' '.repeat(label.length);
   const lines = value.split('\n');
-  return lines.map((line, i) => `${pad}${i === 0 ? label : continuation}${line}`).join('\n');
+  return lines
+    .map((line, i) => `${COMMENT_PREFIX}${i === 0 ? label : continuation}${line}`)
+    .join('\n');
 }
 
 function renderExerciseFile(exercise: Exercise): string {

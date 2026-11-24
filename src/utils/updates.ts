@@ -1,4 +1,3 @@
-import { loadConfig } from '@utils/config';
 import pkg from '../../package.json' with { type: 'json' };
 
 const REGISTRY_URL = 'https://registry.npmjs.org/@mr_roiz%2Fcodeforge/latest';
@@ -27,13 +26,9 @@ function compareVersions(a: string, b: string): number {
 /**
  * Compare the installed version (package.json) against the latest published on
  * npm. Silent and never throws — callers fire this without awaiting. Returns
- * null when opted out, offline, or already on the latest version.
+ * null when offline or already on the latest version.
  */
 export async function checkForUpdates(): Promise<UpdateInfo | null> {
-  if (loadConfig().updateCheck === false) {
-    return null;
-  }
-
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
   try {

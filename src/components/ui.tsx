@@ -20,6 +20,20 @@ export function difficultyColor(d: Exercise['difficulty']): string {
   return DIFFICULTY_COLORS[d];
 }
 
+/** A `█░` bar showing how much of `total` is `done`, `width` cells wide. */
+export function progressBar({
+  done,
+  total,
+  width,
+}: {
+  done: number;
+  total: number;
+  width: number;
+}): string {
+  const filled = total === 0 ? 0 : Math.round((done / total) * width);
+  return '█'.repeat(filled) + '░'.repeat(width - filled);
+}
+
 export function DifficultyBadge({ difficulty }: { difficulty: Exercise['difficulty'] }) {
   const label = DIFFICULTY_LABELS[difficulty];
   return (
@@ -77,34 +91,24 @@ export function truncateNote(note: string): string {
   return flat.length > MAX_NOTE_LENGTH ? `${flat.slice(0, MAX_NOTE_LENGTH).trimEnd()}…` : flat;
 }
 
+/** Join the recorded parts of a solve snapshot, or a dash when none are. */
+function joinSolveParts(parts: (string | undefined)[]): string {
+  const recorded = parts.filter((part) => part !== undefined);
+  return recorded.length > 0 ? recorded.join(' · ') : '—';
+}
+
+function solveTime(attempt: SolveAttempt): string | undefined {
+  return attempt.timeMs == null ? undefined : formatDuration(attempt.timeMs);
+}
+
 /** One solve snapshot: its time and complexity (whichever are recorded). */
 function describeSolve(attempt: SolveAttempt): string {
-  const parts: string[] = [];
-  if (attempt.timeMs != null) {
-    parts.push(formatDuration(attempt.timeMs));
-  }
-  if (attempt.complexity) {
-    parts.push(attempt.complexity.label);
-  }
-  if (parts.length === 0) {
-    parts.push('—');
-  }
-  return parts.join(' · ');
+  return joinSolveParts([solveTime(attempt), attempt.complexity?.label]);
 }
 
 /** Complexity-first view of a solve snapshot, for the "best complexity" column. */
 function describeComplexity(attempt: SolveAttempt): string {
-  const parts: string[] = [];
-  if (attempt.complexity) {
-    parts.push(attempt.complexity.label);
-  }
-  if (attempt.timeMs != null) {
-    parts.push(formatDuration(attempt.timeMs));
-  }
-  if (parts.length === 0) {
-    parts.push('—');
-  }
-  return parts.join(' · ');
+  return joinSolveParts([attempt.complexity?.label, solveTime(attempt)]);
 }
 
 interface StatColumn {

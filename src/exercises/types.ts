@@ -1,3 +1,7 @@
+export const DIFFICULTIES = ['easy', 'medium', 'hard'] as const;
+
+export type Difficulty = (typeof DIFFICULTIES)[number];
+
 export interface ExerciseTest {
   input: unknown[];
   expected: unknown;
@@ -19,7 +23,7 @@ export interface Exercise {
   name: string;
   /** ISO date (YYYY-MM-DD) the exercise was added to the app */
   createdAt: string;
-  difficulty: 'easy' | 'medium' | 'hard';
+  difficulty: Difficulty;
   type: string;
   time: string;
   description: string;

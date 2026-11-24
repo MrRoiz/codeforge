@@ -1,15 +1,10 @@
 import { progressSummaryAtom } from '@app/store';
-import { difficultyColor } from '@components/ui';
+import { difficultyColor, progressBar } from '@components/ui';
+import { DIFFICULTIES } from '@exercises/types';
 import { Box, Text } from 'ink';
 import { useAtomValue } from 'jotai';
 
-const DIFFICULTIES = ['easy', 'medium', 'hard'] as const;
 const BAR_WIDTH = 20;
-
-function progressBar(solved: number, total: number): string {
-  const filled = total === 0 ? 0 : Math.round((solved / total) * BAR_WIDTH);
-  return '█'.repeat(filled) + '░'.repeat(BAR_WIDTH - filled);
-}
 
 interface RowProps {
   label: string;
@@ -45,7 +40,9 @@ export function ProgressOverview() {
       </Text>
 
       <Box marginTop={1} flexDirection="column" width={BAR_WIDTH}>
-        <Text color={complete ? 'greenBright' : 'cyanBright'}>{progressBar(solved, total)}</Text>
+        <Text color={complete ? 'greenBright' : 'cyanBright'}>
+          {progressBar({ done: solved, total, width: BAR_WIDTH })}
+        </Text>
 
         <Row label="attempts" value={String(attempts)} valueColor="magentaBright" />
 

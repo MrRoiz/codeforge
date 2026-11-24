@@ -9,8 +9,9 @@ import {
   sessionAttemptsAtom,
 } from '@app/store';
 import { ScrollView } from '@components/ScrollView';
-import { formatDuration, KeyHints } from '@components/ui';
+import { formatDuration, KeyHints, progressBar } from '@components/ui';
 import { pickQuote } from '@utils/quotes';
+import { ANSI_PATTERN } from '@utils/runTests';
 import { Box, Text, useInput } from 'ink';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useEffect, useState } from 'react';
@@ -19,6 +20,7 @@ import { useEffect, useState } from 'react';
 const GLOW_COLORS = ['greenBright', 'cyanBright', 'whiteBright'];
 const GLOW_FRAMES = 24;
 const GLOW_MS = 140;
+const RESULT_BAR_WIDTH = 30;
 
 function accentColor(ok: boolean, pulsing: boolean, frame: number): string {
   if (!ok) {
@@ -30,11 +32,6 @@ function accentColor(ok: boolean, pulsing: boolean, frame: number): string {
   return 'greenBright';
 }
 
-function bar(passed: number, total: number, width = 30): string {
-  const filled = total === 0 ? 0 : Math.round((passed / total) * width);
-  return '█'.repeat(filled) + '░'.repeat(width - filled);
-}
-
 /** A prominent result tile: the headline number plus a one-line detail. */
 function StatCard({
   label,
@@ -42,20 +39,17 @@ function StatCard({
   detail,
   color,
   best = false,
-  marginRight = 0,
 }: {
   label: string;
   value: string;
   detail: string;
   color: string;
   best?: boolean;
-  marginRight?: number;
 }) {
   return (
     <Box
       flexGrow={1}
       flexBasis={0}
-      marginRight={marginRight}
       borderStyle="double"
       borderColor={color}
       paddingX={2}
@@ -78,8 +72,7 @@ function StatCard({
 }
 
 function cleanMessage(msg: string): string[] {
-  // biome-ignore lint/suspicious/noControlCharactersInRegex: matching the ANSI escape sequence
-  const stripped = msg.replace(/\u001b\[[0-9;]*m/g, '');
+  const stripped = msg.replace(ANSI_PATTERN, '');
   const lines = stripped
     .split('\n')
     .map((l) => l.trim())
@@ -147,7 +140,6 @@ export function ResultsView() {
   const accent = accentColor(ok, pulsing, glowFrame);
   // a passing timed run is the only one with a time worth showing
   const timeMs = ok && elapsedMs != null ? elapsedMs : null;
-  const attempts = sessionAttempts;
 
   return (
     <Box
@@ -162,7 +154,6 @@ export function ResultsView() {
         borderStyle="double"
         borderColor={accent}
         paddingX={2}
-        paddingY={0}
         flexDirection="column"
         alignItems="center"
         flexShrink={0}
@@ -180,8 +171,8 @@ export function ResultsView() {
         ) : null}
       </Box>
 
-      {timeMs != null || complexity != null || attempts > 0 ? (
-        <Box flexShrink={0} flexDirection="row">
+      {timeMs != null || complexity != null || sessionAttempts > 0 ? (
+        <Box flexShrink={0} flexDirection="row" columnGap={1}>
           {timeMs == null ? null : (
             <StatCard
               label="TIME"
@@ -189,16 +180,14 @@ export function ResultsView() {
               detail="timed solve"
               color="cyanBright"
               best={newBest.time}
-              marginRight={attempts > 0 || complexity != null ? 1 : 0}
             />
           )}
-          {attempts === 0 ? null : (
+          {sessionAttempts === 0 ? null : (
             <StatCard
               label="ATTEMPTS"
-              value={String(attempts)}
+              value={String(sessionAttempts)}
               detail="this session"
               color="yellowBright"
-              marginRight={complexity == null ? 0 : 1}
             />
           )}
           {complexity == null ? null : (
@@ -216,7 +205,11 @@ export function ResultsView() {
       <Box marginTop={1} flexShrink={0}>
         <Text>
           <Text color={ok ? 'greenBright' : 'yellowBright'}>
-            {bar(result.numPassed, result.numTotal)}
+            {progressBar({
+              done: result.numPassed,
+              total: result.numTotal,
+              width: RESULT_BAR_WIDTH,
+            })}
           </Text>
           <Text>
             {'  '}
@@ -226,7 +219,7 @@ export function ResultsView() {
       </Box>
 
       <Box marginTop={1} flexDirection="column" flexGrow={1} flexShrink={1} minHeight={0}>
-        <ScrollView isActive>
+        <ScrollView>
           {result.rawError ? (
             <Text color="redBright" wrap="wrap">
               {result.rawError}

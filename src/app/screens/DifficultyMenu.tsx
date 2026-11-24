@@ -6,8 +6,13 @@ import {
 } from '@app/store';
 import { Select } from '@components/Select';
 import { CenteredColumn, KeyHints } from '@components/ui';
+import { DIFFICULTIES, type Difficulty } from '@exercises/types';
 import { Box, Text, useInput } from 'ink';
 import { useAtomValue, useSetAtom } from 'jotai';
+
+function capitalize(difficulty: Difficulty): string {
+  return difficulty[0].toUpperCase() + difficulty.slice(1);
+}
 
 export function DifficultyMenu() {
   const counts = useAtomValue(difficultyCountsAtom);
@@ -29,27 +34,13 @@ export function DifficultyMenu() {
         <Select<DifficultyChoice>
           items={[
             { key: 'all', label: 'All', value: 'all', hint: `(${counts.all})` },
-            {
-              key: 'easy',
-              label: 'Easy',
-              value: 'easy',
-              hint: `(${counts.easy})`,
-              disabled: counts.easy === 0,
-            },
-            {
-              key: 'medium',
-              label: 'Medium',
-              value: 'medium',
-              hint: `(${counts.medium})`,
-              disabled: counts.medium === 0,
-            },
-            {
-              key: 'hard',
-              label: 'Hard',
-              value: 'hard',
-              hint: `(${counts.hard})`,
-              disabled: counts.hard === 0,
-            },
+            ...DIFFICULTIES.map((difficulty) => ({
+              key: difficulty,
+              label: capitalize(difficulty),
+              value: difficulty,
+              hint: `(${counts[difficulty]})`,
+              disabled: counts[difficulty] === 0,
+            })),
           ]}
           onSelect={(choice) => {
             setDifficulty(choice);

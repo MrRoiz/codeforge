@@ -3,7 +3,6 @@ import { type ReactNode, useEffect, useLayoutEffect, useRef, useState } from 're
 
 interface Props {
   children: ReactNode;
-  isActive?: boolean;
 }
 
 /**
@@ -12,7 +11,7 @@ interface Props {
  * Up/Down, j/k, PageUp/PageDown, Home/End (g/G) and space/b are handled, and a
  * scrollbar is shown when there is more content than fits.
  */
-export function ScrollView({ children, isActive = true }: Props) {
+export function ScrollView({ children }: Props) {
   const viewportRef = useRef<DOMElement>(null);
   const contentRef = useRef<DOMElement>(null);
   const [viewportHeight, setViewportHeight] = useState(0);
@@ -45,27 +44,24 @@ export function ScrollView({ children, isActive = true }: Props) {
 
   const scrollTo = (next: number) => setOffset(Math.max(0, Math.min(maxOffset, next)));
 
-  useInput(
-    (input, key) => {
-      if (maxOffset === 0) {
-        return;
-      }
-      if (key.upArrow || input === 'k') {
-        scrollTo(clamped - 1);
-      } else if (key.downArrow || input === 'j') {
-        scrollTo(clamped + 1);
-      } else if (key.pageUp || input === 'b') {
-        scrollTo(clamped - viewportHeight);
-      } else if (key.pageDown || input === ' ') {
-        scrollTo(clamped + viewportHeight);
-      } else if (key.home || input === 'g') {
-        scrollTo(0);
-      } else if (key.end || input === 'G') {
-        scrollTo(maxOffset);
-      }
-    },
-    { isActive },
-  );
+  useInput((input, key) => {
+    if (maxOffset === 0) {
+      return;
+    }
+    if (key.upArrow || input === 'k') {
+      scrollTo(clamped - 1);
+    } else if (key.downArrow || input === 'j') {
+      scrollTo(clamped + 1);
+    } else if (key.pageUp || input === 'b') {
+      scrollTo(clamped - viewportHeight);
+    } else if (key.pageDown || input === ' ') {
+      scrollTo(clamped + viewportHeight);
+    } else if (key.home || input === 'g') {
+      scrollTo(0);
+    } else if (key.end || input === 'G') {
+      scrollTo(maxOffset);
+    }
+  });
 
   const scrollable = maxOffset > 0 && viewportHeight > 0;
   const thumbSize = scrollable

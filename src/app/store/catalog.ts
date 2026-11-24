@@ -1,19 +1,20 @@
-import { exercises } from '@exercises';
-import type { Exercise } from '@exercises/types';
+import { exercises, getExercisesByDifficulty } from '@exercises';
+import { DIFFICULTIES, type Difficulty } from '@exercises/types';
 import { atom } from 'jotai';
 
-export type DifficultyChoice = Exercise['difficulty'] | 'all';
+export type DifficultyChoice = Difficulty | 'all';
 
 export const difficultyAtom = atom<DifficultyChoice>('all');
 
-export const difficultyCountsAtom = atom<Record<DifficultyChoice, number>>(() => ({
-  all: exercises.length,
-  easy: exercises.filter((e) => e.difficulty === 'easy').length,
-  medium: exercises.filter((e) => e.difficulty === 'medium').length,
-  hard: exercises.filter((e) => e.difficulty === 'hard').length,
-}));
+export const difficultyCountsAtom = atom<Record<DifficultyChoice, number>>(() => {
+  const counts = { all: exercises.length } as Record<DifficultyChoice, number>;
+  for (const difficulty of DIFFICULTIES) {
+    counts[difficulty] = getExercisesByDifficulty(difficulty).length;
+  }
+  return counts;
+});
 
 export const filteredExercisesAtom = atom((get) => {
   const difficulty = get(difficultyAtom);
-  return difficulty === 'all' ? exercises : exercises.filter((e) => e.difficulty === difficulty);
+  return difficulty === 'all' ? exercises : getExercisesByDifficulty(difficulty);
 });

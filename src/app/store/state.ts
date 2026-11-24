@@ -1,5 +1,5 @@
 import { exercises } from '@exercises';
-import type { Exercise } from '@exercises/types';
+import { DIFFICULTIES, type Difficulty } from '@exercises/types';
 import { loadState, type State } from '@utils/state';
 import { atom } from 'jotai';
 
@@ -17,17 +17,16 @@ export interface ProgressSummary {
   total: number;
   /** test runs across every exercise, passing or not */
   attempts: number;
-  byDifficulty: Record<Exercise['difficulty'], DifficultyProgress>;
+  byDifficulty: Record<Difficulty, DifficultyProgress>;
 }
 
 /** A read-only roll-up of the progress state for the home screen. */
 export const progressSummaryAtom = atom((get): ProgressSummary => {
   const state = get(appStateAtom);
-  const byDifficulty: Record<Exercise['difficulty'], DifficultyProgress> = {
-    easy: { solved: 0, total: 0 },
-    medium: { solved: 0, total: 0 },
-    hard: { solved: 0, total: 0 },
-  };
+  const byDifficulty = {} as Record<Difficulty, DifficultyProgress>;
+  for (const difficulty of DIFFICULTIES) {
+    byDifficulty[difficulty] = { solved: 0, total: 0 };
+  }
   let solved = 0;
   let attempts = 0;
 

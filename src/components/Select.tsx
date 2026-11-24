@@ -13,6 +13,9 @@ export interface SelectItem<T> {
   disabled?: boolean;
 }
 
+const SELECTED_MARKER = '❯';
+const SELECTED_COLOR = 'cyanBright';
+
 function findEnabledIndex<T>(items: SelectItem<T>[], from: number, delta: number): number {
   let index = from;
   let remaining = items.length;
@@ -29,11 +32,8 @@ function findEnabledIndex<T>(items: SelectItem<T>[], from: number, delta: number
 interface SelectProps<T> {
   items: SelectItem<T>[];
   onSelect: (value: T) => void;
-  onHighlight?: (value: T, index: number) => void;
+  onHighlight?: (value: T) => void;
   isActive?: boolean;
-  initialIndex?: number;
-  marker?: string;
-  color?: string;
   /** cap the number of rendered rows; the window follows the selection */
   maxVisible?: number;
 }
@@ -43,12 +43,9 @@ export function Select<T>({
   onSelect,
   onHighlight,
   isActive = true,
-  initialIndex = 0,
-  marker = '❯',
-  color = 'cyanBright',
   maxVisible,
 }: SelectProps<T>) {
-  const [index, setIndex] = useState(initialIndex);
+  const [index, setIndex] = useState(0);
   const [offset, setOffset] = useState(0);
   const lastInput = useRef<string | null>(null);
 
@@ -76,7 +73,7 @@ export function Select<T>({
   useEffect(() => {
     const item = items[index];
     if (item && onHighlight) {
-      onHighlight(item.value, index);
+      onHighlight(item.value);
     }
   }, [index, items]);
 
@@ -94,19 +91,11 @@ export function Select<T>({
       } else if (key.downArrow || input === 'j') {
         setIndex((i) => findEnabledIndex(items, i, 1));
       } else if (input === 'G') {
-        for (let i = items.length - 1; i >= 0; i--) {
-          if (!items[i].disabled) {
-            setIndex(i);
-            break;
-          }
-        }
+        // stepping back from the first item wraps to the last enabled one
+        setIndex(findEnabledIndex(items, 0, -1));
       } else if (input === 'g' && prev === 'g') {
-        for (let i = 0; i < items.length; i++) {
-          if (!items[i].disabled) {
-            setIndex(i);
-            break;
-          }
-        }
+        // stepping forward from the last item wraps to the first enabled one
+        setIndex(findEnabledIndex(items, items.length - 1, 1));
         lastInput.current = null;
       } else if (key.return) {
         const item = items[index];
@@ -131,15 +120,15 @@ export function Select<T>({
         const dim = item.disabled;
         return (
           <Box key={item.key}>
-            <Text color={active ? color : undefined} dimColor={dim}>
-              {active ? `${marker} ` : '  '}
+            <Text color={active ? SELECTED_COLOR : undefined} dimColor={dim}>
+              {active ? `${SELECTED_MARKER} ` : '  '}
             </Text>
             {item.leading ? (
               <Text color={item.leadingColor} dimColor={dim}>
                 {item.leading}
               </Text>
             ) : null}
-            <Text color={active ? color : undefined} dimColor={dim}>
+            <Text color={active ? SELECTED_COLOR : undefined} dimColor={dim}>
               {item.label}
             </Text>
             {item.hint ? <Text dimColor> {item.hint}</Text> : null}

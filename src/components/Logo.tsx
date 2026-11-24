@@ -1,7 +1,9 @@
+import { configAtom } from '@app/store';
+import { VERSION } from '@utils/cli';
 import { checkForUpdates, type UpdateInfo } from '@utils/updates';
 import { Box, Text } from 'ink';
+import { useAtomValue } from 'jotai';
 import { useEffect, useState } from 'react';
-import pkg from '../../package.json' with { type: 'json' };
 
 export const LOGO_LINES = [
   ' ██████╗ ██████╗ ██████╗ ███████╗███████╗ ██████╗ ██████╗  ██████╗ ███████╗',
@@ -24,9 +26,13 @@ function logoColor(index: number): string {
 
 export function Logo() {
   const [updateInfo, setUpdateInfo] = useState<UpdateInfo | null>(null);
+  const isUpdateCheckEnabled = useAtomValue(configAtom).updateCheck !== false;
 
   // fire-and-forget update check; never blocks or breaks startup
   useEffect(() => {
+    if (!isUpdateCheckEnabled) {
+      return;
+    }
     let mounted = true;
     void checkForUpdates().then((info) => {
       if (mounted) {
@@ -36,7 +42,7 @@ export function Logo() {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [isUpdateCheckEnabled]);
 
   return (
     <Box flexDirection="column" alignItems="center" flexShrink={0}>
@@ -47,7 +53,7 @@ export function Logo() {
       ))}
       <Text color="yellowBright">{'⚒  FORGE YOUR SKILLS · ONE EXERCISE AT A TIME  ⚒'}</Text>
       <Text color="cyan">
-        v{pkg.version}
+        {VERSION}
         {updateInfo ? <Text color="greenBright"> → v{updateInfo.latest} available</Text> : null}
       </Text>
       <Text dimColor>p: Open in GitHub</Text>

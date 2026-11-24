@@ -2,6 +2,7 @@ import type { Exercise } from '@exercises/types';
 import type { ComplexityResult } from '@utils/complexity';
 import type { GeneratedPaths } from '@utils/generate';
 import type { TestRunResult } from '@utils/runTests';
+import type { SolveStanding } from '@utils/state';
 import { atom } from 'jotai';
 
 /** Which destructive action the user is being asked to confirm. */
@@ -22,13 +23,11 @@ export const runPhaseAtom = atom<RunPhase | null>(null);
 /** Timed runs made on the currently open exercise since it was entered. */
 export const sessionAttemptsAtom = atom<number>(0);
 
-/** Which metrics of the last passing run are new personal bests. */
-export interface NewBest {
-  time: boolean;
-  complexity: boolean;
-}
+/** A run that sets no new personal best. */
+export const NO_NEW_BEST: SolveStanding = { time: false, complexity: false };
 
-export const newBestAtom = atom<NewBest>({ time: false, complexity: false });
+/** Which metrics of the last passing run are new personal bests. */
+export const newBestAtom = atom<SolveStanding>(NO_NEW_BEST);
 export const pathsAtom = atom<GeneratedPaths | null>(null);
 export const startedAtom = atom(false);
 export const startedAtAtom = atom<number | null>(null);
