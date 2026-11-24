@@ -1,3 +1,10 @@
+## [2.1.1](https://github.com/MrRoiz/codeforge/compare/v2.1.0...v2.1.1) (2026-11-24)
+
+
+### Bug Fixes
+
+* **results:** show the assert diff for failed cases ([f14b655](https://github.com/MrRoiz/codeforge/commit/f14b655b863905ae647886f5f32cf3752ff38aff))
+
 # [2.1.0](https://github.com/MrRoiz/codeforge/compare/v2.0.1...v2.1.0) (2026-10-07)
 
 
